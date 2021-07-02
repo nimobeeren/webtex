@@ -11,8 +11,9 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <span>Hi there</span>
-        <span dangerouslySetInnerHTML={{ __html: katex.renderToString("x^{32}") }} />
+        <textarea>
+          Hi
+        </textarea>
       </main>
     </div>
   );
