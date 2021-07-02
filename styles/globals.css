@@ -6,11 +6,46 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
 * {
   box-sizing: border-box;
+}
+
+body {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px;
+  counter-reset: h2 h3 h4 h5 h6;
+}
+
+h2::before {
+  content: counter(h2) " ";
+  counter-increment: h2;
+  counter-set: h3 0 h4 0 h5 0 h6 0;
+}
+
+h3::before {
+  content: counter(h2) "." counter(h3) " ";
+  counter-increment: h3;
+  counter-set: h4 0 h5 0 h6 0;
+}
+
+h4::before {
+  content: counter(h2) "." counter(h3) "." counter(h4) " ";
+  counter-increment: h4;
+  counter-set: h5 0 h6 0;
+}
+
+h5::before {
+  content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " ";
+  counter-increment: h5;
+  counter-set: h6 0;
+}
+
+h6::before {
+  content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " ";
+  counter-increment: h6;
+}
+
+img {
+  max-width: 100%;
 }
