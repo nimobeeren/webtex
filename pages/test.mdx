@@ -1,0 +1,59 @@
+# My Paper
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sem enim, ultricies a consectetur eget, facilisis eu nisi. Nunc luctus enim sit amet justo malesuada, quis ornare neque auctor. Proin ac feugiat nulla, eu consequat magna. Nunc vitae lectus non ipsum sollicitudin malesuada. Curabitur at pellentesque quam, eu suscipit lectus. Nulla fermentum, elit nec commodo aliquam, purus dui convallis enim, imperdiet laoreet est ligula ut est. Cras vulputate dictum sem, quis iaculis mauris sagittis pellentesque. Nunc nisl nisl, feugiat quis ullamcorper non, ultrices et tortor. Donec finibus massa neque, quis dapibus nisi pellentesque id. Praesent rhoncus ac sapien non lacinia.
+
+## Introduction
+
+Here's some math using a matrix:
+
+$$
+J_f =
+\begin{bmatrix}
+  \frac{\partial y_1}{\partial x_1} & \dots & \frac{\partial y_1}{\partial x_n}\\
+  \vdots & \ddots & \vdots\\
+  \frac{\partial y_m}{\partial x_1} & \dots & \frac{\partial y_m}{\partial x_n}
+\end{bmatrix}
+$$
+
+and a case distinction:
+
+$$
+{\bf 1}[arg] =
+\begin{cases}
+  1 & \text{if $arg$ is true}\\
+  0 & \text{otherwise}
+\end{cases}
+$$
+
+and an aligned equation:
+
+$$
+\begin{align*}
+\mathcal{L}(\Theta) &= \log \int p({\bf x}, {\bf z})\,\mathrm{d}z\\
+&= \log \int q({\bf z} | {\bf x})\,\frac{p({\bf x}, {\bf z})}{q({\bf z} | {\bf x})}\,\mathrm{d}z\\
+&= \log \mathbb{E}_{q({\bf z} | {\bf x})} \left[ \frac{p({\bf x}, {\bf z})}{q({\bf z} | {\bf x})} \right]\\
+&\geq \mathbb{E}_{q({\bf z} | {\bf x})} \left[ \log \frac{p({\bf x}, {\bf z})}{q({\bf z} | {\bf x})} \right] =: \text{ELBO}(\Theta, q)
+\end{align*}
+$$
+
+Now feast your eyes on this:
+
+<figure>
+  <img
+    src="https://www.nasa.gov/sites/default/files/styles/full_width_feature/public/thumbnails/image/51189669328_bf2f1fc18f_o.jpeg"
+    alt="A nice space picture"
+  />
+  <figcaption>A nice space picture</figcaption>
+</figure>
+
+## H2
+### H3
+## H2
+### H3
+#### H4
+## H2
+#### H4
+###### H6
+###### H6
+##### H5
+###### H6
