@@ -1,8 +1,22 @@
+import { MDXProvider } from '@mdx-js/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import React from 'react'
+import { Heading } from '../components/Heading'
 import '../styles/globals.css'
 
-function MyApp({ Component, pageProps }: AppProps) {
+const components = {
+  /* eslint-disable react/display-name */
+  h1: (props) => <Heading level={1} {...props} />,
+  h2: (props) => <Heading level={2} {...props} />,
+  h3: (props) => <Heading level={3} {...props} />,
+  h4: (props) => <Heading level={4} {...props} />,
+  h5: (props) => <Heading level={5} {...props} />,
+  h6: (props) => <Heading level={6} {...props} />
+  /* eslint-enable react/display-name */
+}
+
+function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
@@ -13,9 +27,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           crossOrigin="anonymous"
         />
       </Head>
-      <Component {...pageProps} />
+      <MDXProvider components={components}>
+        <Component {...pageProps} />
+      </MDXProvider>
     </>
   )
 }
 
-export default MyApp
+export default App
