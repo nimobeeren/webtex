@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 function getAllHeadingPrefixes() {
   if (typeof window == 'undefined') {
@@ -38,14 +38,9 @@ function getAllHeadingPrefixes() {
 const HeadingContext = React.createContext<Map<Element, string> | null>(null)
 
 export const HeadingProvider = ({ children }) => {
-  const [headingPrefixMap, setHeadingPrefixMap] = useState(() =>
-    getAllHeadingPrefixes()
-  )
-
-  // TODO: useEffect to add document onChange handler which updates heading prefix map
-
+  // TODO: update headingPrefixMap when headings change
   return (
-    <HeadingContext.Provider value={headingPrefixMap}>
+    <HeadingContext.Provider value={getAllHeadingPrefixes()}>
       {children}
     </HeadingContext.Provider>
   )
