@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useHeadings } from '../context/HeadingContext'
 
-export function Heading({ level, children, ...restProps }) {
+export function Heading({ depth, children, ...restProps }) {
   const ref = useRef<HTMLHeadingElement>()
   const [prefix, setPrefix] = useState<string | null>(null)
 
@@ -19,8 +19,8 @@ export function Heading({ level, children, ...restProps }) {
     }
   }, [headingPrefixMap])
 
-  if (level < 1 || level > 6) {
-    throw RangeError('Heading level must be between 1 and 6')
+  if (depth < 1 || depth > 6) {
+    throw RangeError('Heading depth must be between 1 and 6')
   }
 
   let _children = children
@@ -33,5 +33,5 @@ export function Heading({ level, children, ...restProps }) {
     )
   }
 
-  return React.createElement(`h${level}`, { ref, ...restProps }, _children)
+  return React.createElement(`h${depth}`, { ref, ...restProps }, _children)
 }

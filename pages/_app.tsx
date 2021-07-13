@@ -7,12 +7,12 @@ import '../styles/globals.css'
 
 const components = {
   /* eslint-disable react/display-name */
-  h1: (props) => <Heading level={1} {...props} />,
-  h2: (props) => <Heading level={2} {...props} />,
-  h3: (props) => <Heading level={3} {...props} />,
-  h4: (props) => <Heading level={4} {...props} />,
-  h5: (props) => <Heading level={5} {...props} />,
-  h6: (props) => <Heading level={6} {...props} />
+  h1: (props) => <Heading depth={1} {...props} />,
+  h2: (props) => <Heading depth={2} {...props} />,
+  h3: (props) => <Heading depth={3} {...props} />,
+  h4: (props) => <Heading depth={4} {...props} />,
+  h5: (props) => <Heading depth={5} {...props} />,
+  h6: (props) => <Heading depth={6} {...props} />
   /* eslint-enable react/display-name */
 }
 
