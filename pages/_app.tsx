@@ -1,8 +1,8 @@
 import { MDXProvider } from '@mdx-js/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import React from 'react'
 import { Heading } from '../components/Heading'
+import { HeadingProvider } from '../context/HeadingContext'
 import '../styles/globals.css'
 
 const components = {
@@ -27,9 +27,11 @@ function App({ Component, pageProps }: AppProps) {
           crossOrigin="anonymous"
         />
       </Head>
-      <MDXProvider components={components}>
-        <Component {...pageProps} />
-      </MDXProvider>
+      <HeadingProvider>
+        <MDXProvider components={components}>
+          <Component {...pageProps} />
+        </MDXProvider>
+      </HeadingProvider>
     </>
   )
 }
