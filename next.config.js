@@ -9,7 +9,11 @@ const withMDX = require('@next/mdx')({
   }
 })
 
-module.exports = withMDX({
-  reactStrictMode: true,
-  pageExtensions: ['js', 'ts', 'tsx', 'md', 'mdx']
-})
+const withTM = require('next-transpile-modules')(['unified'])
+
+module.exports = withTM(
+  withMDX({
+    reactStrictMode: true,
+    pageExtensions: ['js', 'ts', 'tsx', 'md', 'mdx']
+  })
+)

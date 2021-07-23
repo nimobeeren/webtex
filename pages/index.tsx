@@ -1,7 +1,23 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import rehypeStringify from 'rehype-stringify'
+
+const markdownToHtml = unified()
+  .use(remarkParse)
+  .use(remarkRehype)
+  .use(rehypeStringify)
 
 function Index() {
-  const [source, setSource] = useState('')
+  const [markdown, setMarkdown] = useState('')
+  const [html, setHtml] = useState('')
+
+  useEffect(() => {
+    markdownToHtml.process(markdown)
+      .then(html => setHtml(String(html)))
+      .catch(() => setHtml('Error'))
+  }, [markdown])
 
   return (
     <div
@@ -13,7 +29,7 @@ function Index() {
       }}
     >
       <textarea
-        onChange={(event) => setSource(event.target.value)}
+        onChange={(event) => setMarkdown(event.target.value)}
         placeholder="Enter Markdown here"
         style={{
           flex: '1 0 0',
@@ -22,7 +38,7 @@ function Index() {
           resize: 'none'
         }}
       />
-      <div style={{ flex: '1 0 0', background: 'beige' }}>{source}</div>
+      <div style={{ flex: '1 0 0', background: 'beige' }}>{html}</div>
     </div>
   )
 }
