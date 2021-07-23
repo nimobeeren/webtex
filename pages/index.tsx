@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react'
-import { unified } from 'unified'
+import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
-import rehypeStringify from 'rehype-stringify'
+import { unified } from 'unified'
 
 const markdownToHtml = unified()
   .use(remarkParse)
-  .use(remarkRehype)
-  .use(rehypeStringify)
+  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(rehypeStringify, { allowDangerousHtml: true })
 
 function Index() {
   const [markdown, setMarkdown] = useState('')
   const [html, setHtml] = useState('')
 
   useEffect(() => {
-    markdownToHtml.process(markdown)
-      .then(html => setHtml(String(html)))
+    markdownToHtml
+      .process(markdown)
+      .then((html) => setHtml(String(html)))
       .catch(() => setHtml('Error'))
   }, [markdown])
 
