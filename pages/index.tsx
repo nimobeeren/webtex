@@ -25,7 +25,7 @@ function Index() {
       .process(markdown)
       .then((html) => {
         const endTime = performance.now()
-        console.log(`Processing time: ${Math.round(endTime - startTime)}ms`)
+        console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`)
         setHtml(String(html))
       })
       .catch(() => setHtml('Error'))
