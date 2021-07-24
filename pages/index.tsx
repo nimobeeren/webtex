@@ -1,5 +1,6 @@
 import { debounce } from 'lodash-es'
-import { ChangeEvent, useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
 import remarkMath from 'remark-math'
@@ -45,6 +46,7 @@ function Index() {
   return (
     <div
       style={{
+        position: 'relative',
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
@@ -65,6 +67,18 @@ function Index() {
         style={{ flex: '1 0 0', background: 'beige' }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      <Link href={`/print?${new URLSearchParams({ c: html }).toString()}`}>
+        <a
+          target="_noblank"
+          style={{
+            position: 'absolute',
+            bottom: 16,
+            right: 16
+          }}
+        >
+          Print
+        </a>
+      </Link>
     </div>
   )
 }

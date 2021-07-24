@@ -1,20 +1,17 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 
+/**
+ * Gets raw HTML from query param and echoes it back.
+ */
 function Print() {
-  const [html, setHtml] = useState('')
   const router = useRouter()
 
-  let encodedHtml = router.query.c
-  if (Array.isArray(encodedHtml)) {
-    encodedHtml = encodedHtml[0]
-  } else if (!encodedHtml) {
-    encodedHtml = ''
+  let html = router.query.c
+  if (Array.isArray(html)) {
+    html = html[0]
+  } else if (!html) {
+    html = ''
   }
-
-  useEffect(() => {
-    setHtml(atob(encodedHtml as string))
-  }, [encodedHtml])
 
   return <div dangerouslySetInnerHTML={{ __html: html }} />
 }
