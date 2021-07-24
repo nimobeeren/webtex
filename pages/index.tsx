@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react'
+import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
+import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 
 const markdownToHtml = unified()
   .use(remarkParse)
+  .use(remarkMath)
   .use(remarkRehype, { allowDangerousHtml: true })
+  // @ts-expect-error remove if rehype-katex is updated to not error
+  .use(rehypeKatex)
   .use(rehypeStringify, { allowDangerousHtml: true })
 
 function Index() {
@@ -39,7 +44,7 @@ function Index() {
           resize: 'none'
         }}
       />
-      <div style={{ flex: '1 0 0', background: 'beige' }}>{html}</div>
+      <div style={{ flex: '1 0 0', background: 'beige' }} dangerouslySetInnerHTML={{ __html: html }} />
     </div>
   )
 }
