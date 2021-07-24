@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { debounce } from 'lodash-es'
+import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
 import remarkMath from 'remark-math'
@@ -15,15 +16,31 @@ const markdownToHtml = unified()
   .use(rehypeStringify, { allowDangerousHtml: true })
 
 function Index() {
-  const [markdown, setMarkdown] = useState('')
   const [html, setHtml] = useState('')
 
-  useEffect(() => {
+  function handleMarkdownChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    const markdown = event.target.value
+    const startTime = performance.now()
     markdownToHtml
       .process(markdown)
-      .then((html) => setHtml(String(html)))
+      .then((html) => {
+        const endTime = performance.now()
+        console.log(`Processing time: ${Math.round(endTime - startTime)}ms`)
+        setHtml(String(html))
+      })
       .catch(() => setHtml('Error'))
-  }, [markdown])
+  }
+
+  const debouncedHandleMarkdownChange = useMemo(
+    () => debounce(handleMarkdownChange, 100),
+    []
+  )
+
+  useEffect(() => {
+    return () => {
+      debouncedHandleMarkdownChange.cancel()
+    }
+  }, [debouncedHandleMarkdownChange])
 
   return (
     <div
@@ -35,7 +52,7 @@ function Index() {
       }}
     >
       <textarea
-        onChange={(event) => setMarkdown(event.target.value)}
+        onChange={debouncedHandleMarkdownChange}
         placeholder="Enter Markdown here"
         style={{
           flex: '1 0 0',
@@ -44,7 +61,10 @@ function Index() {
           resize: 'none'
         }}
       />
-      <div style={{ flex: '1 0 0', background: 'beige' }} dangerouslySetInnerHTML={{ __html: html }} />
+      <div
+        style={{ flex: '1 0 0', background: 'beige' }}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     </div>
   )
 }
