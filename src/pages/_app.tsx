@@ -1,9 +1,9 @@
 import { MDXProvider } from '@mdx-js/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import '../../styles/globals.css'
 import { Heading } from '../components/Heading'
 import { HeadingProvider } from '../context/HeadingContext'
-import '../styles/globals.css'
 
 const components = {
   /* eslint-disable react/display-name */
