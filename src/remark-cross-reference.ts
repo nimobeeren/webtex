@@ -1,14 +1,28 @@
-import { visit } from 'unist-util-visit'
+import type { Heading, Link } from 'mdast'
+import type { Plugin, Transformer } from 'unified'
+import { visit, Visitor } from 'unist-util-visit'
 
-function attacher(config: any = {}) {
-  const {
-    // Range of heading depths which should be numbered (inclusive)
-    headingDepth = [2, 6]
-  } = config
+type Config = {
+  // Range of heading depths which should be numbered (inclusive)
+  headingDepth: [number, number]
+}
 
-  return transformer
+const defaultConfig: Config = {
+  headingDepth: [2, 6]
+}
 
-  function transformer(tree, file) {
+function parseConfig(config: Partial<Config>): asserts config is Config {
+  for (let key of Object.keys(defaultConfig)) {
+    if (config[key] === undefined) {
+      config[key] = defaultConfig[key]
+    }
+  }
+}
+
+const attacher: Plugin<[Partial<Config>] | []> = (config = {}) => {
+  parseConfig(config)
+
+  const transformer: Transformer = (tree) => {
     const counter = {
       1: 0,
       2: 0,
@@ -18,15 +32,12 @@ function attacher(config: any = {}) {
       6: 0
     }
 
-    const idToLabelMap = {}
+    const idToLabelMap: Record<string, string> = {}
 
-    visit(tree, 'heading', headingVisitor)
-    visit(tree, 'link', linkVisitor)
-
-    function headingVisitor(node) {
+    const headingVisitor: Visitor<Heading> = (node) => {
       counter[node.depth]++
 
-      const [minDepth, maxDepth] = headingDepth
+      const [minDepth, maxDepth] = config.headingDepth
 
       if (minDepth <= node.depth && node.depth <= maxDepth) {
         let label = String(counter[minDepth])
@@ -39,7 +50,7 @@ function attacher(config: any = {}) {
         }
 
         if (node.data?.id) {
-          idToLabelMap[node.data.id] = label
+          idToLabelMap[String(node.data.id)] = label
         }
 
         // Prefix heading with label
@@ -51,7 +62,7 @@ function attacher(config: any = {}) {
       }
     }
 
-    function linkVisitor(node) {
+    const linkVisitor: Visitor<Link> = (node) => {
       if (node.children.length === 0 && node.url.startsWith('#')) {
         const targetId = node.url.slice(1)
         const targetLabel = idToLabelMap[targetId]
@@ -59,6 +70,7 @@ function attacher(config: any = {}) {
         if (targetLabel !== undefined) {
           node.children.push({
             type: 'text',
+            // Strings are separated by a non-breaking space
             value: `Section\u00A0${targetLabel}`
           })
         } else {
@@ -68,14 +80,20 @@ function attacher(config: any = {}) {
             children: [
               {
                 type: 'text',
-                value: 'Section ??'
+                // Strings are separated by a non-breaking space
+                value: 'Section\u00A0??'
               }
             ]
           })
         }
       }
     }
+
+    visit(tree, 'heading', headingVisitor)
+    visit(tree, 'link', linkVisitor)
   }
+
+  return transformer
 }
 
 export default attacher
