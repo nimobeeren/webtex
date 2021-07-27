@@ -8,12 +8,12 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkSlug from 'remark-slug'
 import { unified } from 'unified'
-import remarkNumberHeadings from '../remark-number-headings'
+import remarkCrossReference from '../remark-cross-reference'
 
 const markdownToHtml = unified()
   .use(remarkParse)
   .use(remarkSlug)
-  .use(remarkNumberHeadings)
+  .use(remarkCrossReference, { headingDepth: [3, 6] })
   .use(remarkMath)
   .use(remarkRehype)
   // @ts-expect-error remove if rehype-katex is updated to not error
