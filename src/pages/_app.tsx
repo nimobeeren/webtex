@@ -1,4 +1,3 @@
-import { MDXProvider } from '@mdx-js/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import '../../styles/globals.css'
@@ -14,9 +13,7 @@ function App({ Component, pageProps }: AppProps) {
           crossOrigin="anonymous"
         />
       </Head>
-      <MDXProvider>
-        <Component {...pageProps} />
-      </MDXProvider>
+      <Component {...pageProps} />
     </>
   )
 }
