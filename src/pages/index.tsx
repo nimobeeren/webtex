@@ -7,14 +7,16 @@ import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
+import remarkNumberHeadings from '../remark-number-headings'
 
 const markdownToHtml = unified()
   .use(remarkParse)
+  .use(remarkNumberHeadings)
   .use(remarkMath)
-  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(remarkRehype)
   // @ts-expect-error remove if rehype-katex is updated to not error
   .use(rehypeKatex)
-  .use(rehypeStringify, { allowDangerousHtml: true })
+  .use(rehypeStringify)
 
 function Index() {
   const [html, setHtml] = useState('')

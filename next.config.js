@@ -9,7 +9,11 @@ const withMDX = require('@next/mdx')({
   }
 })
 
-const withTM = require('next-transpile-modules')(['unified', 'lodash-es'])
+const withTM = require('next-transpile-modules')([
+  'unified',
+  'lodash-es',
+  'unist-util-visit'
+])
 
 module.exports = withTM(
   withMDX({
