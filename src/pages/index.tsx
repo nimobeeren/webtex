@@ -6,11 +6,13 @@ import rehypeStringify from 'rehype-stringify'
 import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+import remarkSlug from 'remark-slug'
 import { unified } from 'unified'
 import remarkNumberHeadings from '../remark-number-headings'
 
 const markdownToHtml = unified()
   .use(remarkParse)
+  .use(remarkSlug)
   .use(remarkNumberHeadings)
   .use(remarkMath)
   .use(remarkRehype)
