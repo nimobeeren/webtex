@@ -6,14 +6,14 @@ import rehypeStringify from 'rehype-stringify'
 import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
-import remarkSlug from 'remark-slug'
 import { unified } from 'unified'
 import remarkCrossReference from '../remark-cross-reference'
+import remarkHeadingId from '../remark-heading-id'
 
 const markdownToHtml = unified()
   .use(remarkParse)
-  .use(remarkSlug)
-  .use(remarkCrossReference, { headingDepth: [3, 6] })
+  .use(remarkHeadingId)
+  .use(remarkCrossReference)
   .use(remarkMath)
   .use(remarkRehype)
   // @ts-expect-error remove if rehype-katex is updated to not error
