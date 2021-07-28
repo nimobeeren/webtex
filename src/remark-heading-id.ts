@@ -6,8 +6,8 @@ const attacher: Plugin<[]> = () => {
   const transformer: Transformer = (tree) => {
     const headingVisitor: Visitor<Heading> = (headingNode) => {
       const textVisitor: Visitor<Text> = (textNode) => {
-        // RegEx matches the string [#some-id] where some-id is a valid HTML id
-        const result = textNode.value.match(/(.*)\[#(\S+)\](.*)/)
+        // RegEx matches the string {#some-id} where some-id is a valid HTML id
+        const result = textNode.value.match(/(.*)\{#([^\s\{\}]+)\}(.*)/)
 
         if (result) {
           const id = result[2]
@@ -20,7 +20,7 @@ const attacher: Plugin<[]> = () => {
           const hProperties = headingNode.data.hProperties as any
           hProperties.id = id
 
-          // Remove the matched [#some-id] from the value
+          // Remove the matched {#some-id} from the heading text
           textNode.value = `${result[1]}${result[3]}`.trim()
         }
       }
