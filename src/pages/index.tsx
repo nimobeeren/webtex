@@ -7,6 +7,7 @@ import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
+import rehypeFigure from '../rehype-figure'
 import remarkCrossReference from '../remark-cross-reference'
 import remarkHeadingId from '../remark-heading-id'
 
@@ -16,6 +17,7 @@ const markdownToHtml = unified()
   .use(remarkCrossReference)
   .use(remarkMath)
   .use(remarkRehype)
+  .use(rehypeFigure)
   // @ts-expect-error remove if rehype-katex is updated to not error
   .use(rehypeKatex)
   .use(rehypeStringify)
@@ -62,15 +64,17 @@ function Index() {
         placeholder="Enter Markdown here"
         style={{
           flex: '1 0 0',
-          background: 'palevioletred',
+          background: 'darkgray',
           border: 'none',
           resize: 'none'
         }}
       />
       <div
-        style={{ flex: '1 0 0', background: 'beige' }}
+        style={{ flex: '1 0 0', background: 'black', color: 'white' }}
         dangerouslySetInnerHTML={{ __html: html }}
-      />
+      >
+        {/* {html} */}
+      </div>
       <Link href={`/print?${new URLSearchParams({ c: html }).toString()}`}>
         <a
           target="_noblank"
