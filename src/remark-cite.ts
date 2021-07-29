@@ -1,8 +1,9 @@
 import { Text } from 'mdast'
 import { Plugin } from 'unified'
+import { u } from 'unist-builder'
 import { visit } from 'unist-util-visit'
 
-const mockBibliography = [
+const MOCK_BIBLIOGRAPHY = [
   {
     id: 'newton',
     value: 'I. Newton, Philosophiae naturalis principia mathematica.'
@@ -10,6 +11,10 @@ const mockBibliography = [
   { id: 'yolo', value: 'J. Redmon, YOLOv3.' },
   { id: 'thinking', value: 'D. Kahneman, Thinking Fast and Slow' }
 ]
+
+function getBibItemHtmlId(num: number) {
+  return `bibitem-${num}`
+}
 
 const attacher: Plugin<[]> = () => {
   return (tree) => {
@@ -29,7 +34,7 @@ const attacher: Plugin<[]> = () => {
       }
     })
 
-    const filteredBibliography = mockBibliography
+    const filteredBibliography = MOCK_BIBLIOGRAPHY
       // Keep only bibitems that were actually referenced
       .filter((bibItem) =>
         citations.some((citation) => citation.id === bibItem.id)
@@ -37,19 +42,47 @@ const attacher: Plugin<[]> = () => {
       // Sort alphabetically
       .sort((a, b) => (a.value > b.value ? 1 : -1))
 
-    // TODO: add references section to the end of the document
-    console.log(
-      filteredBibliography.map(
-        (bibItem, index) => `[${index + 1}] ${bibItem.value}`
+    // Create a References section at the end of the document
+    if (filteredBibliography.length > 0) {
+      // Add References heading
+      ;(tree.children as any).push(
+        u('heading', { depth: 2 }, [u('text', 'References')])
       )
-    )
+      // Add a list of references
+      ;(tree.children as any).push(
+        u(
+          'list',
+          filteredBibliography.map((bibItem, index) =>
+            u(
+              'listItem',
+              {
+                data: {
+                  id: getBibItemHtmlId(index + 1),
+                  hProperties: { id: getBibItemHtmlId(index + 1) }
+                }
+              },
+              [u('paragraph', [u('text', `[${index + 1}] ${bibItem.value}`)])]
+            )
+          )
+        )
+      )
+    }
 
+    // Replace each citation node with [n] where n is the number of the
+    // bibitem as listed in the references section
     for (let citation of citations) {
-      const citationNum =
-        1 +
-        filteredBibliography.findIndex((bibItem) => bibItem.id === citation.id)
-      citation.node.type = 'text'
-      citation.node.value = `[${citationNum}]`
+      const index = filteredBibliography.findIndex(
+        (bibItem) => bibItem.id === citation.id
+      )
+
+      if (index === -1) {
+        citation.node.type = 'strong'
+        citation.node.children = [u('text', '[??]')]
+      } else {
+        citation.node.type = 'link'
+        citation.node.url = `#${getBibItemHtmlId(index + 1)}`
+        citation.node.children = [u('text', `[${index + 1}]`)]
+      }
     }
   }
 }

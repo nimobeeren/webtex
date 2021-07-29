@@ -8,6 +8,7 @@ const withTM = require('next-transpile-modules')([
   'hast-util-parse-selector',
   'lodash-es',
   'unified',
+  'unist-builder',
   'unist-util-modify-children',
   'unist-util-visit',
   'unist-util-visit-parents'
