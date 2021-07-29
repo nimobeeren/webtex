@@ -11,12 +11,19 @@ const attacher: Plugin<[]> = () => {
         if (node.tagName === 'img') {
           // Use the img alt text as caption
           const caption = (node.properties as any)?.alt
+
           // Wrap the img in a figure and add a figcaption
           parent.children.splice(
             index,
             1,
-            h('figure', [node as Element, h('figcaption', caption)])
+            h('figure', { id: (node.properties as any)?.id }, [
+              node as Element,
+              h('figcaption', caption)
+            ])
           )
+
+          // Remove the ID from the img tag, since we added it to the figure
+          ;(node.properties as any).id = ''
         }
       })
 

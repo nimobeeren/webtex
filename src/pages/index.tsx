@@ -35,7 +35,10 @@ function Index() {
         console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`)
         setHtml(String(html))
       })
-      .catch(() => setHtml('Error'))
+      .catch((err) => {
+        console.error(err)
+        setHtml(String(err))
+      })
   }
 
   const debouncedHandleMarkdownChange = useMemo(
@@ -78,9 +81,21 @@ function Index() {
       >
         <div
           dangerouslySetInnerHTML={{ __html: html }}
-          style={{ flex: '1 0 0', background: 'black', color: 'white' }}
+          style={{
+            flex: '1 0 0',
+            background: 'black',
+            color: 'white',
+            overflowY: 'auto'
+          }}
         />
-        <div style={{ flex: '1 0 0', background: 'orangered', color: 'white' }}>
+        <div
+          style={{
+            flex: '1 0 0',
+            background: 'orangered',
+            color: 'white',
+            overflowY: 'auto'
+          }}
+        >
           {html}
         </div>
       </div>
