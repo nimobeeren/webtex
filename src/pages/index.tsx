@@ -3,11 +3,13 @@ import Link from 'next/link'
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
+import remarkDirective from 'remark-directive'
 import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 import rehypeFigure from '../rehype-figure'
+import remarkCite from '../remark-cite'
 import remarkCrossReference from '../remark-cross-reference'
 import remarkCustomId from '../remark-custom-id'
 
@@ -15,6 +17,8 @@ const markdownToHtml = unified()
   .use(remarkParse)
   .use(remarkCustomId)
   .use(remarkCrossReference)
+  .use(remarkDirective)
+  .use(remarkCite)
   .use(remarkMath)
   .use(remarkRehype)
   .use(rehypeFigure)
