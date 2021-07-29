@@ -73,7 +73,11 @@ const attacher: Plugin<[Partial<Options>] | []> = (options = {}) => {
       }
 
       // Prefix alt text with label
-      node.alt = `Figure ${label}: ${node.alt}`
+      if (node.alt) {
+        node.alt = `Figure ${label}: ${node.alt}`
+      } else {
+        node.alt = `Figure ${label}`
+      }
     })
 
     visit(tree, 'link', (node: Link) => {
