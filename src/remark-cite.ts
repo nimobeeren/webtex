@@ -1,9 +1,8 @@
-import fetch from 'cross-fetch'
+import Cite from 'citation-js'
 import { Text } from 'mdast'
 import { Plugin } from 'unified'
 import { u } from 'unist-builder'
 import { visit } from 'unist-util-visit'
-import { Bibliography } from './pages/api/bibliography'
 
 const MOCK_BIBLIOGRAPHY = `@article{dijkstra1959,
   title={A note on two problems in connexion with graphs},
@@ -23,8 +22,23 @@ const MOCK_BIBLIOGRAPHY = `@article{dijkstra1959,
 }
 `
 
-function getBibItemHtmlId(num: number) {
-  return `bibitem-${num}`
+type BibEntry = { id: string; [key: string]: any }
+type Bibliography = Array<BibEntry>
+
+function parseBibliography(bibtex: string): Bibliography {
+  return Cite.input(bibtex)
+}
+
+function formatBibliography(bibliography: Bibliography): string {
+  return new Cite(bibliography).format('bibliography', {
+    format: 'html'
+  })
+}
+
+function formatCitation(bibEntry: BibEntry): string {
+  return new Cite(bibEntry).format('citation', {
+    format: 'html'
+  })
 }
 
 const attacher: Plugin<[]> = () => {
@@ -41,17 +55,12 @@ const attacher: Plugin<[]> = () => {
           citationId += textNode.value
         })
 
-        citations.push({ id: citationId, node })
+        citations.push({ id: citationId || null, node })
       }
     })
 
-    const parsedBibliography: Bibliography = await fetch('/api/bibliography', {
-      method: 'POST',
-      body: MOCK_BIBLIOGRAPHY
-    }).then((res) => res.json())
-
-    const filteredBibliography = parsedBibliography
-      // Keep only bibitems that were actually referenced
+    const bibliography = parseBibliography(MOCK_BIBLIOGRAPHY)
+      // Keep only entries that were actually referenced
       .filter((bibEntry) =>
         citations.some((citation) => citation.id === bibEntry.id)
       )
@@ -59,54 +68,32 @@ const attacher: Plugin<[]> = () => {
       .sort((a, b) => (a.author[0].family > b.author[0].family ? 1 : -1))
 
     // Create a bibliography section at the end of the document
-    if (filteredBibliography.length > 0) {
+    if (bibliography.length > 0) {
       // Add References heading
       ;(tree.children as any).push(
         u('heading', { depth: 2 }, [u('text', 'References')])
       )
 
-      // Add a list of references
-      ;(tree.children as any).push(
-        u(
-          'list',
-          filteredBibliography.map((bibEntry, index) => {
-            const authorString = [
-              bibEntry.author[0].given,
-              bibEntry.author[0].family
-            ]
-              .filter(Boolean)
-              .join(' ')
-            const bibEntryString = `${authorString}. ${bibEntry.title}`
-
-            return u(
-              'listItem',
-              {
-                data: {
-                  id: getBibItemHtmlId(index + 1),
-                  hProperties: { id: getBibItemHtmlId(index + 1) }
-                }
-              },
-              [u('paragraph', [u('text', `[${index + 1}] ${bibEntryString}`)])]
-            )
-          })
-        )
-      )
+      // Add the formatted bibliography as HTML
+      ;(tree.children as any).push(u('html', formatBibliography(bibliography)))
     }
 
-    // Replace each citation node with [n] where n is the number of the
-    // bibitem as listed in the references section
+    // Replace each citation node with a formatted citation string
     for (let citation of citations) {
-      const index = filteredBibliography.findIndex(
-        (bibItem) => bibItem.id === citation.id
-      )
+      const bibEntry = citation.id
+        ? bibliography.find((bibEntry) => bibEntry.id === citation.id)
+        : null
 
-      if (index === -1) {
-        citation.node.type = 'strong'
-        citation.node.children = [u('text', '[??]')]
+      if (bibEntry) {
+        citation.node.type = 'html'
+        citation.node.value = formatCitation(bibEntry)
       } else {
-        citation.node.type = 'link'
-        citation.node.url = `#${getBibItemHtmlId(index + 1)}`
-        citation.node.children = [u('text', `[${index + 1}]`)]
+        if (citation.id) {
+          // If there is a citation ID, but it does not exist in bibliography,
+          // show an error
+          citation.node.type = 'strong'
+          citation.node.children = [u('text', `:cite[${citation.id}]`)]
+        }
       }
     }
   }

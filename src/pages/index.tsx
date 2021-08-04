@@ -2,6 +2,8 @@ import { debounce } from 'lodash-es'
 import Link from 'next/link'
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
+import rehypeRaw from 'rehype-raw'
+import rehypeSanitize from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
 import remarkDirective from 'remark-directive'
 import remarkMath from 'remark-math'
@@ -20,10 +22,14 @@ const markdownToHtml = unified()
   .use(remarkDirective)
   .use(remarkCite)
   .use(remarkMath)
-  .use(remarkRehype)
+  .use(remarkRehype, { allowDangerousHtml: true })
+  // @ts-expect-error
+  .use(rehypeRaw)
   .use(rehypeFigure)
   // @ts-expect-error remove if rehype-katex is updated to not error
   .use(rehypeKatex)
+  // @ts-expect-error
+  .use(rehypeSanitize)
   .use(rehypeStringify)
 
 function Index() {
