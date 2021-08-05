@@ -36,10 +36,12 @@ const MOCK_BIBLIOGRAPHY = `@article{dijkstra1959,
   volume={5},
   number={2},
   pages={821--853},
-  year={2009},
-  publisher={De Gruyter}
+  year={2009}
 }
 `
+
+const CITATION_STYLE = 'apa'
+// const CITATION_STYLE = 'acm-sig-proceedings'
 
 function parseBibtex(bibtex: string) {
   // Parse BibLaTeX string to internal structure
@@ -66,19 +68,23 @@ function parseBibtex(bibtex: string) {
   return csl
 }
 
+function getCslItem(csl: CSLOutput, id: string) {
+  return Object.values(csl).find((item) => item.id === id)
+}
+
 async function createCiteproc(csl: CSLOutput) {
   // Fetch the en-US locale, since it's the only one currently supported
   const locale = await fetch('/citations/locales/locales-en-US.xml').then(
     (res) => res.text()
   )
 
-  const style = await fetch('/citations/styles/acm-sig-proceedings.csl').then(
+  const style = await fetch(`/citations/styles/${CITATION_STYLE}.csl`).then(
     (res) => res.text()
   )
 
   return new CiteProc.Engine(
     {
-      retrieveLocale(lang) {
+      retrieveLocale(lang: string) {
         if (lang === 'en-US') {
           return locale
         } else {
@@ -86,8 +92,14 @@ async function createCiteproc(csl: CSLOutput) {
         }
       },
 
-      retrieveItem(id) {
-        return Object.values(csl).find((item) => item.id === id)
+      retrieveItem(id: string) {
+        const item = getCslItem(csl, id)
+        if (!item) {
+          throw new Error(
+            `Tried to retrieve non-existent citation item with ID: ${id}`
+          )
+        }
+        return item
       }
     },
     style
@@ -102,18 +114,23 @@ function getCitationItemIds(citation: Node) {
     citationId += textNode.value
   })
   // TODO: support multiple citation items
-  return [citationId || null]
+  return citationId ? [citationId] : []
 }
 
 /**
- * Registers citations and returns a formatted HTML string for each one.
+ * Registers citations and returns a formatted HTML string for each one. Only
+ * citations that contain one or more citation item IDs are supported.
  * @returns An array of the same length as `citations`, containing HTML strings
  * corresponding to the given citations.
  */
 function registerCitations(citeproc, citations: Node[]): string[] {
   const citeprocCitations = citations.map((citation) => {
+    const ids = getCitationItemIds(citation)
+    if (ids.length === 0) {
+      throw new Error("Can't register citation without item IDs")
+    }
     return {
-      citationItems: getCitationItemIds(citation).map((id) => ({ id })),
+      citationItems: ids.map((id) => ({ id })),
       properties: {
         nodeIndex: 0 // for in-text citations rather than footnotes
       }
@@ -144,23 +161,45 @@ function makeBibliography(citeproc): string {
 
 const attacher: Plugin<[]> = () => {
   return async (tree) => {
+    const csl = parseBibtex(MOCK_BIBLIOGRAPHY)
+    const citeproc = await createCiteproc(csl)
+
     // Find all citation nodes
-    const citations: Node[] = []
+    let citations: Node[] = []
     visit(tree, 'textDirective', (node) => {
       if (node.name === 'cite') {
         citations.push(node)
       }
     })
 
-    const csl = parseBibtex(MOCK_BIBLIOGRAPHY)
-    const citeproc = await createCiteproc(csl)
-    const formattedCitations = registerCitations(citeproc, citations)
+    let knownCitations: Node[] = [] // valid and exists in the bibliography
+    let unknownCitations: Node[] = [] // valid, but does not exist
+    for (let citation of citations) {
+      const ids = getCitationItemIds(citation)
+      // Check if citation items exist in the bibliography
+      if (ids.length > 0 && ids.every((id) => getCslItem(csl, id))) {
+        knownCitations.push(citation)
+      } else {
+        // Citation refers to at least one non-existant item
+        unknownCitations.push(citation)
+      }
+    }
+
+    const formattedCitations = registerCitations(citeproc, knownCitations)
     const formattedBibliography = makeBibliography(citeproc)
 
-    // Replace each citation node with a formatted citation string
-    for (let i = 0; i < citations.length; i++) {
-      citations[i].type = 'html'
-      citations[i].value = formattedCitations[i]
+    // Replace each valid citation node with a formatted citation string
+    for (let i = 0; i < knownCitations.length; i++) {
+      knownCitations[i].type = 'html'
+      knownCitations[i].value = formattedCitations[i]
+    }
+
+    for (let unknownCitation of unknownCitations) {
+      const ids = getCitationItemIds(unknownCitation)
+      unknownCitation.type = 'strong'
+      unknownCitation.children = [
+        u('text', ids.length > 0 ? `:cite[${ids.join(',')}]` : ':cite')
+      ]
     }
 
     // Create a bibliography section at the end of the document
