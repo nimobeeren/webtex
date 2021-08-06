@@ -1,4 +1,4 @@
-import { debounce, merge } from 'lodash-es'
+import { merge, throttle } from 'lodash-es'
 import Link from 'next/link'
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
@@ -55,16 +55,16 @@ function Index() {
       })
   }
 
-  const debouncedHandleMarkdownChange = useMemo(
-    () => debounce(handleMarkdownChange, 100),
+  const throttledHandleMarkdownChange = useMemo(
+    () => throttle(handleMarkdownChange, 100),
     []
   )
 
   useEffect(() => {
     return () => {
-      debouncedHandleMarkdownChange.cancel()
+      throttledHandleMarkdownChange.cancel()
     }
-  }, [debouncedHandleMarkdownChange])
+  }, [throttledHandleMarkdownChange])
 
   // Run the markdown processor on phony input to initialize all the plugins,
   // that way the first real processing is faster.
@@ -87,7 +87,7 @@ function Index() {
       }}
     >
       <textarea
-        onChange={debouncedHandleMarkdownChange}
+        onChange={throttledHandleMarkdownChange}
         placeholder="Enter Markdown here"
         style={{
           flex: '1 0 0',
