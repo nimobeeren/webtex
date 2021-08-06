@@ -9,3 +9,20 @@ body {
 *,::before,::after {
   box-sizing: border-box;
 }
+
+.csl-entry {
+  line-height: 1.4em;
+  margin-bottom: 0.4em;
+}
+
+.csl-entry:last-of-type {
+  margin-bottom: 0;
+}
+
+.csl-left-margin {
+  float: left;
+}
+
+.csl-right-inline {
+  margin-left: 2.7em;
+}

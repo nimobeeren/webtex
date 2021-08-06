@@ -1,9 +1,9 @@
-import { debounce } from 'lodash-es'
+import { debounce, merge } from 'lodash-es'
 import Link from 'next/link'
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
-import rehypeSanitize from 'rehype-sanitize'
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
 import remarkDirective from 'remark-directive'
 import remarkMath from 'remark-math'
@@ -26,10 +26,14 @@ const markdownToHtml = unified()
   // @ts-expect-error
   .use(rehypeRaw)
   .use(rehypeFigure)
-  // @ts-expect-error remove if rehype-katex is updated to not error
-  .use(rehypeKatex)
   // @ts-expect-error
-  .use(rehypeSanitize)
+  .use(rehypeKatex)
+  .use(
+    // @ts-expect-error
+    rehypeSanitize,
+    // Allow class and style attributes on all elements
+    merge(defaultSchema, { attributes: { '*': ['className', 'style'] } })
+  )
   .use(rehypeStringify)
 
 function Index() {
