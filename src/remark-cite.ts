@@ -97,7 +97,7 @@ class CitationEngine {
           if (lang === self.locale) {
             return citationLocale
           } else {
-            return null
+            return undefined
           }
         },
 
@@ -208,19 +208,17 @@ class CitationEngine {
 }
 
 /**
- * Gets citation item IDs from a given node, assuming that it is a citation
- * node.
+ * Constructs a citation from a given node, assuming it is a citation node.
  * @returns the citation, which could contain multiple citation items
  */
 function getCitationFromNode(citation: Node): Citation {
-  // Get the citation ID, given by the joined values of all descendant
-  // text nodes
-  let citationId = ''
+  // Concatenate all text contained contained by the node's children
+  let childText = ''
   visit(citation, 'text', (textNode: Text) => {
-    citationId += textNode.value
+    childText += textNode.value
   })
-  // TODO: support multiple citation items
-  return citationId ? [citationId] : []
+  // Split by items by comma
+  return childText ? childText.split(',').map((item) => item.trim()) : []
 }
 
 /**
@@ -235,12 +233,10 @@ const attacher: Plugin<[]> = () => {
     // Find all citation nodes
     const citations: Citation[] = []
     const citationNodeMap = new Map<Citation, Node>()
-    visit(tree, 'textDirective', (node) => {
-      if (node.name === 'cite') {
-        const citation = getCitationFromNode(node)
-        citations.push(citation)
-        citationNodeMap.set(citation, node)
-      }
+    visit(tree, { type: 'textDirective', name: 'cite' }, (node) => {
+      const citation = getCitationFromNode(node)
+      citations.push(citation)
+      citationNodeMap.set(citation, node)
     })
 
     // Check if citations refer to existing bibliography entries
