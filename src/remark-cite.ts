@@ -181,7 +181,7 @@ class CitationEngine {
    * Parses a bibliography in BibTeX format and returns it in CSL-JSON format.
    * @returns CSL-JSON representation of the bibliography
    */
-  static parseBibtex(bibtex: string) {
+  static parseBibtex(bibtex: string): Record<string, CSLEntry> {
     // Parse BibLaTeX string to internal structure
     const parser = new BibLatexParser(bibtex)
     const { entries: internalStructure, errors, warnings } = parser.parse()
