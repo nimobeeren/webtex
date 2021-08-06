@@ -225,9 +225,13 @@ function getCitationFromNode(citation: Node): Citation {
  * Remark plugin to generate formatted citations.
  */
 const attacher: Plugin<[]> = () => {
+  const engine = new CitationEngine()
+  const initPromise = engine.init()
+
   return async (tree) => {
-    const engine = new CitationEngine()
-    await engine.init()
+    // Wait for engine to be ready
+    await initPromise
+
     engine.setBibliography(MOCK_BIBLIOGRAPHY)
 
     // Find all citation nodes
