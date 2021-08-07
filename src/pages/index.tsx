@@ -1,6 +1,6 @@
 import { merge, throttle } from 'lodash-es'
 import Link from 'next/link'
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
@@ -10,12 +10,14 @@ import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
+import { VFile } from 'vfile'
+import { MOCK_BIBLIOGRAPHY } from '../mock-data'
 import rehypeFigure from '../rehype-figure'
 import remarkCite from '../remark-cite'
 import remarkCrossReference from '../remark-cross-reference'
 import remarkCustomId from '../remark-custom-id'
 
-const markdownToHtml = unified()
+const processor = unified()
   .use(remarkParse)
   .use(remarkCustomId)
   .use(remarkCrossReference)
@@ -38,12 +40,18 @@ const markdownToHtml = unified()
 
 function Index() {
   const [html, setHtml] = useState('')
+  const [markdown, setMarkdown] = useState('')
+  const [bibliography, setBibliography] = useState(MOCK_BIBLIOGRAPHY)
 
-  function handleMarkdownChange(event: ChangeEvent<HTMLTextAreaElement>) {
-    const markdown = event.target.value
+  function handleSourceChange(md: string, bibtex: string) {
     const startTime = performance.now()
-    markdownToHtml
-      .process(markdown)
+
+    // Store the bibliography as a data attribute on the virtual file, because
+    // it's not part of the markdown, but it is still needed to create citations
+    const file = new VFile({ value: md, data: { bibliography: bibtex } })
+
+    processor
+      .process(file)
       .then((html) => {
         const endTime = performance.now()
         console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`)
@@ -55,22 +63,26 @@ function Index() {
       })
   }
 
-  const throttledHandleMarkdownChange = useMemo(
-    () => throttle(handleMarkdownChange, 100),
+  const throttledHandleSourceChange = useMemo(
+    () => throttle(handleSourceChange, 100),
     []
   )
 
   useEffect(() => {
     return () => {
-      throttledHandleMarkdownChange.cancel()
+      throttledHandleSourceChange.cancel()
     }
-  }, [throttledHandleMarkdownChange])
+  }, [throttledHandleSourceChange])
+
+  useEffect(() => {
+    throttledHandleSourceChange(markdown, bibliography)
+  }, [markdown, bibliography, throttledHandleSourceChange])
 
   // Run the markdown processor on phony input to initialize all the plugins,
   // that way the first real processing is faster.
   useEffect(() => {
     const startTime = performance.now()
-    markdownToHtml.run({ type: 'root' }).then(() => {
+    processor.run({ type: 'root' }).then(() => {
       const endTime = performance.now()
       console.debug(`Init time: ${Math.round(endTime - startTime)}ms`)
     })
@@ -86,16 +98,37 @@ function Index() {
         height: '100vh'
       }}
     >
-      <textarea
-        onChange={throttledHandleMarkdownChange}
-        placeholder="Enter Markdown here"
+      <div
         style={{
           flex: '1 0 0',
-          background: 'darkgray',
-          border: 'none',
-          resize: 'none'
+          display: 'flex',
+          flexDirection: 'column'
         }}
-      />
+      >
+        <textarea
+          value={markdown}
+          onChange={(event) => setMarkdown(event.target.value)}
+          placeholder="Enter Markdown here"
+          style={{
+            flex: '1 0 0',
+            background: 'palevioletred',
+            border: 'none',
+            resize: 'none'
+          }}
+        />
+        <textarea
+          value={bibliography}
+          onChange={(event) => setBibliography(event.target.value)}
+          placeholder="Enter BibTeX here"
+          style={{
+            flex: '1 0 0',
+            background: 'crimson',
+            color: 'white',
+            border: 'none',
+            resize: 'none'
+          }}
+        />
+      </div>
       <div
         style={{
           flex: '1 0 0',
@@ -107,16 +140,14 @@ function Index() {
           dangerouslySetInnerHTML={{ __html: html }}
           style={{
             flex: '1 0 0',
-            background: 'black',
-            color: 'white',
+            background: 'skyblue',
             overflowY: 'auto'
           }}
         />
         <div
           style={{
             flex: '1 0 0',
-            background: 'orangered',
-            color: 'white',
+            background: 'papayawhip',
             overflowY: 'auto'
           }}
         >

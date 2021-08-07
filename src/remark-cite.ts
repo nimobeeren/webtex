@@ -6,40 +6,6 @@ import { Plugin } from 'unified'
 import { u } from 'unist-builder'
 import { Node, visit } from 'unist-util-visit'
 
-const MOCK_BIBLIOGRAPHY = `@article{dijkstra1959,
-  title={A note on two problems in connexion with graphs},
-  author={Dijkstra, Edsger W and others},
-  journal={Numerische mathematik},
-  volume={1},
-  number={1},
-  pages={269--271},
-  year={1959}
-}
-
-@book{walker2017,
-  title={Why we sleep: Unlocking the power of sleep and dreams},
-  author={Walker, Matthew},
-  year={2017},
-  publisher={Simon and Schuster}
-}
-
-@misc{kahneman2017,
-  title={Thinking, fast and slow},
-  author={Kahneman, Daniel},
-  year={2017}
-}
-
-@article{walker2009,
-  title={Measuring Global Money Laundering:" The Walker Gravity Model"},
-  author={Walker, John and Unger, Brigitte},
-  journal={Review of Law \& Economics},
-  volume={5},
-  number={2},
-  pages={821--853},
-  year={2009}
-}
-`
-
 /** Reference to a specific bibliographic resource */
 type CitationItem = string
 /** Cluster of citation items referenced in the same place */
@@ -228,11 +194,13 @@ const attacher: Plugin<[]> = () => {
   const engine = new CitationEngine()
   const initPromise = engine.init()
 
-  return async (tree) => {
+  return async (tree, file) => {
     // Wait for engine to be ready
     await initPromise
 
-    engine.setBibliography(MOCK_BIBLIOGRAPHY)
+    // It is the caller's responsibility to put the bibliography in the file
+    // data, otherwise this plugin won't do anything
+    engine.setBibliography(String(file.data.bibliography || ''))
 
     // Find all citation nodes
     const citations: Citation[] = []
