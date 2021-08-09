@@ -9,6 +9,7 @@ import remarkDirective from 'remark-directive'
 import remarkMath from 'remark-math'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+import remarkSlug from 'remark-slug'
 import { unified } from 'unified'
 import { VFile } from 'vfile'
 import { MOCK_BIBLIOGRAPHY } from '../mock-data'
@@ -19,6 +20,8 @@ import remarkCustomId from '../remark-custom-id'
 
 const processor = unified()
   .use(remarkParse)
+  // @ts-expect-error
+  .use(remarkSlug)
   .use(remarkCustomId)
   .use(remarkCrossReference)
   .use(remarkDirective)
@@ -34,7 +37,10 @@ const processor = unified()
     // @ts-expect-error
     rehypeSanitize,
     // Allow class and style attributes on all elements
-    merge(defaultSchema, { attributes: { '*': ['className', 'style'] } })
+    merge(defaultSchema, {
+      attributes: { '*': ['className', 'style'] },
+      clobber: ['name'] // don't clobber id attribute
+    })
   )
   .use(rehypeStringify)
 

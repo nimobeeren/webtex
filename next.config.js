@@ -11,6 +11,7 @@ const withTM = require('next-transpile-modules')([
   'hast-util-sanitize',
   'hast-util-to-parse5',
   'lodash-es',
+  'remark-slug',
   'rehype-raw',
   'rehype-sanitize',
   'unified',
