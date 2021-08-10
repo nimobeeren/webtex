@@ -1,26 +1,11 @@
+const esmDependencies = require('./esm-dependencies')
+
 let config = {
   reactStrictMode: true
 }
 
-const withTM = require('next-transpile-modules')([
-  'array-iterate',
-  'hastscript',
-  'hast-to-hyperscript',
-  'hast-util-parse-selector',
-  'hast-util-raw',
-  'hast-util-sanitize',
-  'hast-util-to-parse5',
-  'lodash-es',
-  'remark-slug',
-  'rehype-raw',
-  'rehype-sanitize',
-  'unified',
-  'unist-builder',
-  'unist-util-modify-children',
-  'unist-util-visit',
-  'unist-util-visit-parents',
-  'vfile'
-])
+// Explicitly add ESM dependencies to be transpiled
+const withTM = require('next-transpile-modules')(esmDependencies)
 config = withTM(config)
 
 if (process.env.ANALYZE === 'true') {

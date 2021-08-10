@@ -35,7 +35,7 @@ const attacher: Plugin<[]> = () => {
         }
 
         // Remove the directive node from the tree
-        parent.children.splice(parent.children.findIndex((n) => n === node))
+        parent.children.splice(parent.children.findIndex((n) => n === node), 1)
       }
     )
 
