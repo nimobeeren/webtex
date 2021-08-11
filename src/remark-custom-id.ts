@@ -1,3 +1,4 @@
+import { pullAll } from 'lodash-es'
 import type { Text } from 'mdast'
 import type { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
@@ -16,7 +17,9 @@ const attacher: Plugin<[]> = () => {
   }
 
   return (tree) => {
-    console.log(tree)
+    // console.log(
+    //   JSON.stringify(tree, (k, v) => (k === 'position' ? undefined : v), 2)
+    // )
     visitParents(
       tree,
       { type: 'textDirective', name: 'id' },
@@ -28,14 +31,58 @@ const attacher: Plugin<[]> = () => {
           id += textNode.value
         })
 
+        // We always remove the directive node at the end, and we may want to
+        // remove some siblings of the directive node as well, which is done by
+        // pushing them to this array
+        const nodesToRemove = [node]
+        
+        // To determine what to do next, we look at the parent type
         const parent = ancestors[ancestors.length - 1]
-
-        if (parent.type === 'heading') {
-          setNodeId(parent, id)
+        switch (parent.type) {
+          case 'heading':
+            // If the parent is a heading, we apply the ID to the heading
+            setNodeId(parent, id)
+            break
+          case 'paragraph':
+            // If the parent is a paragraph, we look for an image node such that
+            // all these conditions hold:
+            //   1. The image node is a sibling of the directive node
+            //   2. The image node appears before the directive node
+            //   3. There are no nodes between the image and the directive,
+            //      except text nodes containing only whitespace
+            // Otherwise, the directive does not apply to anything 😕
+            const directiveIndex = parent.children.findIndex((n) => n === node)
+            for (let i = directiveIndex - 1; i >= 0; i--) {
+              const precedingSibling = parent.children[i]
+              if (precedingSibling.type === 'image') {
+                // We found the image 🖼️!
+                // Let's set the ID on the image node and we're done
+                setNodeId(precedingSibling, id)
+                break
+              } else if (precedingSibling.type === 'text') {
+                // We found a text node 📝, so let's see what its value is
+                if ((precedingSibling as Text).value.match(/^\s$/)) {
+                  // It's only whitespace, so let's continue, but remember to
+                  // remove this node at the end
+                  nodesToRemove.push(precedingSibling)
+                } else {
+                  // It's not just whitespace, so the directive does not apply
+                  // to anything 😕
+                  break
+                }
+              } else {
+                // The node is some other type, so the directive does not apply
+                // to anything 😕
+                break
+              }
+            }
+            break
+          default:
+            break
         }
 
-        // Remove the directive node from the tree
-        parent.children.splice(parent.children.findIndex((n) => n === node), 1)
+        // Remove nodes by modifying the parent's children in place
+        pullAll(parent.children, nodesToRemove)
       }
     )
 
