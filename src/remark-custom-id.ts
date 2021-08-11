@@ -17,9 +17,9 @@ const attacher: Plugin<[]> = () => {
   }
 
   return (tree) => {
-    // console.log(
-    //   JSON.stringify(tree, (k, v) => (k === 'position' ? undefined : v), 2)
-    // )
+    console.log(
+      JSON.stringify(tree, (k, v) => (k === 'position' ? undefined : v), 2)
+    )
     visitParents(
       tree,
       { type: 'textDirective', name: 'id' },

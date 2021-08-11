@@ -41,13 +41,35 @@ describe('remark-custom-id', () => {
   test('applies ID to figure when directive is on a new line', async () => {
     /*
     This corresponds to the following Markdown:
-    ![this is a figure](https://via.placeholder.com/200)
+    ![my image](https://via.placeholder.com/200)
     :id[testId]
     */
     const tree = u('root', [
       u('paragraph', [
         u('image', { url: 'https://via.placeholder.com/200', alt: 'my image' }),
         u('text', '\n'),
+        u('textDirective', { name: 'id' }, [u('text', 'testId')])
+      ])
+    ])
+
+    await processor.run(tree)
+
+    // The ID is applied to the `image` node
+    expect(getNodeId(tree.children[0].children[0])).toBe('testId')
+    // The `textDirective` node and the `text` node containing only whitespace
+    // characters are removed from the tree
+    expect(tree.children[0].children.length).toBe(1)
+  })
+
+  test('applies ID to figure when directive is on the same line', async () => {
+    /*
+    This corresponds to the following Markdown:
+    ![my image](https://via.placeholder.com/200) :id[testId]
+    */
+    const tree = u('root', [
+      u('paragraph', [
+        u('image', { url: 'https://via.placeholder.com/200', alt: 'my image' }),
+        u('text', ' '),
         u('textDirective', { name: 'id' }, [u('text', 'testId')])
       ])
     ])
