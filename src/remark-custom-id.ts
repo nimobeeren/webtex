@@ -2,7 +2,7 @@ import type { Text } from 'mdast'
 import type { Plugin } from 'unified'
 import { Node, Parent } from 'unist'
 import { remove } from 'unist-util-remove'
-import { visit, Node as VisitNode } from 'unist-util-visit'
+import { Node as VisitNode, visit } from 'unist-util-visit'
 import { visitParents } from 'unist-util-visit-parents'
 
 const attacher: Plugin<[]> = () => {
@@ -157,6 +157,14 @@ const attacher: Plugin<[]> = () => {
     )
 
     remove(tree, (node) => nodesToRemove.includes(node))
+
+    // Set `title` attribute of heading, so its ID can be inspected by hovering
+    visit(tree, 'heading', (node) => {
+      if (node.data?.id) {
+        if (!node.data.hProperties) node.data.hProperties = {}
+        ;(node.data.hProperties as any).title = node.data.id
+      }
+    })
   }
 }
 
