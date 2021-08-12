@@ -18,19 +18,13 @@ const attacher: Plugin<[]> = () => {
   }
 
   return (tree) => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(
-        JSON.stringify(tree, (k, v) => (k === 'position' ? undefined : v), 2)
-      )
-    }
-
     const nodesToRemove: Node[] = []
 
     const visitor = (directiveNode: VisitNode, ancestors: Parent[]) => {
       // Get the user-specified ID by concatenating the values of all text
       // children of the directive node
       let id = ''
-      visit(directiveNode as VisitNode, 'text', (textNode: Text) => {
+      visit(directiveNode, 'text', (textNode: Text) => {
         id += textNode.value
       })
 

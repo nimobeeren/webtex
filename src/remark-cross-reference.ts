@@ -1,6 +1,7 @@
-import type { Heading, Image, Link } from 'mdast'
+import type { Heading, Image, Text } from 'mdast'
 import type { Plugin } from 'unified'
-import { visit } from 'unist-util-visit'
+import { u } from 'unist-builder'
+import { Node, visit } from 'unist-util-visit'
 
 type Options = {
   // Range of heading depths which should be numbered (inclusive)
@@ -80,23 +81,26 @@ const attacher: Plugin<[Partial<Options>] | []> = (options = {}) => {
       }
     })
 
-    visit(tree, 'link', (node: Link) => {
-      if (node.children.length === 0 && node.url.startsWith('#')) {
-        const targetId = node.url.slice(1)
+    // Look for directive nodes such as `:ref[target]`
+    visit(
+      tree,
+      { type: 'textDirective', name: 'ref' },
+      (directiveNode: Node) => {
+        // Get the user-specified ID by concatenating the values of all text
+        // children of the directive node
+        let targetId = ''
+        visit(directiveNode, 'text', (textNode: Text) => {
+          targetId += textNode.value
+        })
+
         const target = idToLabelMap[targetId]
 
+        // If no target is not specified or does not exist, show a warning
         if (!target) {
-          // Reference target is not found
-          node.children.push({
-            type: 'strong',
-            children: [
-              {
-                type: 'text',
-                // Strings are separated by a non-breaking space
-                value: 'Ref\u00A0??'
-              }
-            ]
-          })
+          directiveNode.type = 'strong'
+          directiveNode.children = [
+            u('text', targetId ? `:ref[${targetId}]` : ':ref')
+          ]
           return
         }
 
@@ -107,13 +111,14 @@ const attacher: Plugin<[Partial<Options>] | []> = (options = {}) => {
           typePrefix = 'Figure'
         }
 
-        node.children.push({
-          type: 'text',
+        directiveNode.type = 'link'
+        directiveNode.url = `#${targetId}`
+        directiveNode.children = [
           // Strings are separated by a non-breaking space
-          value: `${typePrefix}\u00A0${target.label}`
-        })
+          u('text', `${typePrefix}\u00A0${target.label}`)
+        ]
       }
-    })
+    )
   }
 }
 
