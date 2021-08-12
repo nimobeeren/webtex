@@ -1,6 +1,6 @@
-import { merge, throttle } from 'lodash-es'
+import { merge } from 'lodash-es'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
@@ -17,6 +17,7 @@ import rehypeFigure from '../rehype-figure'
 import remarkCite from '../remark-cite'
 import remarkCrossReference from '../remark-cross-reference'
 import remarkCustomId from '../remark-custom-id'
+import { useThrottleCallback } from '@react-hook/throttle'
 
 const processor = unified()
   .use(remarkParse)
@@ -44,12 +45,15 @@ const processor = unified()
   )
   .use(rehypeStringify)
 
+const RENDER_THROTTLE_FPS = 1
+const SAVE_THROTTLE_FPS = 1
+
 function Index() {
   const [html, setHtml] = useState('')
   const [markdown, setMarkdown] = useState('')
   const [bibliography, setBibliography] = useState(MOCK_BIBLIOGRAPHY)
 
-  function handleSourceChange(md: string, bibtex: string) {
+  function renderMarkdown(md: string, bibtex: string) {
     const startTime = performance.now()
 
     // Store the bibliography as a data attribute on the virtual file, because
@@ -69,20 +73,15 @@ function Index() {
       })
   }
 
-  const throttledHandleSourceChange = useMemo(
-    () => throttle(handleSourceChange, 100),
-    []
+  const throttledRenderMarkdown = useThrottleCallback(
+    renderMarkdown,
+    RENDER_THROTTLE_FPS,
+    true // leading
   )
 
   useEffect(() => {
-    return () => {
-      throttledHandleSourceChange.cancel()
-    }
-  }, [throttledHandleSourceChange])
-
-  useEffect(() => {
-    throttledHandleSourceChange(markdown, bibliography)
-  }, [markdown, bibliography, throttledHandleSourceChange])
+    throttledRenderMarkdown(markdown, bibliography)
+  }, [markdown, bibliography, throttledRenderMarkdown])
 
   // Run the markdown processor on phony input to initialize all the plugins,
   // that way the first real processing is faster.
