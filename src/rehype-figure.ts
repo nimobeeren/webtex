@@ -24,6 +24,12 @@ const attacher: Plugin<[]> = () => {
 
           // Remove the ID from the img tag, since we added it to the figure
           ;(node.properties as any).id = undefined
+
+          // Remove the alt from the img tag, since it is given as caption
+          // This is not ideal from a11y standpoint, we should allow a different
+          // alt and caption at the same time, but we don't have any syntax for
+          // that right now
+          ;(node.properties as any).alt = ''
         }
       })
 
