@@ -163,7 +163,29 @@ describe('remark-custom-id', () => {
     expect(tree.children[0].children).toHaveLength(2)
   })
 
-  test("only applies the first directive when separated by blank lines", async () => {
+  test('only applies the first directive when both are inline', async () => {
+    /*
+    This is equivalent to the following Markdown:
+    ## Test heading :id[id-a] :id[id-b]
+    */
+    const tree = u('root', [
+      u('heading', { depth: 2 }, [
+        u('text', 'Test heading '),
+        u('textDirective', {name:'id'}, [u('text', 'id-a')]),
+        u('text', ' '),
+        u('textDirective', {name:'id'}, [u('text', 'id-b')]),
+      ]),
+    ])
+
+    await processor.run(tree)
+
+    // The first ID is applied to the `heading` node
+    expect(getNodeId(tree.children[0])).toBe('id-a')
+    // Both directive nodes are removed
+    expect(tree.children[0].children).toHaveLength(2)
+  })
+
+  test('only applies the first directive when separated by blank lines', async () => {
     /*
     This is equivalent to the following Markdown:
     ## Test heading
@@ -186,7 +208,7 @@ describe('remark-custom-id', () => {
     expect(tree.children).toHaveLength(1)
   })
 
-  test("only applies the first directive when directly following", async () => {
+  test('only applies the first directive when directly following', async () => {
     /*
     This is equivalent to the following Markdown:
     ## Test heading

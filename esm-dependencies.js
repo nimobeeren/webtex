@@ -18,6 +18,7 @@ module.exports = [
   'unified',
   'unist-builder',
   'unist-util-modify-children',
+  'unist-util-remove',
   'unist-util-visit',
   'unist-util-visit-parents',
   'vfile'
