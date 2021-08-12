@@ -23,7 +23,7 @@ const attacher: Plugin<[]> = () => {
           )
 
           // Remove the ID from the img tag, since we added it to the figure
-          ;(node.properties as any).id = ''
+          ;(node.properties as any).id = undefined
         }
       })
 
