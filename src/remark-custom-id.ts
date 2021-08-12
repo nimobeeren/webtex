@@ -34,6 +34,11 @@ const attacher: Plugin<[]> = () => {
         id += textNode.value
       })
 
+      // If no ID is specified, we don't do anything
+      if (id === '') {
+        return
+      }
+
       const parent = ancestors[ancestors.length - 1]
       const directiveIndex = parent.children.findIndex(
         (n) => n === directiveNode

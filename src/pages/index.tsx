@@ -39,7 +39,7 @@ const processor = unified()
     // Allow class and style attributes on all elements
     merge(defaultSchema, {
       attributes: { '*': ['className', 'style'] },
-      clobber: ['name'] // don't clobber id attribute
+      clobberPrefix: '' // don't clobber (i.e. prefix) any attribute values
     })
   )
   .use(rehypeStringify)
