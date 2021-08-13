@@ -116,16 +116,6 @@ function Index() {
     throttledSaveSource(markdown, bibliography)
   }, [markdown, bibliography, throttledRenderSource, throttledSaveSource])
 
-  // Run the markdown processor on phony input to initialize all the plugins,
-  // that way the first real processing is faster.
-  useEffect(() => {
-    const startTime = performance.now()
-    processor.run({ type: 'root' }).then(() => {
-      const endTime = performance.now()
-      console.debug(`Init time: ${Math.round(endTime - startTime)}ms`)
-    })
-  }, [])
-
   return (
     <div
       style={{
