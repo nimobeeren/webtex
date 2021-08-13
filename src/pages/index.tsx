@@ -1,3 +1,4 @@
+import { useThrottleCallback } from '@react-hook/throttle'
 import { merge } from 'lodash-es'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -12,12 +13,14 @@ import remarkRehype from 'remark-rehype'
 import remarkSlug from 'remark-slug'
 import { unified } from 'unified'
 import { VFile } from 'vfile'
-import { MOCK_BIBLIOGRAPHY } from '../mock-data'
 import rehypeFigure from '../rehype-figure'
 import remarkCite from '../remark-cite'
 import remarkCrossReference from '../remark-cross-reference'
 import remarkCustomId from '../remark-custom-id'
-import { useThrottleCallback } from '@react-hook/throttle'
+
+const STORAGE_KEY_SOURCE = 'saved-source-v1'
+const RENDER_THROTTLE_FPS = 10
+const SAVE_THROTTLE_FPS = 1
 
 const processor = unified()
   .use(remarkParse)
@@ -45,15 +48,41 @@ const processor = unified()
   )
   .use(rehypeStringify)
 
-const RENDER_THROTTLE_FPS = 1
-const SAVE_THROTTLE_FPS = 1
+function loadSource() {
+  if (typeof window === 'undefined') {
+    return undefined
+  }
+  const json = window.localStorage.getItem(STORAGE_KEY_SOURCE)
+  if (json === null) {
+    return undefined
+  }
+  try {
+    const { markdown, bibliography } = JSON.parse(json)
+    return { markdown, bibliography }
+  } catch {
+    console.warn(
+      `Got unexpected value from storage with (key "${STORAGE_KEY_SOURCE}"), value "${json}"`
+    )
+    return undefined
+  }
+}
+
+function saveSource(markdown: string, bibliography: string) {
+  if (typeof window === 'undefined') {
+    return undefined
+  }
+  const state = JSON.stringify({ markdown, bibliography })
+  window.localStorage.setItem(STORAGE_KEY_SOURCE, state)
+}
 
 function Index() {
+  const [markdown, setMarkdown] = useState(() => loadSource()?.markdown || '')
+  const [bibliography, setBibliography] = useState(
+    () => loadSource()?.bibliography || ''
+  )
   const [html, setHtml] = useState('')
-  const [markdown, setMarkdown] = useState('')
-  const [bibliography, setBibliography] = useState(MOCK_BIBLIOGRAPHY)
 
-  function renderMarkdown(md: string, bibtex: string) {
+  function renderSource(md: string, bibtex: string) {
     const startTime = performance.now()
 
     // Store the bibliography as a data attribute on the virtual file, because
@@ -73,15 +102,19 @@ function Index() {
       })
   }
 
-  const throttledRenderMarkdown = useThrottleCallback(
-    renderMarkdown,
+  const throttledRenderSource = useThrottleCallback(
+    renderSource,
     RENDER_THROTTLE_FPS,
-    true // leading
+    true // run on leading and trailing edge
   )
 
+  const throttledSaveSource = useThrottleCallback(saveSource, SAVE_THROTTLE_FPS)
+
+  // Things to do when the source code of the document is changed
   useEffect(() => {
-    throttledRenderMarkdown(markdown, bibliography)
-  }, [markdown, bibliography, throttledRenderMarkdown])
+    throttledRenderSource(markdown, bibliography)
+    throttledSaveSource(markdown, bibliography)
+  }, [markdown, bibliography, throttledRenderSource, throttledSaveSource])
 
   // Run the markdown processor on phony input to initialize all the plugins,
   // that way the first real processing is faster.
