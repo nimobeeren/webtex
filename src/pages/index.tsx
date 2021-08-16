@@ -1,4 +1,14 @@
-import { Box, Button, Flex, Textarea } from '@chakra-ui/react'
+import {
+  Button,
+  Flex,
+  Icon,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs
+} from '@chakra-ui/react'
+import { Book, Edit } from '@emotion-icons/boxicons-solid'
 import { useThrottleCallback } from '@react-hook/throttle'
 import { merge } from 'lodash-es'
 import Link from 'next/link'
@@ -14,6 +24,8 @@ import remarkRehype from 'remark-rehype'
 import remarkSlug from 'remark-slug'
 import { unified } from 'unified'
 import { VFile } from 'vfile'
+import { Editor } from '../components/Editor'
+import { Preview } from '../components/Preview'
 import rehypeFigure from '../rehype-figure'
 import remarkCite from '../remark-cite'
 import remarkCrossReference from '../remark-cross-reference'
@@ -76,21 +88,6 @@ function saveSource(markdown: string, bibliography: string) {
   window.localStorage.setItem(STORAGE_KEY_SOURCE, state)
 }
 
-function Editor(props) {
-  return (
-    <Textarea
-      p={2}
-      border="none"
-      borderRadius="none"
-      fontFamily="mono"
-      fontSize="sm"
-      lineHeight={1}
-      resize="none"
-      {...props}
-    />
-  )
-}
-
 function Index() {
   const [markdown, setMarkdown] = useState(() => loadSource()?.markdown || '')
   const [bibliography, setBibliography] = useState(
@@ -135,34 +132,44 @@ function Index() {
   return (
     <Flex width="100%" height="100vh" position="relative">
       <Flex flex="1 0 0" direction="column">
-        <Editor
-          value={markdown}
-          onChange={(event) => setMarkdown(event.target.value)}
-          placeholder="Enter Markdown here"
-          flex="1 0 0"
-          background="palevioletred"
-        />
-        <Editor
-          value={bibliography}
-          onChange={(event) => setBibliography(event.target.value)}
-          placeholder="Enter BibTeX here"
-          flex="1 0 0"
-          background="crimson"
-          color="white"
-        />
+        <Tabs
+          variant="enclosed-colored"
+          display="flex"
+          flexDir="column"
+          height="100%"
+        >
+          <TabList>
+            <Tab>
+              <Icon as={Edit} mr={2} />
+              Content
+            </Tab>
+            <Tab>
+              <Icon as={Book} mr={2} />
+              Bibliography
+            </Tab>
+          </TabList>
+
+          <TabPanels height="100%">
+            <TabPanel p={0} height="100%" tabIndex={-1}>
+              <Editor
+                value={markdown}
+                onChange={(event) => setMarkdown(event.target.value)}
+                placeholder="Enter Markdown here"
+                height="100%"
+              />
+            </TabPanel>
+            <TabPanel p={0} height="100%" tabIndex={-1}>
+              <Editor
+                value={bibliography}
+                onChange={(event) => setBibliography(event.target.value)}
+                placeholder="Enter BibTeX here"
+                height="100%"
+              />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Flex>
-      <Flex flex="1 0 0" direction="column">
-        <Box
-          as="iframe"
-          flex="1 0 0"
-          background="skyblue"
-          overflowY="auto"
-          srcDoc={html}
-        />
-        <Box flex="1 0 0" background="papayawhip" overflowY="auto">
-          {html}
-        </Box>
-      </Flex>
+      <Preview contentHtml={html} flex="1 0 0" />
       <Link
         href={`/print?${new URLSearchParams({ c: html }).toString()}`}
         passHref

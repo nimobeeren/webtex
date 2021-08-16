@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^1.6.6",
+    "@emotion-icons/boxicons-solid": "^3.18.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@mdx-js/loader": "1.6.22",
@@ -42,6 +43,7 @@
     "vfile": "^5.0.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.0",
     "@next/bundle-analyzer": "^11.0.1",
     "@types/hast": "^2.3.2",
     "@types/jest": "^26.0.24",
