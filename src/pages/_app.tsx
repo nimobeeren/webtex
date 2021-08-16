@@ -1,6 +1,27 @@
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import '../../styles/globals.css'
+
+const theme = extendTheme({
+  styles: {
+    global: {
+      '.csl-entry': {
+        lineHeight: '1.4em',
+        marginBottom: '0.4em'
+      },
+      '.csl-entry:last-of-type': {
+        marginBottom: 0
+      },
+      '.csl-left-margin': {
+        float: 'left'
+      },
+      '.csl-right-inline': {
+        marginLeft: '2.7em'
+      }
+    }
+  }
+})
 
 function App({ Component, pageProps }: AppProps) {
   return (
@@ -13,7 +34,9 @@ function App({ Component, pageProps }: AppProps) {
           crossOrigin="anonymous"
         />
       </Head>
-      <Component {...pageProps} />
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
     </>
   )
 }

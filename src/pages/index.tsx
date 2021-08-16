@@ -1,7 +1,8 @@
+import { Box, Button, Flex, Textarea } from '@chakra-ui/react'
 import { useThrottleCallback } from '@react-hook/throttle'
 import { merge } from 'lodash-es'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
@@ -75,6 +76,21 @@ function saveSource(markdown: string, bibliography: string) {
   window.localStorage.setItem(STORAGE_KEY_SOURCE, state)
 }
 
+function Editor(props) {
+  return (
+    <Textarea
+      p={2}
+      border="none"
+      borderRadius="none"
+      fontFamily="mono"
+      fontSize="sm"
+      lineHeight={1}
+      resize="none"
+      {...props}
+    />
+  )
+}
+
 function Index() {
   const [markdown, setMarkdown] = useState(() => loadSource()?.markdown || '')
   const [bibliography, setBibliography] = useState(
@@ -117,73 +133,43 @@ function Index() {
   }, [markdown, bibliography, throttledRenderSource, throttledSaveSource])
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        height: '100vh'
-      }}
-    >
-      <div
-        style={{
-          flex: '1 0 0',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <textarea
+    <Flex width="100%" height="100vh" position="relative">
+      <Flex flex="1 0 0" direction="column">
+        <Editor
           value={markdown}
           onChange={(event) => setMarkdown(event.target.value)}
           placeholder="Enter Markdown here"
-          style={{
-            flex: '1 0 0',
-            background: 'palevioletred',
-            border: 'none',
-            resize: 'none'
-          }}
+          flex="1 0 0"
+          background="palevioletred"
         />
-        <textarea
+        <Editor
           value={bibliography}
           onChange={(event) => setBibliography(event.target.value)}
           placeholder="Enter BibTeX here"
-          style={{
-            flex: '1 0 0',
-            background: 'crimson',
-            color: 'white',
-            border: 'none',
-            resize: 'none'
-          }}
+          flex="1 0 0"
+          background="crimson"
+          color="white"
         />
-      </div>
-      <div
-        style={{
-          flex: '1 0 0',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <div
-          dangerouslySetInnerHTML={{ __html: html }}
-          style={{
-            flex: '1 0 0',
-            background: 'skyblue',
-            overflowY: 'auto'
-          }}
+      </Flex>
+      <Flex flex="1 0 0" direction="column">
+        <Box
+          as="iframe"
+          flex="1 0 0"
+          background="skyblue"
+          overflowY="auto"
+          srcDoc={html}
         />
-        <div
-          style={{
-            flex: '1 0 0',
-            background: 'papayawhip',
-            overflowY: 'auto'
-          }}
-        >
+        <Box flex="1 0 0" background="papayawhip" overflowY="auto">
           {html}
-        </div>
-      </div>
-      <Link href={`/print?${new URLSearchParams({ c: html }).toString()}`}>
-        <a
+        </Box>
+      </Flex>
+      <Link
+        href={`/print?${new URLSearchParams({ c: html }).toString()}`}
+        passHref
+      >
+        <Button
+          as="a"
+          colorScheme="blue"
           target="_noblank"
           style={{
             position: 'absolute',
@@ -192,9 +178,9 @@ function Index() {
           }}
         >
           Print
-        </a>
+        </Button>
       </Link>
-    </div>
+    </Flex>
   )
 }
 
