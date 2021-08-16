@@ -3,6 +3,7 @@ import { Textarea } from '@chakra-ui/react'
 export function Editor(props) {
   return (
     <Textarea
+      width="calc(100% - 1rem)"
       px={0}
       pb={0}
       pt={4}
