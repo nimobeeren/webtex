@@ -1009,6 +1009,14 @@
   dependencies:
     "@chakra-ui/utils" "1.8.2"
 
+"@emotion-icons/boxicons-regular@^3.18.0":
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/@emotion-icons/boxicons-regular/-/boxicons-regular-3.18.0.tgz#18b20f62ad07a49be577637f98d22d7eb2689618"
+  integrity sha512-oJXoeMKxhKXP9D0I8pfbCYCQ6u0++4IshiSKhtYsTUYNwgsigMSOjLpoLW/5hR2SDzHU9/o9NPsA7/jkTPggLg==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+    "@emotion-icons/emotion-icon" "4.1.0"
+
 "@emotion-icons/boxicons-solid@^3.18.0":
   version "3.18.0"
   resolved "https://registry.yarnpkg.com/@emotion-icons/boxicons-solid/-/boxicons-solid-3.18.0.tgz#7c447a781ea3bdac4f09fcd356403f198fe862fd"

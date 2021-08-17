@@ -1,7 +1,9 @@
 import {
+  Box,
   Button,
   Flex,
   Icon,
+  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -9,6 +11,7 @@ import {
   Tabs
 } from '@chakra-ui/react'
 import { Book, Edit } from '@emotion-icons/boxicons-solid'
+import { Bulb, BookOpen, Export } from '@emotion-icons/boxicons-regular'
 import { useThrottleCallback } from '@react-hook/throttle'
 import { merge } from 'lodash-es'
 import Link from 'next/link'
@@ -131,7 +134,7 @@ function Index() {
 
   return (
     <Flex width="100%" height="100vh" position="relative">
-      <Flex flex="1 0 0" direction="column">
+      <Box flex="1 0 0">
         <Tabs
           variant="enclosed-colored"
           display="flex"
@@ -168,25 +171,45 @@ function Index() {
             </TabPanel>
           </TabPanels>
         </Tabs>
-      </Flex>
-      <Preview contentHtml={html} flex="1 0 0" />
-      <Link
-        href={`/print?${new URLSearchParams({ c: html }).toString()}`}
-        passHref
-      >
-        <Button
-          as="a"
-          colorScheme="blue"
-          target="_noblank"
-          style={{
-            position: 'absolute',
-            bottom: 16,
-            right: 16
-          }}
+      </Box>
+      <Flex flex="1 0 0" direction="column">
+        {/* Similar style as the <TabList /> */}
+        <Stack
+          direction="row"
+          justify="flex-end"
+          align="center"
+          spacing={2}
+          height={42}
+          px={2}
+          borderBottom="1px"
+          borderColor="gray.200"
         >
-          Print
-        </Button>
-      </Link>
+          <Button leftIcon={<Icon as={Bulb} />} colorScheme="blue" variant="ghost" size="sm">
+            Give Feedback
+          </Button>
+          <Link href="/docs" passHref >
+            <Button leftIcon={<Icon as={BookOpen} />} colorScheme="blue" variant="ghost" size="sm">
+              Docs
+            </Button>
+          </Link>
+          <Link
+            href={`/print?${new URLSearchParams({ c: html }).toString()}`}
+            passHref
+          >
+            <Button
+              as="a"
+              leftIcon={<Icon as={Export} />}
+              colorScheme="blue"
+              target="_noblank"
+              variant="ghost"
+              size="sm"
+            >
+              Export
+            </Button>
+          </Link>
+        </Stack>
+        <Preview contentHtml={html} flexGrow="1" />
+      </Flex>
     </Flex>
   )
 }
