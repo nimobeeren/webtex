@@ -1,11 +1,13 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import '@fontsource/inter'
+import '@fontsource/jetbrains-mono'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import '@fontsource/inter'
 
 const theme = extendTheme({
   fonts: {
-    body: "Inter"
+    body: `Inter, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
+    mono: `"JetBrains Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`
   },
   components: {
     Button: {
