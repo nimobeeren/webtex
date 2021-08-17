@@ -10,8 +10,8 @@ import {
   TabPanels,
   Tabs
 } from '@chakra-ui/react'
+import { BookOpen, Bulb, Export } from '@emotion-icons/boxicons-regular'
 import { Book, Edit } from '@emotion-icons/boxicons-solid'
-import { Bulb, BookOpen, Export } from '@emotion-icons/boxicons-regular'
 import { useThrottleCallback } from '@react-hook/throttle'
 import { merge } from 'lodash-es'
 import Link from 'next/link'
@@ -184,11 +184,21 @@ function Index() {
           borderBottom="1px"
           borderColor="gray.200"
         >
-          <Button leftIcon={<Icon as={Bulb} />} colorScheme="blue" variant="ghost" size="sm">
+          <Button
+            leftIcon={<Icon as={Bulb} />}
+            colorScheme="blue"
+            variant="solid"
+            size="sm"
+          >
             Give Feedback
           </Button>
-          <Link href="/docs" passHref >
-            <Button leftIcon={<Icon as={BookOpen} />} colorScheme="blue" variant="ghost" size="sm">
+          <Link href="/docs" passHref>
+            <Button
+              leftIcon={<Icon as={BookOpen} />}
+              colorScheme="blue"
+              variant="ghost"
+              size="sm"
+            >
               Docs
             </Button>
           </Link>
@@ -208,7 +218,12 @@ function Index() {
             </Button>
           </Link>
         </Stack>
-        <Preview contentHtml={html} flexGrow="1" />
+        <Preview
+          contentHtml={html}
+          flexGrow="1"
+          borderLeft="1px"
+          borderColor="gray.200"
+        />
       </Flex>
     </Flex>
   )
