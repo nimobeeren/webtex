@@ -1,9 +1,19 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import '../../styles/globals.css'
+import '@fontsource/inter'
 
 const theme = extendTheme({
+  fonts: {
+    body: "Inter"
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        letterSpacing: 'wide'
+      }
+    }
+  },
   styles: {
     global: {
       '.csl-entry': {
@@ -27,6 +37,7 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        {/* KaTeX styles */}
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
