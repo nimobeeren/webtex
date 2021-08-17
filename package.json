@@ -15,6 +15,7 @@
     "@emotion-icons/boxicons-solid": "^3.18.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@feedback-fish/react": "^1.2.1",
     "@fontsource/inter": "^4.5.0",
     "@fontsource/jetbrains-mono": "^4.5.0",
     "@mdx-js/loader": "1.6.22",

@@ -28,6 +28,7 @@ import remarkSlug from 'remark-slug'
 import { unified } from 'unified'
 import { VFile } from 'vfile'
 import { Editor } from '../components/Editor'
+import { FeedbackButton } from '../components/FeedbackButton'
 import { Preview } from '../components/Preview'
 import rehypeFigure from '../rehype-figure'
 import remarkCite from '../remark-cite'
@@ -184,14 +185,14 @@ function Index() {
           borderBottom="1px"
           borderColor="gray.200"
         >
-          <Button
+          <FeedbackButton
             leftIcon={<Icon as={Bulb} />}
             colorScheme="blue"
             variant="solid"
             size="sm"
           >
             Give Feedback
-          </Button>
+          </FeedbackButton>
           <Link href="/docs" passHref>
             <Button
               as="a"

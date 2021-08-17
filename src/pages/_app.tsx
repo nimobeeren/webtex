@@ -1,4 +1,5 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { FeedbackFish } from '@feedback-fish/react'
 import '@fontsource/inter'
 import '@fontsource/jetbrains-mono'
 import type { AppProps } from 'next/app'
