@@ -194,6 +194,9 @@ function Index() {
           </Button>
           <Link href="/docs" passHref>
             <Button
+              as="a"
+              isDisabled
+              title="Coming soon!"
               leftIcon={<Icon as={BookOpen} />}
               colorScheme="blue"
               variant="ghost"
@@ -208,6 +211,7 @@ function Index() {
           >
             <Button
               as="a"
+              isDisabled
               leftIcon={<Icon as={Export} />}
               colorScheme="blue"
               target="_noblank"
