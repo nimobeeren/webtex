@@ -207,12 +207,11 @@ function Index() {
             </Button>
           </Link>
           <Link
-            href={`/print?${new URLSearchParams({ c: html }).toString()}`}
+            href={`/export?${new URLSearchParams({ c: html }).toString()}`}
             passHref
           >
             <Button
               as="a"
-              isDisabled
               leftIcon={<Icon as={Export} />}
               colorScheme="blue"
               target="_noblank"

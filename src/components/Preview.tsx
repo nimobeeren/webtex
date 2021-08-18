@@ -66,6 +66,6 @@ export function Preview({ contentHtml, ...restProps }) {
       </Text>
     </Center>
   ) : (
-    <Box as="iframe" overflowY="auto" srcDoc={docHtml} {...restProps} />
+    <Box as="iframe" srcDoc={docHtml} overflowY="auto" {...restProps} />
   )
 }
