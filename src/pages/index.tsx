@@ -191,7 +191,7 @@ function Index() {
             variant="solid"
             size="sm"
           >
-            Give Feedback
+            Give us Feedback
           </FeedbackButton>
           <Link href="/docs" passHref>
             <Button

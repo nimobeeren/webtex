@@ -24,7 +24,7 @@ type CiteProcCitationTriple = [
 class CitationEngine {
   bibliography: Record<string, CSLEntry> = {}
   citations: Citation[] = []
-  style = 'apa'
+  style = 'ieee'
   locale = 'en-US'
 
   citeProc: any

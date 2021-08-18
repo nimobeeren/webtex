@@ -1,5 +1,4 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
-import { FeedbackFish } from '@feedback-fish/react'
 import '@fontsource/inter'
 import '@fontsource/jetbrains-mono'
 import type { AppProps } from 'next/app'
@@ -14,23 +13,6 @@ const theme = extendTheme({
     Button: {
       baseStyle: {
         letterSpacing: 'wide'
-      }
-    }
-  },
-  styles: {
-    global: {
-      '.csl-entry': {
-        lineHeight: '1.4em',
-        marginBottom: '0.4em'
-      },
-      '.csl-entry:last-of-type': {
-        marginBottom: 0
-      },
-      '.csl-left-margin': {
-        float: 'left'
-      },
-      '.csl-right-inline': {
-        marginLeft: '2.7em'
       }
     }
   }
