@@ -14,6 +14,15 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
         <!-- Font is loaded inside iframe because fonts loaded in the main document
         CSS are not accessible inside the iframe -->
         <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap" rel="stylesheet">
+
+        <!-- KaTeX styles -->
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+          integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc"
+          crossOrigin="anonymous"
+        />
+
         <style>
           html {
             color: ${useToken('colors', 'gray.800')};
