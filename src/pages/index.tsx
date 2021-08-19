@@ -10,12 +10,12 @@ import {
   TabPanels,
   Tabs
 } from '@chakra-ui/react'
-import { BookOpen, Bulb, Export } from '@emotion-icons/boxicons-regular'
+import { BookOpen, Bulb, Printer } from '@emotion-icons/boxicons-regular'
 import { Book, Edit } from '@emotion-icons/boxicons-solid'
 import { useThrottleCallback } from '@react-hook/throttle'
 import { merge } from 'lodash-es'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
@@ -99,6 +99,8 @@ function Index() {
   )
   const [html, setHtml] = useState('')
 
+  const previewRef = useRef<HTMLIFrameElement>(null)
+
   function renderSource(md: string, bibtex: string) {
     const startTime = performance.now()
 
@@ -137,6 +139,7 @@ function Index() {
     <Flex width="100%" height="100vh" position="relative">
       <Box flex="1 0 0">
         <Tabs
+          id="editor-tabs" // added to fix rehydration id mismatch
           variant="enclosed-colored"
           display="flex"
           flexDir="column"
@@ -206,25 +209,27 @@ function Index() {
               Docs
             </Button>
           </Link>
-          <Link
-            href={`/export?${new URLSearchParams({ c: html }).toString()}`}
-            passHref
+          <Button
+            onClick={() => {
+              if (previewRef.current?.contentWindow) {
+                previewRef.current.contentWindow.print()
+              } else {
+                console.error('Could not print document')
+              }
+            }}
+            leftIcon={<Icon as={Printer} />}
+            colorScheme="blue"
+            target="_noblank"
+            variant="ghost"
+            size="sm"
           >
-            <Button
-              as="a"
-              leftIcon={<Icon as={Export} />}
-              colorScheme="blue"
-              target="_noblank"
-              variant="ghost"
-              size="sm"
-            >
-              Export
-            </Button>
-          </Link>
+            Print
+          </Button>
         </Stack>
         <Preview
+          ref={previewRef}
           contentHtml={html}
-          flexGrow="1"
+          flexGrow={1}
           borderLeft="1px"
           borderColor="gray.200"
         />
