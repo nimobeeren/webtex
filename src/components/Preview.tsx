@@ -11,8 +11,8 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
     const docHtml = `<!DOCTYPE html>
       <html>
       <head>
-        <!-- Font is loaded inside iframe because fonts loaded in the main document
-        CSS are not accessible inside the iframe -->
+        <!-- Font is loaded inside iframe because fonts loaded in the main
+        document CSS are not accessible inside the iframe -->
         <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap" rel="stylesheet">
 
         <!-- KaTeX styles -->
@@ -39,7 +39,7 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
             color: ${useToken('colors', 'blue.700')};
           }
           blockquote {
-            margin: ${useToken('space', 4)} ${useToken('space', 10)};
+            margin: 1em 2.5em;
           }
           blockquote, q {
             font-style: italic;
@@ -48,13 +48,13 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: ${useToken('space', 2)};
-            margin: ${useToken('space', 4)} ${useToken('space', 10)};
+            gap: 0.5em;
+            margin: 1em 2.5em;
           }
           img {
             max-width: 100%;
           }
-          /* The following is inspired by CSS from https://editor.citationstyles.org */
+          /* The following is mostly copied from https://editor.citationstyles.org */
           .csl-entry {
             line-height: 1.4em;
             margin-bottom: 0.4em;
@@ -75,20 +75,24 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
         </body>
       </html>`
 
-    return contentHtml === '' ? (
-      <Center p={8} {...restProps}>
-        <Text fontSize="lg" color="gray.600">
-          When you write content on the left, a preview will be shown here
-        </Text>
-      </Center>
-    ) : (
-      <Box
-        as="iframe"
-        ref={ref}
-        srcDoc={docHtml}
-        overflowY="auto"
-        {...restProps}
-      />
-    )
+    if (contentHtml === '') {
+      return (
+        <Center p={8} {...restProps}>
+          <Text fontSize="lg" color="gray.600">
+            When you write content on the left, a preview will be shown here
+          </Text>
+        </Center>
+      )
+    } else {
+      return (
+        <Box
+          as="iframe"
+          ref={ref}
+          srcDoc={docHtml}
+          overflowY="auto"
+          {...restProps}
+        />
+      )
+    }
   }
 )

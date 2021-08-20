@@ -4,8 +4,9 @@ export function Editor(props) {
   return (
     <Textarea
       width="calc(100% - 1rem)"
-      px={0}
-      pb={0}
+      pl={0}
+      pr={4}
+      pb={4}
       pt={4}
       ml={4}
       border="none"
@@ -15,7 +16,7 @@ export function Editor(props) {
       lineHeight="shorter"
       resize="none"
       overflowX="auto"
-      whiteSpace="pre"
+      whiteSpace="pre-wrap"
       _focus={{ outline: 'none' }}
       {...props}
     />
