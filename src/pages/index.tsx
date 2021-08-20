@@ -30,6 +30,7 @@ import { VFile } from 'vfile'
 import { Editor } from '../components/Editor'
 import { FeedbackButton } from '../components/FeedbackButton'
 import { Preview } from '../components/Preview'
+import example from '../example.json'
 import rehypeFigure from '../rehype-figure'
 import remarkCite from '../remark-cite'
 import remarkCrossReference from '../remark-cross-reference'
@@ -93,9 +94,11 @@ function saveSource(markdown: string, bibliography: string) {
 }
 
 function Index() {
-  const [markdown, setMarkdown] = useState(() => loadSource()?.markdown || '')
+  const [markdown, setMarkdown] = useState(
+    () => loadSource()?.markdown || example.markdown
+  )
   const [bibliography, setBibliography] = useState(
-    () => loadSource()?.bibliography || ''
+    () => loadSource()?.bibliography || example.bibliography
   )
   const [html, setHtml] = useState('')
 
