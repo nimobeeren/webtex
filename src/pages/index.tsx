@@ -35,6 +35,7 @@ import rehypeFigure from '../rehype-figure'
 import remarkCite from '../remark-cite'
 import remarkCrossReference from '../remark-cross-reference'
 import remarkCustomId from '../remark-custom-id'
+import rehypeLinkModifier from '../rehype-link-srcdoc'
 
 const STORAGE_KEY_SOURCE = 'saved-source-v1'
 const RENDER_THROTTLE_FPS = 10
@@ -53,6 +54,7 @@ const processor = unified()
   // @ts-expect-error
   .use(rehypeRaw)
   .use(rehypeFigure)
+  .use(rehypeLinkModifier)
   // @ts-expect-error
   .use(rehypeKatex)
   .use(
@@ -61,7 +63,12 @@ const processor = unified()
     // Allow class and style attributes on all elements
     merge(defaultSchema, {
       attributes: { '*': ['className', 'style'] },
-      clobberPrefix: '' // don't clobber (i.e. prefix) any attribute values
+      clobberPrefix: '', // don't clobber (i.e. prefix) any attribute values
+      // Allow the `about` protocol on href attributes, this is needed for
+      // rehype-link-srcdoc to work
+      protocols: {
+        href: [...defaultSchema.protocols!.href, 'about']
+      }
     })
   )
   .use(rehypeStringify)
