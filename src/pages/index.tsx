@@ -199,6 +199,8 @@ function Index() {
           borderColor="gray.200"
         >
           <FeedbackButton
+            isDisabled
+            title="Just let me know by text :p"
             leftIcon={<Icon as={Bulb} />}
             colorScheme="blue"
             variant="solid"
