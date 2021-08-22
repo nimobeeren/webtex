@@ -206,7 +206,7 @@ function Index() {
           >
             Give us Feedback
           </FeedbackButton>
-          <Link href="/docs" passHref>
+          {/* <Link href="/docs" passHref>
             <Button
               as="a"
               isDisabled
@@ -218,7 +218,7 @@ function Index() {
             >
               Docs
             </Button>
-          </Link>
+          </Link> */}
           <Button
             onClick={() => {
               if (previewRef.current?.contentWindow) {
