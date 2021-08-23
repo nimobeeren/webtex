@@ -3,6 +3,7 @@ import {
   Button,
   Flex,
   Icon,
+  IconButton,
   Stack,
   Tab,
   TabList,
@@ -10,7 +11,8 @@ import {
   TabPanels,
   Tabs
 } from '@chakra-ui/react'
-import { BookOpen, Bulb, Printer } from '@emotion-icons/boxicons-regular'
+import { Github } from '@emotion-icons/boxicons-logos'
+import { Bulb, Printer } from '@emotion-icons/boxicons-regular'
 import { Book, Edit } from '@emotion-icons/boxicons-solid'
 import { useThrottleCallback } from '@react-hook/throttle'
 import { merge } from 'lodash-es'
@@ -32,10 +34,10 @@ import { FeedbackButton } from '../components/FeedbackButton'
 import { Preview } from '../components/Preview'
 import example from '../example.json'
 import rehypeFigure from '../rehype-figure'
+import rehypeLinkModifier from '../rehype-link-srcdoc'
 import remarkCite from '../remark-cite'
 import remarkCrossReference from '../remark-cross-reference'
 import remarkCustomId from '../remark-custom-id'
-import rehypeLinkModifier from '../rehype-link-srcdoc'
 
 const STORAGE_KEY_SOURCE = 'saved-source-v1'
 const RENDER_THROTTLE_FPS = 10
@@ -231,12 +233,25 @@ function Index() {
             }}
             leftIcon={<Icon as={Printer} />}
             colorScheme="blue"
-            target="_noblank"
             variant="ghost"
             size="sm"
           >
             Print
           </Button>
+          <Link href="https://github.com/nimobeeren/webtex" passHref>
+            <IconButton
+              as="a"
+              target="_blank"
+              rel="noopener"
+              aria-label="View the source code on GitHub"
+              title="View the source code on GitHub"
+              icon={<Icon as={Github} />}
+              colorScheme="blue"
+              variant="ghost"
+              size="sm"
+              fontSize="3xl"
+            />
+          </Link>
         </Stack>
         <Preview
           ref={previewRef}
