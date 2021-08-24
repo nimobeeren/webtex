@@ -78,7 +78,12 @@ function Index() {
       .then((vfile) => {
         const endTime = performance.now();
         console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`);
-        setOutput(vfile.result as JSX.Element);
+        if (vfile.value === "") {
+          // Input was empty
+          setOutput(null);
+        } else {
+          setOutput(vfile.result as JSX.Element);
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -208,7 +213,7 @@ function Index() {
           </Link>
         </Stack>
         <Preview
-          ref={previewRef}
+          // ref={previewRef} TODO: forward ref
           flexGrow={1}
           borderLeft="1px"
           borderColor="gray.200"
