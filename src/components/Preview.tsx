@@ -4,9 +4,8 @@ import { PortalFrame } from "./PortalFrame";
 
 type PreviewProps = BoxProps;
 
-// TODO forward ref to iframe
-// export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
-export function Preview({ children, ...restProps }: PreviewProps) {
+export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
+function Preview({ children, ...restProps }, ref) {
   const head = `
       <!-- Font is loaded inside iframe because fonts loaded in the main
       document CSS are not accessible inside the iframe -->
@@ -77,6 +76,6 @@ export function Preview({ children, ...restProps }: PreviewProps) {
       </Center>
     );
   } else {
-    return <PortalFrame head={head} {...restProps}>{children}</PortalFrame>;
+    return <PortalFrame head={head} ref={ref} {...restProps}>{children}</PortalFrame>;
   }
-}
+})

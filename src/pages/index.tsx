@@ -213,7 +213,7 @@ function Index() {
           </Link>
         </Stack>
         <Preview
-          // ref={previewRef} TODO: forward ref
+          ref={previewRef}
           flexGrow={1}
           borderLeft="1px"
           borderColor="gray.200"
