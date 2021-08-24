@@ -10,38 +10,38 @@ import {
   TabPanel,
   TabPanels,
   Tabs
-} from '@chakra-ui/react'
-import { Github } from '@emotion-icons/boxicons-logos'
-import { Bulb, Printer } from '@emotion-icons/boxicons-regular'
-import { Book, Edit } from '@emotion-icons/boxicons-solid'
-import { useThrottleCallback } from '@react-hook/throttle'
-import { merge } from 'lodash-es'
-import Link from 'next/link'
-import React, { useEffect, useRef, useState } from 'react'
-import rehypeKatex from 'rehype-katex'
-import rehypeRaw from 'rehype-raw'
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
-import rehypeStringify from 'rehype-stringify'
-import remarkDirective from 'remark-directive'
-import remarkMath from 'remark-math'
-import remarkParse from 'remark-parse'
-import remarkRehype from 'remark-rehype'
-import remarkSlug from 'remark-slug'
-import { unified } from 'unified'
-import { VFile } from 'vfile'
-import { Editor } from '../components/Editor'
-import { FeedbackButton } from '../components/FeedbackButton'
-import { Preview } from '../components/Preview'
-import example from '../example.json'
-import rehypeFigure from '../rehype-figure'
-import rehypeLinkModifier from '../rehype-link-srcdoc'
-import remarkCite from '../remark-cite'
-import remarkCrossReference from '../remark-cross-reference'
-import remarkCustomId from '../remark-custom-id'
+} from "@chakra-ui/react";
+import { Github } from "@emotion-icons/boxicons-logos";
+import { Bulb, Printer } from "@emotion-icons/boxicons-regular";
+import { Book, Edit } from "@emotion-icons/boxicons-solid";
+import { useThrottleCallback } from "@react-hook/throttle";
+import { merge } from "lodash-es";
+import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
+import rehypeKatex from "rehype-katex";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import rehypeStringify from "rehype-stringify";
+import remarkDirective from "remark-directive";
+import remarkMath from "remark-math";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import remarkSlug from "remark-slug";
+import { unified } from "unified";
+import { VFile } from "vfile";
+import { Editor } from "../components/Editor";
+import { FeedbackButton } from "../components/FeedbackButton";
+import { Preview } from "../components/Preview";
+import example from "../example.json";
+import rehypeFigure from "../rehype-figure";
+import rehypeLinkModifier from "../rehype-link-srcdoc";
+import remarkCite from "../remark-cite";
+import remarkCrossReference from "../remark-cross-reference";
+import remarkCustomId from "../remark-custom-id";
 
-const STORAGE_KEY_SOURCE = 'saved-source-v1'
-const RENDER_THROTTLE_FPS = 10
-const SAVE_THROTTLE_FPS = 1
+const STORAGE_KEY_SOURCE = "saved-source-v1";
+const RENDER_THROTTLE_FPS = 10;
+const SAVE_THROTTLE_FPS = 1;
 
 const processor = unified()
   .use(remarkParse)
@@ -64,88 +64,91 @@ const processor = unified()
     rehypeSanitize,
     // Allow class and style attributes on all elements
     merge(defaultSchema, {
-      attributes: { '*': ['className', 'style'] },
-      clobberPrefix: '', // don't clobber (i.e. prefix) any attribute values
+      attributes: { "*": ["className", "style"] },
+      clobberPrefix: "", // don't clobber (i.e. prefix) any attribute values
       // Allow the `about` protocol on href attributes, this is needed for
       // rehype-link-srcdoc to work
       protocols: {
-        href: [...defaultSchema.protocols!.href, 'about']
+        href: [...defaultSchema.protocols!.href, "about"]
       }
     })
   )
-  .use(rehypeStringify)
+  .use(rehypeStringify);
 
 function loadSource() {
-  if (typeof window === 'undefined') {
-    return undefined
+  if (typeof window === "undefined") {
+    return undefined;
   }
-  const json = window.localStorage.getItem(STORAGE_KEY_SOURCE)
+  const json = window.localStorage.getItem(STORAGE_KEY_SOURCE);
   if (json === null) {
-    return undefined
+    return undefined;
   }
   try {
-    const { markdown, bibliography } = JSON.parse(json)
-    return { markdown, bibliography }
+    const { markdown, bibliography } = JSON.parse(json);
+    return { markdown, bibliography };
   } catch {
     console.warn(
       `Got unexpected value from storage with (key "${STORAGE_KEY_SOURCE}"), value "${json}"`
-    )
-    return undefined
+    );
+    return undefined;
   }
 }
 
 function saveSource(markdown: string, bibliography: string) {
-  if (typeof window === 'undefined') {
-    return undefined
+  if (typeof window === "undefined") {
+    return undefined;
   }
-  const state = JSON.stringify({ markdown, bibliography })
-  window.localStorage.setItem(STORAGE_KEY_SOURCE, state)
+  const state = JSON.stringify({ markdown, bibliography });
+  window.localStorage.setItem(STORAGE_KEY_SOURCE, state);
 }
 
 function Index() {
   const [markdown, setMarkdown] = useState(
     () => loadSource()?.markdown || example.markdown
-  )
+  );
   const [bibliography, setBibliography] = useState(
     () => loadSource()?.bibliography || example.bibliography
-  )
-  const [html, setHtml] = useState('')
+  );
+  const [html, setHtml] = useState("");
 
-  const previewRef = useRef<HTMLIFrameElement>(null)
+  const previewRef = useRef<HTMLIFrameElement>(null);
 
   function renderSource(md: string, bibtex: string) {
-    const startTime = performance.now()
+    const startTime = performance.now();
 
     // Store the bibliography as a data attribute on the virtual file, because
     // it's not part of the markdown, but it is still needed to create citations
-    const file = new VFile({ value: md, data: { bibliography: bibtex } })
+    const file = new VFile({ value: md, data: { bibliography: bibtex } });
 
     processor
       .process(file)
       .then((html) => {
-        const endTime = performance.now()
-        console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`)
-        setHtml(String(html))
+        const endTime = performance.now();
+        console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`);
+        setHtml(String(html));
       })
       .catch((err) => {
-        console.error(err)
-        setHtml(String(err))
-      })
+        console.error(err);
+        setHtml(String(err));
+      });
   }
 
   const throttledRenderSource = useThrottleCallback(
     renderSource,
     RENDER_THROTTLE_FPS,
     true // run on leading and trailing edge
-  )
+  );
 
-  const throttledSaveSource = useThrottleCallback(saveSource, SAVE_THROTTLE_FPS)
+  const throttledSaveSource = useThrottleCallback(
+    saveSource,
+    SAVE_THROTTLE_FPS
+  );
 
   // Things to do when the source code of the document is changed
   useEffect(() => {
-    throttledRenderSource(markdown, bibliography)
-    throttledSaveSource(markdown, bibliography)
-  }, [markdown, bibliography, throttledRenderSource, throttledSaveSource])
+    throttledRenderSource(markdown, bibliography);
+    throttledSaveSource(markdown, bibliography);
+  }, [markdown, bibliography, throttledRenderSource, throttledSaveSource]);
 
   return (
     <Flex width="100%" height="100vh" position="relative">
@@ -224,9 +227,9 @@ function Index() {
           <Button
             onClick={() => {
               if (previewRef.current?.contentWindow) {
-                previewRef.current.contentWindow.print()
+                previewRef.current.contentWindow.print();
               } else {
-                console.error('Could not print document')
+                console.error("Could not print document");
               }
             }}
             leftIcon={<Icon as={Printer} />}
@@ -260,7 +263,7 @@ function Index() {
         />
       </Flex>
     </Flex>
-  )
+  );
 }
 
-export default Index
+export default Index;

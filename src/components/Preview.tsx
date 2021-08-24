@@ -1,13 +1,13 @@
-import { Box, BoxProps, Center, Text, useToken } from '@chakra-ui/react'
-import React from 'react'
+import { Box, BoxProps, Center, Text, useToken } from "@chakra-ui/react";
+import React from "react";
 
 type PreviewProps = BoxProps & {
-  contentHtml: string
-}
+  contentHtml: string;
+};
 
 export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
   function Preview(props, ref) {
-    const { contentHtml, ...restProps } = props
+    const { contentHtml, ...restProps } = props;
     const docHtml = `<!DOCTYPE html>
       <html>
       <head>
@@ -25,7 +25,7 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
 
         <style>
           html {
-            color: ${useToken('colors', 'gray.800')};
+            color: ${useToken("colors", "gray.800")};
             margin: 1.5cm;
             text-align: justify;
             word-wrap: break-word;
@@ -36,7 +36,7 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
             font-family: "Source Serif Pro", "Times New Roman", Times, serif;
           }
           a {
-            color: ${useToken('colors', 'blue.700')};
+            color: ${useToken("colors", "blue.700")};
           }
           blockquote {
             margin: 1em 2.5em;
@@ -73,16 +73,16 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
         <body>
           ${contentHtml}
         </body>
-      </html>`
+      </html>`;
 
-    if (contentHtml === '') {
+    if (contentHtml === "") {
       return (
         <Center p={8} {...restProps}>
           <Text fontSize="lg" color="gray.600">
             When you write content on the left, a preview will be shown here
           </Text>
         </Center>
-      )
+      );
     } else {
       return (
         <Box
@@ -92,7 +92,7 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
           overflowY="auto"
           {...restProps}
         />
-      )
+      );
     }
   }
-)
+);
