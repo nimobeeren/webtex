@@ -62,7 +62,7 @@ function Index() {
   const [bibliography, setBibliography] = useState(
     () => loadSource()?.bibliography || example.bibliography
   );
-  const [html, setHtml] = useState("");
+  const [output, setOutput] = useState<JSX.Element | null>(null);
 
   const previewRef = useRef<HTMLIFrameElement>(null);
 
@@ -75,14 +75,14 @@ function Index() {
 
     processor
       .process(file)
-      .then((html) => {
+      .then((vfile) => {
         const endTime = performance.now();
         console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`);
-        setHtml(String(html));
+        setOutput(vfile.result as JSX.Element);
       })
       .catch((err) => {
         console.error(err);
-        setHtml(String(err));
+        setOutput(<p>{String(err)}</p>);
       });
   }
 
@@ -209,11 +209,13 @@ function Index() {
         </Stack>
         <Preview
           ref={previewRef}
-          contentHtml={html}
           flexGrow={1}
           borderLeft="1px"
           borderColor="gray.200"
-        />
+          overflowY="auto"
+        >
+          {output}
+        </Preview>
       </Flex>
     </Flex>
   );

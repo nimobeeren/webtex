@@ -1,8 +1,9 @@
 import { merge } from "lodash-es";
+import React from "react";
 import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
+import rehypeReact from "rehype-react";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
-import rehypeStringify from "rehype-stringify";
 import remarkDirective from "remark-directive";
 import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
@@ -45,4 +46,8 @@ export const processor = unified()
       }
     })
   )
-  .use(rehypeStringify);
+  // @ts-expect-error
+  .use(rehypeReact, {
+    createElement: React.createElement,
+    Fragment: React.Fragment
+  });
