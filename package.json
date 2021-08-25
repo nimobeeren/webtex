@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "lint": "next lint",
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "build": "next build",
     "start": "next start"
+  },
+  "engines": {
+    "node": "^14.17.5"
   },
   "dependencies": {
     "@chakra-ui/react": "1.6.6",
