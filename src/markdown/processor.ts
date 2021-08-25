@@ -1,5 +1,6 @@
 import { merge } from "lodash-es";
 import React from "react";
+import rehypeExternalLinks from "rehype-external-links";
 import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import rehypeReact from "rehype-react";
@@ -11,7 +12,6 @@ import remarkRehype from "remark-rehype";
 import remarkSlug from "remark-slug";
 import { unified } from "unified";
 import rehypeFigure from "./rehype-figure";
-import rehypeLinkModifier from "./rehype-link-srcdoc";
 import remarkCite from "./remark-cite";
 import remarkCrossReference from "./remark-cross-reference";
 import remarkCustomId from "./remark-custom-id";
@@ -29,7 +29,8 @@ export const processor = unified()
   // @ts-expect-error
   .use(rehypeRaw)
   .use(rehypeFigure)
-  .use(rehypeLinkModifier)
+  // @ts-expect-error
+  .use(rehypeExternalLinks)
   // @ts-expect-error
   .use(rehypeKatex)
   .use(
