@@ -1,15 +1,13 @@
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Box, HTMLChakraProps } from "@chakra-ui/react";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-type PortalFrameProps = BoxProps & {
-  head?: string;
-};
+type PortalFrameProps = HTMLChakraProps<"iframe">;
 
 export const PortalFrame = React.forwardRef<
   HTMLIFrameElement,
   PortalFrameProps
->(function PortalFrame({ children, head, ...restProps }, ref) {
+>(function PortalFrame({ children, ...restProps }, ref) {
   if (!ref) {
     throw new Error(`You must pass a ref to this component, got: ${ref}`);
   } else if (typeof ref === "function") {
@@ -23,17 +21,7 @@ export const PortalFrame = React.forwardRef<
   const contentDocument = ref.current?.contentDocument;
 
   return (
-    <Box
-      as="iframe"
-      ref={ref}
-      srcDoc={`<!DOCTYPE html>
-        <html>
-        <head>${head || ""}</head>
-        <body></body>
-        </html>`}
-      onLoad={() => setIsReady(true)}
-      {...restProps}
-    >
+    <Box as="iframe" ref={ref} onLoad={() => setIsReady(true)} {...restProps}>
       {isReady && contentDocument
         ? ReactDOM.createPortal(children, contentDocument.body)
         : null}
