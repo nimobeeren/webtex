@@ -27,7 +27,7 @@
     "framer-motion": "^4",
     "hastscript": "^7.0.1",
     "lodash-es": "^4.17.21",
-    "next": "11.0.0",
+    "next": "11.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "rehype-external-links": "^1.0.0",
