@@ -1,4 +1,4 @@
-import type { Text } from "mdast";
+import type { Heading, Text } from "mdast";
 import type { Plugin } from "unified";
 import { Node, Parent } from "unist";
 import { remove } from "unist-util-remove";
@@ -153,7 +153,7 @@ const attacher: Plugin<[]> = () => {
     remove(tree, (node) => nodesToRemove.includes(node));
 
     // Set `title` attribute of heading, so its ID can be inspected by hovering
-    visit(tree, "heading", (node) => {
+    visit(tree, "heading", (node: Heading) => {
       if (node.data?.id) {
         if (!node.data.hProperties) node.data.hProperties = {};
         (node.data.hProperties as any).title = node.data.id;
