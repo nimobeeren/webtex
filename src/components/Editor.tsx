@@ -1,4 +1,4 @@
-import { Textarea } from '@chakra-ui/react'
+import { Textarea } from "@chakra-ui/react";
 
 export function Editor(props) {
   return (
@@ -17,8 +17,8 @@ export function Editor(props) {
       resize="none"
       overflowX="auto"
       whiteSpace="pre-wrap"
-      _focus={{ outline: 'none' }}
+      _focus={{ outline: "none" }}
       {...props}
     />
-  )
+  );
 }

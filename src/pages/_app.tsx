@@ -1,7 +1,7 @@
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
-import '@fontsource/inter'
-import '@fontsource/jetbrains-mono'
-import type { AppProps } from 'next/app'
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import "@fontsource/inter";
+import "@fontsource/jetbrains-mono";
+import type { AppProps } from "next/app";
 
 const theme = extendTheme({
   fonts: {
@@ -11,18 +11,18 @@ const theme = extendTheme({
   components: {
     Button: {
       baseStyle: {
-        letterSpacing: 'wide'
+        letterSpacing: "wide"
       }
     }
   }
-})
+});
 
 function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
       <Component {...pageProps} />
     </ChakraProvider>
-  )
+  );
 }
 
-export default App
+export default App;
