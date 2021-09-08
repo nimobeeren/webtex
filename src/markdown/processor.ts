@@ -36,12 +36,7 @@ export const processor = unified()
     // Allow class and style attributes on all elements
     merge(defaultSchema, {
       attributes: { "*": ["className", "style"] },
-      clobberPrefix: "", // don't clobber (i.e. prefix) any attribute values
-      // Allow the `about` protocol on href attributes, this is needed for
-      // rehype-link-srcdoc to work
-      protocols: {
-        href: [...defaultSchema.protocols!.href, "about"]
-      }
+      clobberPrefix: "" // don't clobber (i.e. prefix) any attribute values
     })
   )
   .use(rehypeReact, {

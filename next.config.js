@@ -1,3 +1,6 @@
+/**
+ * @type {import('next').NextConfig}
+ */
 let config = {
   reactStrictMode: true,
   experimental: { esmExternals: true }
