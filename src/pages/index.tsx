@@ -17,7 +17,6 @@ import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import { VFile } from "vfile";
 import { Editor } from "../components/Editor";
 import { FeedbackButton } from "../components/FeedbackButton";
 import { Preview } from "../components/Preview";
@@ -69,12 +68,10 @@ function Index() {
   function renderSource(md: string, bibtex: string) {
     const startTime = performance.now();
 
-    // Store the bibliography as a data attribute on the virtual file, because
-    // it's not part of the markdown, but it is still needed to create citations
-    const file = new VFile({ value: md, data: { bibliography: bibtex } });
-
     processor
-      .process(file)
+      // Store the bibliography as a data attribute on the virtual file, because
+      // it's not part of the markdown, but it is still needed to create citations
+      .process({ value: md, data: { bibliography: bibtex } })
       .then((vfile) => {
         const endTime = performance.now();
         console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`);

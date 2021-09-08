@@ -6,6 +6,7 @@ import rehypeRaw from "rehype-raw";
 import rehypeReact from "rehype-react";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import remarkDirective from "remark-directive";
+import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
@@ -18,23 +19,19 @@ import remarkCustomId from "./remark-custom-id";
 
 export const processor = unified()
   .use(remarkParse)
-  // @ts-expect-error
   .use(remarkSlug)
+  .use(remarkGfm)
   .use(remarkCustomId)
   .use(remarkCrossReference)
   .use(remarkDirective)
   .use(remarkCite)
   .use(remarkMath)
   .use(remarkRehype, { allowDangerousHtml: true })
-  // @ts-expect-error
   .use(rehypeRaw)
   .use(rehypeFigure)
-  // @ts-expect-error
   .use(rehypeExternalLinks)
-  // @ts-expect-error
   .use(rehypeKatex)
   .use(
-    // @ts-expect-error
     rehypeSanitize,
     // Allow class and style attributes on all elements
     merge(defaultSchema, {
@@ -47,7 +44,6 @@ export const processor = unified()
       }
     })
   )
-  // @ts-expect-error
   .use(rehypeReact, {
     createElement: React.createElement,
     Fragment: React.Fragment
