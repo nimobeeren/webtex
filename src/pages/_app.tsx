@@ -1,7 +1,10 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import "@fontsource/inter";
 import "@fontsource/jetbrains-mono";
+import { MDXProvider } from "@mdx-js/react";
 import type { AppProps } from "next/app";
+import React from "react";
+import { components } from "../mdxComponents";
 
 const theme = extendTheme({
   fonts: {
@@ -20,7 +23,9 @@ const theme = extendTheme({
 function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
+      <MDXProvider components={components}>
+        <Component {...pageProps} />
+      </MDXProvider>
     </ChakraProvider>
   );
 }
