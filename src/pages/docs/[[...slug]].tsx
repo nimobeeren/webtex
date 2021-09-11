@@ -4,35 +4,29 @@ import React from "react";
 import { getAllDocSlugs, getDocBySlug } from "../../docs";
 import { processor } from "../../markdown/processor-docs";
 
-function Docs({ doc }) {
-  if (!doc) {
+function Docs({ docHtml }) {
+  if (!docHtml) {
     return <ErrorPage statusCode={404} />;
   }
-  return <div dangerouslySetInnerHTML={{ __html: doc }} />;
+  return <div dangerouslySetInnerHTML={{ __html: docHtml }} />;
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  console.log({ params });
-  if (!params?.slug || !Array.isArray(params.slug)) {
-    return { props: {} };
-  }
+  const slug = params?.slug?.[0] || "index";
 
-  let doc = getDocBySlug(params.slug?.[0] || "index");
-  doc = (await processor.process(doc)).toString();
+  const doc = getDocBySlug(slug);
+  const docHtml = (await processor.process(doc)).toString();
 
   return {
     props: {
-      doc
+      docHtml
     }
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const slugs = getAllDocSlugs();
-  console.log({ slugs });
-  // LEFT HERE
-  // Index page (/docs) doesn't work yet
-  // Other page /docs/test does work, but styles are wrong because we're not
+  // TODO: Styles are wrong because we're not
   // using chakra's components (check if one of the unified plugins can help)
   return {
     paths: slugs.map((slug) => ({
