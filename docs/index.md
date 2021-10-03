@@ -1,3 +1,6 @@
 # Documentation
 
-This is how we do it!
+- Hello
+- World
+  - Foo
+  - Bar

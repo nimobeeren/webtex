@@ -6,6 +6,7 @@ import remarkRehype from "remark-rehype";
 import remarkSlug from "remark-slug";
 import { unified } from "unified";
 
+// TODO: move to next-mdx-remote options
 export const processor = unified()
   .use(remarkParse)
   .use(remarkSlug)

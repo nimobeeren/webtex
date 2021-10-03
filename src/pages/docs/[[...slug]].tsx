@@ -1,33 +1,37 @@
 import { GetStaticPaths, GetStaticProps } from "next";
+import { MDXRemote } from "next-mdx-remote";
+import { serialize } from "next-mdx-remote/serialize";
 import ErrorPage from "next/error";
 import React from "react";
 import { getAllDocSlugs, getDocBySlug } from "../../docs";
-import { processor } from "../../markdown/processor-docs";
+import { components } from "../../mdxComponents";
 
-function Docs({ docHtml }) {
-  if (!docHtml) {
+function DocsPage({ source }) {
+  if (!source) {
     return <ErrorPage statusCode={404} />;
   }
-  return <div dangerouslySetInnerHTML={{ __html: docHtml }} />;
+  return (
+    <div>
+      <MDXRemote {...source} components={components} />
+    </div>
+  );
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug?.[0] || "index";
 
   const doc = getDocBySlug(slug);
-  const docHtml = (await processor.process(doc)).toString();
+  const mdxSource = await serialize(doc);
 
   return {
     props: {
-      docHtml
+      source: mdxSource
     }
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const slugs = getAllDocSlugs();
-  // TODO: Styles are wrong because we're not
-  // using chakra's components (check if one of the unified plugins can help)
   return {
     paths: slugs.map((slug) => ({
       params: { slug: slug === "index" ? [] : [slug] }
@@ -36,4 +40,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default Docs;
+export default DocsPage;
