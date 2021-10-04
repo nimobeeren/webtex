@@ -5,8 +5,10 @@ import { serialize } from "next-mdx-remote/serialize";
 import ErrorPage from "next/error";
 import NextLink from "next/link";
 import React from "react";
+import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import remarkSlug from "remark-slug";
 import { Doc, getAllDocs, getAllDocSlugs, getDocBySlug } from "../../docs";
 import { components } from "../../mdxComponents";
@@ -54,8 +56,12 @@ export const getStaticProps: GetStaticProps<StaticProps> = async ({
 
   const mdxSource = await serialize(doc.content, {
     mdxOptions: {
-      remarkPlugins: [remarkSlug, remarkGfm],
-      rehypePlugins: [rehypeRaw]
+      // LEFT HERE
+      // FIXME: KaTeX doesn't work yet
+      // FIXME: raw HTML doesn't work yet
+      // TODO: also would be nice to set up next-remote-watch, see https://github.com/vercel/next.js/tree/canary/examples/with-mdx-remote
+      remarkPlugins: [remarkSlug, remarkGfm, remarkMath],
+      rehypePlugins: [rehypeRaw, rehypeKatex]
     },
     // Allows access to front matter in MDX
     scope: doc.frontMatter
