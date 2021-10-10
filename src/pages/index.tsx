@@ -2,9 +2,9 @@ import {
   Box,
   Button,
   Flex,
+  HStack,
   Icon,
   IconButton,
-  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -148,8 +148,7 @@ function Index() {
       </Box>
       <Flex flex="1 0 0" direction="column">
         {/* Similar style as the <TabList /> */}
-        <Stack
-          direction="row"
+        <HStack
           justify="flex-end"
           align="center"
           spacing={2}
@@ -208,7 +207,7 @@ function Index() {
               fontSize="3xl"
             />
           </Link>
-        </Stack>
+        </HStack>
         <Preview
           ref={previewRef}
           flexGrow={1}
