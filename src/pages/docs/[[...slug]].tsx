@@ -72,8 +72,6 @@ function DocsPage({ source, frontMatter, allDocs }: StaticProps) {
         <NextLink href="https://github.com/nimobeeren/webtex" passHref>
           <IconButton
             as="a"
-            target="_blank"
-            rel="noopener"
             aria-label="View the source code on GitHub"
             title="View the source code on GitHub"
             icon={<Icon as={Github} />}
