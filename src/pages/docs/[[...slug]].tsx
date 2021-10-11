@@ -122,7 +122,21 @@ function DocsPage({ source, frontMatter, allDocs }: StaticProps) {
           </List>
         </Box>
         <Flex py={16} flexGrow={1} overflowY="auto">
-          <Box as="main" flexGrow={1} maxW={720} m="0 auto" px={8}>
+          <Box
+            as="main"
+            flexGrow={1}
+            maxW={720}
+            m="0 auto"
+            px={8}
+            sx={{
+              "& h1": {
+                mb: 6
+              },
+              "& p": {
+                my: 4
+              }
+            }}
+          >
             <MDXRemote {...source} components={components} />
           </Box>
           <Box

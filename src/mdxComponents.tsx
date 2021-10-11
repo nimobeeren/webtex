@@ -1,9 +1,10 @@
-/* eslint-disable react/display-name */
 import {
   Code,
   Heading,
+  HeadingProps,
   Image,
   Link,
+  LinkProps,
   ListItem,
   OrderedList,
   Table,
@@ -17,25 +18,25 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-function H1(props) {
-  return <Heading as="h1" {...props} />;
+function H1(props: HeadingProps) {
+  return <Heading as="h1" size="xl" {...props} />;
 }
-function H2(props) {
-  return <Heading as="h2" {...props} />;
+function H2(props: HeadingProps) {
+  return <Heading as="h2" size="lg" {...props} />;
 }
-function H3(props) {
-  return <Heading as="h3" {...props} />;
+function H3(props: HeadingProps) {
+  return <Heading as="h3" size="md" {...props} />;
 }
-function H4(props) {
-  return <Heading as="h4" {...props} />;
+function H4(props: HeadingProps) {
+  return <Heading as="h4" size="sm" {...props} />;
 }
-function H5(props) {
-  return <Heading as="h5" {...props} />;
+function H5(props: HeadingProps) {
+  return <Heading as="h5" size="xs" {...props} />;
 }
-function H6(props) {
-  return <Heading as="h6" {...props} />;
+function H6(props: HeadingProps) {
+  return <Heading as="h6" size="xs" {...props} />;
 }
-function A({ href, ...restProps }) {
+function A({ href, ...restProps }: LinkProps & { href: string }) {
   return (
     <NextLink href={href} passHref>
       <Link {...restProps} />
