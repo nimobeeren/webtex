@@ -15,7 +15,7 @@ import { Github } from "@emotion-icons/boxicons-logos";
 import { BookOpen, Bulb, Printer } from "@emotion-icons/boxicons-regular";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
-import { default as Link, default as NextLink } from "next/link";
+import NextLink from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "../components/Editor";
 import { FeedbackButton } from "../components/FeedbackButton";
@@ -192,7 +192,7 @@ function Index() {
           >
             Print
           </Button>
-          <Link href="https://github.com/nimobeeren/webtex" passHref>
+          <NextLink href="https://github.com/nimobeeren/webtex" passHref>
             <IconButton
               as="a"
               target="_blank"
@@ -205,7 +205,7 @@ function Index() {
               size="sm"
               fontSize="3xl"
             />
-          </Link>
+          </NextLink>
         </HStack>
         <Preview
           ref={previewRef}

@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   HStack,
-  Link,
   List,
   ListItem,
   Spacer,
@@ -70,7 +69,7 @@ function DocsPage({ source, frontMatter, allDocs }: StaticProps) {
         >
           Give us Feedback
         </FeedbackButton>
-        <Link href="https://github.com/nimobeeren/webtex" passHref>
+        <NextLink href="https://github.com/nimobeeren/webtex" passHref>
           <IconButton
             as="a"
             target="_blank"
@@ -83,7 +82,7 @@ function DocsPage({ source, frontMatter, allDocs }: StaticProps) {
             size="sm"
             fontSize="3xl"
           />
-        </Link>
+        </NextLink>
       </HStack>
       <Flex flexGrow={1} minHeight={0}>
         <Box
@@ -129,9 +128,6 @@ function DocsPage({ source, frontMatter, allDocs }: StaticProps) {
             m="0 auto"
             px={8}
             sx={{
-              "& h1": {
-                mb: 6
-              },
               "& p": {
                 my: 4
               }
