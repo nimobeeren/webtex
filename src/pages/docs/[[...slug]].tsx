@@ -22,6 +22,7 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkSlug from "remark-slug";
+import { ActiveLink } from "../../components/ActiveLink";
 import { FeedbackButton } from "../../components/FeedbackButton";
 import { Doc, getAllDocs, getAllDocSlugs, getDocBySlug } from "../../docs";
 import { components } from "../../mdxComponents";
@@ -100,22 +101,28 @@ function DocsPage({ source, frontMatter, allDocs }: StaticProps) {
                   href={doc.slug === "index" ? "/docs" : `/docs/${doc.slug}`}
                   passHref
                 >
-                  <Link
+                  <ActiveLink
                     display="block"
                     w="100%"
                     h="100%"
                     px={8}
                     lineHeight="taller"
+                    _hover={{
+                      background: "blue.50"
+                    }}
+                    _activeLink={{
+                      background: "blue.100"
+                    }}
                   >
                     {doc.frontMatter.title || doc.slug}
-                  </Link>
+                  </ActiveLink>
                 </NextLink>
               </ListItem>
             ))}
           </List>
         </Box>
         <Flex py={16} flexGrow={1} overflowY="auto">
-          <Box as="main" maxW={720} m="0 auto" px={8}>
+          <Box as="main" flexGrow={1} maxW={720} m="0 auto" px={8}>
             <MDXRemote {...source} components={components} />
           </Box>
           <Box
