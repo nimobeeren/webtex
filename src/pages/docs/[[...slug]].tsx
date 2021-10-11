@@ -126,8 +126,16 @@ function DocsPage({ source, frontMatter, allDocs }: StaticProps) {
             m="0 auto"
             px={8}
             sx={{
-              "& p": {
+              p: {
                 my: 4
+              },
+              a: {
+                color: "blue.600",
+                ':hover': {
+                  // must be in :hover to fix specificity
+                  textDecorationColor: "blue.100",
+                  textUnderlineOffset: "3px"
+                }
               }
             }}
           >
