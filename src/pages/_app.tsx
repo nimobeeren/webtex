@@ -2,6 +2,9 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import "@fontsource/inter";
 import "@fontsource/jetbrains-mono";
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
+import React from "react";
+import TempDocsLayout from "../components/TempDocsLayout";
 
 const theme = extendTheme({
   fonts: {
@@ -18,9 +21,17 @@ const theme = extendTheme({
 });
 
 function App({ Component, pageProps }: AppProps) {
+  const { pathname } = useRouter();
+
+  const Layout = `${pathname}/`.startsWith("/docs/")
+    ? TempDocsLayout
+    : ({ children }) => children;
+
   return (
     <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ChakraProvider>
   );
 }
