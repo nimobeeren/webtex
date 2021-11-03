@@ -1,5 +1,8 @@
-import { Box } from "@chakra-ui/layout";
+import { Box } from "@chakra-ui/react";
+import { MDXProvider } from "@mdx-js/react";
 import Head from "next/head";
+import React from "react";
+import { components } from "../mdxComponents";
 
 function TempDocsLayout({ children }) {
   return (
@@ -12,9 +15,12 @@ function TempDocsLayout({ children }) {
           crossOrigin="anonymous"
         />
       </Head>
-      <Box maxW={800} m="0 auto">
-        {children}
-      </Box>
+      <MDXProvider components={components}>
+        {/* @ts-expect-error due to a bug in types, MDXProvider only accepts an array as children */}
+        <Box maxW={800} m="0 auto">
+          {children}
+        </Box>
+      </MDXProvider>
     </>
   );
 }

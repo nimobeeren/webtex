@@ -16,6 +16,7 @@ import {
   Tr,
   UnorderedList
 } from "@chakra-ui/react";
+import type { Components } from "@mdx-js/react/lib";
 import NextLink from "next/link";
 
 function H1(props: HeadingProps) {
@@ -36,7 +37,12 @@ function H5(props: HeadingProps) {
 function H6(props: HeadingProps) {
   return <Heading as="h6" size="xs" {...props} />;
 }
-function A({ href, ...restProps }: LinkProps & { href: string }) {
+function A({ href, ...restProps }: LinkProps & { href?: string }) {
+  // NextLink requires a href, so if we don't get one we render a standard link
+  if (!href) {
+    return <Link {...restProps} />;
+  }
+
   return (
     <NextLink href={href} passHref>
       <Link {...restProps} />
@@ -44,7 +50,7 @@ function A({ href, ...restProps }: LinkProps & { href: string }) {
   );
 }
 
-export const components = {
+export const components: Components = {
   p: Text,
   h1: H1,
   h2: H2,

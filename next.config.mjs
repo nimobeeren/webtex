@@ -23,7 +23,8 @@ const withMDX = nextMdx({
   extension: /\.mdx?$/,
   options: {
     remarkPlugins: [remarkSlug, remarkMath],
-    rehypePlugins: [rehypeKatex]
+    rehypePlugins: [rehypeKatex],
+    providerImportSource: "@mdx-js/react"
   }
 });
 
