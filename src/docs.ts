@@ -7,7 +7,7 @@ const docsDirectory = join(process.cwd(), "docs");
 export type Doc = {
   slug: string;
   content: string;
-  frontMatter: {
+  frontmatter: {
     title?: string;
     [key: string]: any;
   };
@@ -28,7 +28,7 @@ export function getDocBySlug(slug: string): Doc {
   return {
     slug,
     content,
-    frontMatter: data
+    frontmatter: data
   };
 }
 

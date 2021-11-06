@@ -107,7 +107,7 @@ function DocsLayout({ children, allDocs }: Props) {
                         background: "blue.100"
                       }}
                     >
-                      {doc.frontMatter.title || doc.slug}
+                      {doc.frontmatter.title || doc.slug}
                     </ActiveLink>
                   </NextLink>
                 </ListItem>

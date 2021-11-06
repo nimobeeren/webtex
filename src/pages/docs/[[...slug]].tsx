@@ -27,11 +27,11 @@ function runSync(file, options?) {
 
 type StaticProps = {
   compiledMDX?: string;
-  frontMatter?: Doc["frontMatter"];
+  frontmatter?: Doc["frontmatter"];
   allDocs: Doc[];
 };
 
-function DocsPage({ compiledMDX, frontMatter, allDocs }: StaticProps) {
+function DocsPage({ compiledMDX, frontmatter, allDocs }: StaticProps) {
   const { default: Content } = useMemo(() => {
     if (!compiledMDX) return { default: null };
     return runSync(compiledMDX, {
@@ -70,7 +70,7 @@ export const getStaticProps: GetStaticProps<StaticProps> = async ({
     return {
       props: {
         compiledMDX: undefined,
-        frontMatter: undefined,
+        frontmatter: undefined,
         allDocs
       }
     };
@@ -88,7 +88,7 @@ export const getStaticProps: GetStaticProps<StaticProps> = async ({
   return {
     props: {
       compiledMDX,
-      frontMatter: doc.frontMatter,
+      frontmatter: doc.frontmatter,
       allDocs
     }
   };
