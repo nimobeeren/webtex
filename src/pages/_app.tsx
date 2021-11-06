@@ -1,10 +1,9 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import "@fontsource/inter";
 import "@fontsource/jetbrains-mono";
+import { MDXProvider } from "@mdx-js/react";
 import type { AppProps } from "next/app";
-import { useRouter } from "next/router";
-import React from "react";
-import TempDocsLayout from "../components/TempDocsLayout";
+import { components } from "../mdxComponents"
 
 const theme = extendTheme({
   fonts: {
@@ -21,17 +20,12 @@ const theme = extendTheme({
 });
 
 function App({ Component, pageProps }: AppProps) {
-  const { pathname } = useRouter();
-
-  const Layout = `${pathname}/`.startsWith("/docs/")
-    ? TempDocsLayout
-    : ({ children }) => children;
-
   return (
     <ChakraProvider theme={theme}>
-      <Layout>
+      <MDXProvider components={components}>
+        {/* @ts-expect-error bug in @mdx-js/react */}
         <Component {...pageProps} />
-      </Layout>
+      </MDXProvider>
     </ChakraProvider>
   );
 }
