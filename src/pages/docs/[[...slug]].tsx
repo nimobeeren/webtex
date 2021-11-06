@@ -4,14 +4,17 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import ErrorPage from "next/error";
 import { useMemo } from "react";
 import * as runtime from "react/jsx-runtime.js";
+import rehypeKatex from "rehype-katex";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import remarkSlug from "remark-slug";
 import DocsLayout from "../../components/DocsLayout";
 import { Doc, getAllDocs, getAllDocSlugs, getDocBySlug } from "../../docs";
 
 /**
  * Synchronously run code.
  *
- * COPIED FROM:
- * @see https://github.com/mdx-js/mdx/blob/7ff979c8dc2d6f75a6190c84eaffc802e294b0d2/packages/mdx/lib/run.js#L24
+ * COPIED FROM @see https://github.com/mdx-js/mdx/blob/7ff979c8dc2d6f75a6190c84eaffc802e294b0d2/packages/mdx/lib/run.js#L24
  *
  * @param {{toString(): string}} file JS document to run
  * @param {unknown} options
@@ -53,7 +56,6 @@ export const getStaticProps: GetStaticProps<StaticProps> = async ({
 }) => {
   const slug = params?.slug?.[0] || "index";
 
-  // TODO: what if doc is not found?
   let doc: Doc | undefined;
   try {
     doc = getDocBySlug(slug);
@@ -77,10 +79,9 @@ export const getStaticProps: GetStaticProps<StaticProps> = async ({
   const compiledMDX = String(
     await compile(doc.content, {
       outputFormat: "function-body",
-      providerImportSource: "@mdx-js/react"
-      // TODO
-      // remarkPlugins: [remarkSlug, remarkGfm, remarkMath],
-      // rehypePlugins: [rehypeRaw, rehypeKatex]
+      providerImportSource: "@mdx-js/react",
+      remarkPlugins: [remarkSlug, remarkGfm, remarkMath],
+      rehypePlugins: [rehypeKatex]
     })
   );
 
