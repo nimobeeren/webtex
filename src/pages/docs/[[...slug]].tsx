@@ -1,7 +1,8 @@
 import { compile } from "@mdx-js/mdx";
+import { useMDXComponents } from "@mdx-js/react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import ErrorPage from "next/error";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import * as runtime from "react/jsx-runtime.js";
 import DocsLayout from "../../components/DocsLayout";
 import { Doc, getAllDocs, getAllDocSlugs, getDocBySlug } from "../../docs";
@@ -22,15 +23,18 @@ function runSync(file, options?) {
 }
 
 type StaticProps = {
-  compiledMDX: string;
-  frontMatter: Doc["frontMatter"];
+  compiledMDX?: string;
+  frontMatter?: Doc["frontMatter"];
   allDocs: Doc[];
 };
 
 function DocsPage({ compiledMDX, frontMatter, allDocs }: StaticProps) {
   const { default: Content } = useMemo(() => {
     if (!compiledMDX) return { default: null };
-    return runSync(compiledMDX, runtime);
+    return runSync(compiledMDX, {
+      ...runtime,
+      useMDXComponents
+    });
   }, [compiledMDX]);
 
   if (!compiledMDX) {
@@ -49,12 +53,31 @@ export const getStaticProps: GetStaticProps<StaticProps> = async ({
 }) => {
   const slug = params?.slug?.[0] || "index";
 
-  const doc = getDocBySlug(slug);
+  // TODO: what if doc is not found?
+  let doc: Doc | undefined;
+  try {
+    doc = getDocBySlug(slug);
+  } catch (e) {
+    if (!(e instanceof Error && e.message.match(/$could not find/i))) {
+      throw e;
+    }
+  }
   const allDocs = getAllDocs();
+
+  if (!doc) {
+    return {
+      props: {
+        compiledMDX: undefined,
+        frontMatter: undefined,
+        allDocs
+      }
+    };
+  }
 
   const compiledMDX = String(
     await compile(doc.content, {
-      outputFormat: "function-body"
+      outputFormat: "function-body",
+      providerImportSource: "@mdx-js/react"
       // TODO
       // remarkPlugins: [remarkSlug, remarkGfm, remarkMath],
       // rehypePlugins: [rehypeRaw, rehypeKatex]
