@@ -1,8 +1,9 @@
-import { Button, ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import "@fontsource/inter";
 import "@fontsource/jetbrains-mono";
 import { MDXProvider } from "@mdx-js/react";
 import type { AppProps } from "next/app";
+import { Embed } from "../components/Embed";
 import { components } from "../mdxComponents";
 
 const theme = extendTheme({
@@ -22,8 +23,8 @@ const theme = extendTheme({
 function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <MDXProvider components={{ ...components, Button }}>
-        {/* @ts-expect-error bug in @mdx-js/react */}
+      <MDXProvider components={{ ...components, Embed }}>
+        {/* @ts-expect-error bug in @mdx-js/react, should be fixed in next release */}
         <Component {...pageProps} />
       </MDXProvider>
     </ChakraProvider>
