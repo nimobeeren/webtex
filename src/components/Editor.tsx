@@ -3,7 +3,7 @@ import { Textarea } from "@chakra-ui/react";
 export function Editor(props) {
   return (
     <Textarea
-      width="calc(100% - 1rem)"
+      width="calc(100% - 1rem)" // 1rem is equal to the left margin
       pl={0}
       pr={4}
       pb={4}

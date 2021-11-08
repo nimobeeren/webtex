@@ -46,7 +46,13 @@ export function Embed({ defaultValue, ...restProps }) {
 
   return (
     <Flex>
-      <Box flex="1 0 0">
+      <Box
+        flex="1 0 0"
+        border="1px"
+        borderColor="gray.200"
+        borderTopLeftRadius="md"
+        borderBottomLeftRadius="md"
+      >
         <Editor
           value={markdown}
           onChange={(event) => setMarkdown(event.target.value)}
@@ -54,7 +60,19 @@ export function Embed({ defaultValue, ...restProps }) {
           height="100%"
         />
       </Box>
-      <Preview ref={previewRef}>{output}</Preview>
+      <Box flex="1 0 0">
+        <Preview
+          ref={previewRef}
+          width="100%"
+          border="1px"
+          borderLeft="none"
+          borderColor="gray.200"
+          borderTopRightRadius="md"
+          borderBottomRightRadius="md"
+        >
+          {output}
+        </Preview>
+      </Box>
     </Flex>
   );
 }
