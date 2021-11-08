@@ -44,6 +44,11 @@ export function Embed({ defaultValue, ...restProps }) {
     throttledRenderSource(markdown);
   }, [markdown, throttledRenderSource]);
 
+  // TODO: make editor tall enough to fit all code
+  // TODO: copy button
+  // TODO: add flag to show bibliography tab
+  // TODO: vertical mode
+  // TODO: fix bottom padding of docs layout
   return (
     <Flex>
       <Box
@@ -69,6 +74,7 @@ export function Embed({ defaultValue, ...restProps }) {
           borderColor="gray.200"
           borderTopRightRadius="md"
           borderBottomRightRadius="md"
+          styleOverrides={`body { margin: 1rem; }`}
         >
           {output}
         </Preview>

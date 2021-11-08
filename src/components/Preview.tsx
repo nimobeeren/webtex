@@ -1,8 +1,8 @@
 import { BoxProps, Center, Text } from "@chakra-ui/react";
 import React from "react";
-import { PortalFrame } from "./PortalFrame";
+import { PortalFrame, PortalFrameProps } from "./PortalFrame";
 
-type PreviewProps = BoxProps;
+type PreviewProps = BoxProps & PortalFrameProps;
 
 export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
   function Preview({ children, ...restProps }, ref) {
