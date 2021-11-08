@@ -2,7 +2,7 @@ import { compile } from "@mdx-js/mdx";
 import { useMDXComponents } from "@mdx-js/react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import ErrorPage from "next/error";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import * as runtime from "react/jsx-runtime.js";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
@@ -11,18 +11,13 @@ import remarkSlug from "remark-slug";
 import DocsLayout from "../../components/DocsLayout";
 import { Doc, getAllDocs, getAllDocSlugs, getDocBySlug } from "../../docs";
 
-const AsyncFunction = Object.getPrototypeOf(run).constructor;
-
 /**
- * Asynchronously run code.
+ * Synchronously run code.
  *
  * Adapted from https://github.com/mdx-js/mdx/blob/7ff979c8dc2d6f75a6190c84eaffc802e294b0d2/packages/mdx/lib/run.js
  */
-async function run(file: string, options?) {
-  const code = `return (async () => {
-    ${file}
-  })()`;
-  return new AsyncFunction(code)(options);
+function runSync(file: string, options?: any) {
+  return new Function(String(file))(options);
 }
 
 type StaticProps = {
@@ -32,27 +27,27 @@ type StaticProps = {
 };
 
 function DocsPage({ compiledMDX, frontmatter, allDocs }: StaticProps) {
-  const [content, setContent] = useState<React.ReactNode>(null);
-
-  useEffect(() => {
-    const anon = async function () {
-      const { default: Content } = await run(compiledMDX || "", {
+  const content = useMemo(() => {
+    if (compiledMDX) {
+      return runSync(compiledMDX, {
         ...runtime,
         useMDXComponents
       });
-      setContent(<Content />);
-    };
-    if (compiledMDX) anon();
+    } else {
+      return null;
+    }
   }, [compiledMDX]);
 
   if (!compiledMDX) {
     return <ErrorPage statusCode={404} />;
   }
+  if (!content?.default) {
+    return <ErrorPage statusCode={500} />;
+  }
 
   return (
     <DocsLayout allDocs={allDocs}>
-      {/* @ts-ignore */}
-      {content}
+      <content.default />
     </DocsLayout>
   );
 }
