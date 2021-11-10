@@ -49,7 +49,7 @@ export function Embed({ defaultValue, ...restProps }) {
   // TODO: add flag to show bibliography tab
   // TODO: vertical mode
   return (
-    <Flex>
+    <Flex {...restProps}>
       <Box
         flex="1 0 0"
         border="1px"
@@ -58,16 +58,17 @@ export function Embed({ defaultValue, ...restProps }) {
         borderBottomLeftRadius="md"
       >
         <Editor
+          autoFit
           value={markdown}
           onChange={(event) => setMarkdown(event.target.value)}
           placeholder="Enter Markdown here"
-          height="100%"
         />
       </Box>
       <Box flex="1 0 0">
         <Preview
           ref={previewRef}
           width="100%"
+          height="100%"
           border="1px"
           borderLeft="none"
           borderColor="gray.200"
