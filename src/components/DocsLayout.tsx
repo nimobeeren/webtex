@@ -114,13 +114,14 @@ function DocsLayout({ children, allDocs }: Props) {
               ))}
             </List>
           </Box>
-          <Flex py={16} flexGrow={1} overflowY="auto">
+          <Flex flexGrow={1} overflowY="auto">
             <Box
               as="main"
               flexGrow={1}
               maxW={720}
               m="0 auto"
               px={8}
+              pt={16}
               sx={{
                 p: {
                   my: 4
@@ -136,6 +137,9 @@ function DocsLayout({ children, allDocs }: Props) {
               }}
             >
               {children}
+              {/* Add a box to act as bottom padding, because bottom padding in
+              a container with overflow: auto doesn't really work. */}
+              <Box role="presentation" h={16} />
             </Box>
             <Box
               flexShrink={0}

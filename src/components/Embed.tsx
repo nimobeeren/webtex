@@ -48,7 +48,6 @@ export function Embed({ defaultValue, ...restProps }) {
   // TODO: copy button
   // TODO: add flag to show bibliography tab
   // TODO: vertical mode
-  // TODO: fix bottom padding of docs layout
   return (
     <Flex>
       <Box
