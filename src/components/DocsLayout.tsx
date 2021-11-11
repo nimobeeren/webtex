@@ -122,9 +122,13 @@ function DocsLayout({ children, allDocs }: Props) {
               m="0 auto"
               px={8}
               pt={16}
+              // These CSS rules are applied to the whole subtree
               sx={{
                 p: {
                   my: 4
+                },
+                "h1,h2,h3,h4,h5,h6": {
+                  mb: 4
                 },
                 a: {
                   color: "blue.600",
