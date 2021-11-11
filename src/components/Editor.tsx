@@ -18,7 +18,8 @@ const sharedStyles: TextareaProps & BoxProps = {
   fontFamily: "mono",
   fontSize: "sm",
   lineHeight: "shorter",
-  whiteSpace: "pre-wrap"
+  whiteSpace: "pre-wrap",
+  wordBreak: "break-word"
 };
 
 function TheTextarea({ value, ...restProps }: TextareaProps) {
