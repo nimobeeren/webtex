@@ -2,6 +2,7 @@ import { compile } from "@mdx-js/mdx";
 import { useMDXComponents } from "@mdx-js/react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import ErrorPage from "next/error";
+import Head from "next/head";
 import { useMemo } from "react";
 import * as runtime from "react/jsx-runtime.js";
 import rehypeKatex from "rehype-katex";
@@ -47,6 +48,9 @@ function DocsPage({ compiledMDX, frontmatter, allDocs }: StaticProps) {
 
   return (
     <DocsLayout allDocs={allDocs}>
+      <Head>
+        <title>{[frontmatter?.title, 'WebTeX'].join(' | ')}</title>
+      </Head>
       <content.default />
     </DocsLayout>
   );

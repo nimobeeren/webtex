@@ -16,6 +16,7 @@ import { Github } from "@emotion-icons/boxicons-logos";
 import { BookOpen, Bulb, Printer } from "@emotion-icons/boxicons-regular";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
+import Head from "next/head";
 import NextLink from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "../components/Editor";
@@ -110,6 +111,9 @@ function Index() {
 
   return (
     <Flex width="100%" height="100vh" position="relative">
+      <Head>
+        <title>WebTeX</title>
+      </Head>
       <Box flex="1 0 0">
         <Tabs
           id="editor-tabs" // added to fix rehydration id mismatch
