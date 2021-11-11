@@ -16,14 +16,7 @@ export type EmbedProps = {
 export function Embed({ defaultValue, ...restProps }: EmbedProps) {
   const theme = useTheme();
 
-  const [markdown, setMarkdown] = useState(() => {
-    if (typeof defaultValue === "string") {
-      return defaultValue.trim();
-    } else if (defaultValue) {
-      return String(defaultValue);
-    }
-    return "";
-  });
+  const [markdown, setMarkdown] = useState(String(defaultValue) || "");
 
   const [output, setOutput] = useState<JSX.Element | null>(null);
 
