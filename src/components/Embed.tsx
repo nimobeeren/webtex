@@ -1,4 +1,5 @@
-import { Box, Flex } from "@chakra-ui/layout";
+import { Box, Flex, FlexProps } from "@chakra-ui/layout";
+import { TextareaProps } from "@chakra-ui/textarea";
 import { useThrottleCallback } from "@react-hook/throttle";
 import React, { useEffect, useRef, useState } from "react";
 import { Preview } from "../components/Preview";
@@ -7,8 +8,19 @@ import { Editor } from "./Editor";
 
 const RENDER_THROTTLE_FPS = 10;
 
-export function Embed({ defaultValue, ...restProps }) {
-  const [markdown, setMarkdown] = useState(() => defaultValue || "");
+export type EmbedProps = {
+  defaultValue: TextareaProps["defaultValue"];
+} & FlexProps;
+
+export function Embed({ defaultValue, ...restProps }: EmbedProps) {
+  const [markdown, setMarkdown] = useState(() => {
+    if (typeof defaultValue === "string") {
+      return defaultValue.trim();
+    } else if (defaultValue) {
+      return String(defaultValue);
+    }
+    return "";
+  });
 
   const [output, setOutput] = useState<JSX.Element | null>(null);
 
@@ -44,7 +56,7 @@ export function Embed({ defaultValue, ...restProps }) {
     throttledRenderSource(markdown);
   }, [markdown, throttledRenderSource]);
 
-  // TODO: make editor tall enough to fit all code
+  // TODO: make preview auto fit
   // TODO: copy button
   // TODO: add flag to show bibliography tab
   // TODO: vertical mode
@@ -58,7 +70,7 @@ export function Embed({ defaultValue, ...restProps }) {
         borderBottomLeftRadius="md"
       >
         <Editor
-          autoFit
+          autoHeight
           value={markdown}
           onChange={(event) => setMarkdown(event.target.value)}
           placeholder="Enter Markdown here"
