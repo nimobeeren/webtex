@@ -9,7 +9,8 @@ import {
   TabList,
   TabPanel,
   TabPanels,
-  Tabs
+  Tabs,
+  useTheme
 } from "@chakra-ui/react";
 import { Github } from "@emotion-icons/boxicons-logos";
 import { BookOpen, Bulb, Printer } from "@emotion-icons/boxicons-regular";
@@ -55,6 +56,8 @@ function saveSource(markdown: string, bibliography: string) {
 }
 
 function Index() {
+  const theme = useTheme();
+
   const [markdown, setMarkdown] = useState(
     () => loadSource()?.markdown || example.markdown
   );
@@ -126,7 +129,13 @@ function Index() {
             </Tab>
           </TabList>
 
-          <TabPanels height="100%">
+          <TabPanels
+            height="100%"
+            _focusWithin={{
+              boxShadow: `inset ${theme.shadows.outline}`
+            }}
+            transitionDuration="normal"
+          >
             <TabPanel p={0} height="100%" tabIndex={-1}>
               <Editor
                 value={markdown}

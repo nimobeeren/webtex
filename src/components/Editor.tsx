@@ -5,6 +5,22 @@ export type EditorProps = {
   autoHeight?: boolean;
 } & TextareaProps;
 
+// These styles are shared between the <pre> and <textarea> elements, in order
+// to make them look the same. Then we use the <pre> to automatically resize
+// the <textarea> to fit its content (if enabled through a prop).
+// See: https://alistapart.com/article/expanding-text-areas-made-elegant/
+const sharedStyles: TextareaProps & BoxProps = {
+  pl: 0,
+  pr: 4,
+  pb: 4,
+  pt: 4,
+  ml: 4,
+  fontFamily: "mono",
+  fontSize: "sm",
+  lineHeight: "shorter",
+  whiteSpace: "pre-wrap"
+};
+
 function TheTextarea({ value, ...restProps }: TextareaProps) {
   return (
     <Textarea
@@ -13,7 +29,7 @@ function TheTextarea({ value, ...restProps }: TextareaProps) {
       border="none"
       borderRadius={0}
       resize="none"
-      overflowX="auto"
+      // Disable focus state, take care to indicate focus on a wrapping component
       _focus={{ outline: "none" }}
       {...restProps}
     />
@@ -21,22 +37,6 @@ function TheTextarea({ value, ...restProps }: TextareaProps) {
 }
 
 export function Editor({ autoHeight, value, ...restProps }: EditorProps) {
-  // These styles are shared between the <pre> and <textarea> elements, in order
-  // to make them look the same. Then we use the <pre> to automatically resize
-  // the <textarea> to fit its content (if enabled through a prop).
-  // See: https://alistapart.com/article/expanding-text-areas-made-elegant/
-  const sharedStyles: TextareaProps & BoxProps = {
-    pl: 0,
-    pr: 4,
-    pb: 4,
-    pt: 4,
-    ml: 4,
-    fontFamily: "mono",
-    fontSize: "sm",
-    lineHeight: "shorter",
-    whiteSpace: "pre-wrap"
-  };
-
   if (!autoHeight) {
     return <TheTextarea value={value} {...sharedStyles} {...restProps} />;
   }

@@ -1,4 +1,5 @@
 import { Box, Flex, FlexProps } from "@chakra-ui/layout";
+import { useTheme } from "@chakra-ui/react";
 import { TextareaProps } from "@chakra-ui/textarea";
 import { useThrottleCallback } from "@react-hook/throttle";
 import React, { useEffect, useRef, useState } from "react";
@@ -13,6 +14,8 @@ export type EmbedProps = {
 } & FlexProps;
 
 export function Embed({ defaultValue, ...restProps }: EmbedProps) {
+  const theme = useTheme();
+
   const [markdown, setMarkdown] = useState(() => {
     if (typeof defaultValue === "string") {
       return defaultValue.trim();
@@ -68,6 +71,10 @@ export function Embed({ defaultValue, ...restProps }: EmbedProps) {
         borderColor="gray.200"
         borderTopLeftRadius="md"
         borderBottomLeftRadius="md"
+        _focusWithin={{
+          boxShadow: `inset ${theme.shadows.outline}`
+        }}
+        transitionDuration="normal"
       >
         <Editor
           autoHeight
