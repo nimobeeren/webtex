@@ -1,5 +1,5 @@
 import { Box, Flex, FlexProps } from "@chakra-ui/layout";
-import { useTheme } from "@chakra-ui/react";
+import { Button, useClipboard, useTheme } from "@chakra-ui/react";
 import { TextareaProps } from "@chakra-ui/textarea";
 import { useThrottleCallback } from "@react-hook/throttle";
 import React, { useEffect, useRef, useState } from "react";
@@ -59,14 +59,15 @@ export function Embed({ defaultValue, ...restProps }: EmbedProps) {
     throttledRenderSource(markdown);
   }, [markdown, throttledRenderSource]);
 
-  // TODO: make preview auto fit
-  // TODO: copy button
+  const { hasCopied, onCopy } = useClipboard(markdown);
+
   // TODO: add flag to show bibliography tab
   // TODO: vertical mode
   return (
     <Flex {...restProps}>
       <Box
         flex="1 0 0"
+        pos="relative"
         border="1px"
         borderColor="gray.200"
         borderTopLeftRadius="md"
@@ -76,6 +77,20 @@ export function Embed({ defaultValue, ...restProps }: EmbedProps) {
         }}
         transitionDuration="normal"
       >
+        <Button
+          pos="absolute"
+          top={4}
+          right={4}
+          zIndex="docked"
+          size="xs"
+          bg="pink.100"
+          color="pink.900"
+          _hover={{ bg: "pink.200" }}
+          _active={{ bg: "pink.300" }}
+          onClick={onCopy}
+        >
+          {hasCopied ? "COPIED" : "COPY"}
+        </Button>
         <Editor
           autoHeight
           value={markdown}
