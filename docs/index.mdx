@@ -2,20 +2,36 @@
 title: Introduction
 ---
 
+### 🚧 TODO 🚧
+- Callout component
+- Citations in embed
+- Show copy button on hover
+- Fix overflow issue
+- Make embed grow to fit preview
+- Introduce images/figures under Basic formatting
+
 # WebTeX
 
-Web$\TeX$ is tool that helps with scientific and technical writing. It is based on Markdown, which introduces simple syntax to make things like headings, [links](https://en.wikipedia.org/wiki/Hyperlink), and **bold** and _italic_ text. Web$\TeX$ extends Markdown by adding support for $\TeX$ math expressions, automatically numbered headings and figures, citations and cross-references.
+Web$\TeX$ is tool that helps with scientific and technical writing. It builds on Markdown, which lets you do the basic formatting that you expect from any writing app. Web$\TeX$ extends Markdown by adding support for math expressions, citations, and cross-references.
 
-## Markdown
+## Basic formatting
 
-Markdown is nice because it is very easy to read. You may have used Markdown before on sites like Reddit or GitHub. It lets you do things like this:
+To make things like headings, **bold** text, _italic_ text, and [links](#), you can use Markdown. You may have used Markdown before on sites like Reddit or GitHub.
+
+It works like this:
 
 <Embed defaultValue=
-{`_Italic_
+{`**Bold**
 
-**Bold**
+_Italic_
 
 [Link](https://webtex.vercel.app/)
+
+---
+
+## Section
+
+### Subsection
 
 ---
 
@@ -41,9 +57,11 @@ Code blocks with triple backticks
 \`\`\``}
 />
 
+Web$\TeX$ supports everything in the [CommonMark spec](https://commonmark.org/).
+
 ## Math
 
-Math works just like in $\LaTeX$, by wrapping it in $-symbols:
+Math works just like in $\LaTeX$, by wrapping it in $-signs:
 
 <Embed defaultValue=
 {`Inline math: $e^{i\\pi} = -1$
@@ -56,3 +74,46 @@ $$`}
 />
 
 Many $\TeX$ functions are supported, including macros using `\newcommand` etc. For a full list of supported functions, refer to the [KaTeX docs](https://katex.org/docs/supported.html).
+
+## Citations
+
+TODO
+
+## Cross-references
+
+Figures and sections can be referenced using the `:ref[id]` command, where `id` is the ID of the element you want to reference. Before something can be referenced, it must have an ID. You can give something an ID using the `:id[your-id]` command.
+
+For example, this is how you reference a figure:
+
+<Embed defaultValue=
+{`![Look at this graph!](/nickelback.jpg) :id[graph]
+
+---
+
+Now :ref[graph] is a reference to the figure.`}
+/>
+
+Referencing sections is even easier, because you don't have to give them an ID unless you want to. Check this out:
+
+<Embed defaultValue=
+{`## A section :id[first-section]
+
+Some text.
+
+## Another section
+
+More text.
+
+---
+
+:ref[first-section] works.
+
+And :ref[another-section] works too!`}
+/>
+
+⚠️ Be careful when referencing sections without giving them an ID. When you change the title of the section, the reference will break.
+
+💡 You can find the ID of any section by hovering over the heading in the preview.
+
+{/* TODO: this feels out of place */}
+Headings and figures are automatically numbered. A heading with one `#` is not numbered, so this can be used as the title of the document.
