@@ -3,16 +3,16 @@ title: Introduction
 ---
 
 ### 🚧 TODO 🚧
-- Callout component
-- Citations in embed
-- Show copy button on hover
 - Fix overflow issue
-- Make embed grow to fit preview
+- Citations in embed
 - Introduce images/figures under Basic formatting
+- Callout component
+- Show copy button on hover
+- Make embed grow to fit preview
 
 # WebTeX
 
-Web$\TeX$ is tool that helps with scientific and technical writing. It builds on Markdown, which lets you do the basic formatting that you expect from any writing app. Web$\TeX$ extends Markdown by adding support for math expressions, citations, and cross-references.
+Web$\TeX$ is tool that helps with scientific and technical writing. It builds on Markdown, which lets you do the basic formatting that you expect from any writing app. Web$\TeX$ extends Markdown by adding support for math expressions, citations, and cross-referencing.
 
 ## Basic formatting
 
@@ -46,6 +46,10 @@ _Italic_
 
 ---
 
+![This is a figure.](/nickelback.jpg)
+
+---
+
 > This is a quote.
 
 ---
@@ -57,7 +61,16 @@ Code blocks with triple backticks
 \`\`\``}
 />
 
-Web$\TeX$ supports everything in the [CommonMark spec](https://commonmark.org/).
+In the example above, two things are different from most other Markdown tools:
+
+1. Section headings are automatically numbered
+2. Images are given a caption, and they are automatically numbered
+
+Other than that, Web$\TeX$ follows the [CommonMark spec](https://commonmark.org/).
+
+💡 Headings with one `#` are not numbered, so you can use these as the title of the document.
+
+💡 If you don't want to use captions or automatic numbering, check out the section on [HTML](#html).
 
 ## Math
 
@@ -79,7 +92,7 @@ Many $\TeX$ functions are supported, including macros using `\newcommand` etc. F
 
 TODO
 
-## Cross-references
+## Cross-referencing
 
 Figures and sections can be referenced using the `:ref[id]` command, where `id` is the ID of the element you want to reference. Before something can be referenced, it must have an ID. You can give something an ID using the `:id[your-id]` command.
 
@@ -115,5 +128,31 @@ And :ref[another-section] works too!`}
 
 💡 You can find the ID of any section by hovering over the heading in the preview.
 
-{/* TODO: this feels out of place */}
-Headings and figures are automatically numbered. A heading with one `#` is not numbered, so this can be used as the title of the document.
+## HTML
+
+A great feature of Markdown is that you can include any HTML you want.
+
+Just look at the possibilities:
+
+<Embed defaultValue=
+{`You can use many HTML elements, for example to create <mark>marked text</mark>.
+
+---
+
+You can do custom styling with CSS:
+
+<p style="color: blue; text-align: center;">I'm blue, da ba dee da ba daa</p>
+
+---
+
+And this is how you insert an image without a caption:
+
+<img src="/nickelback.jpg">
+
+Or a heading without numbering:
+
+<h2>Don't count on me!</h2>
+`}
+/>
+
+💡 There are a lot of HTML elements, take a look at [this list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics) for some useful ones.

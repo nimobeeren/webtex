@@ -136,10 +136,15 @@ function DocsLayout({ children, allDocs }: Props) {
                 a: {
                   color: "blue.600",
                   ":hover": {
-                    // must be in :hover to fix specificity
+                    // Must be in :hover to fix specificity
                     textDecorationColor: "blue.100",
                     textUnderlineOffset: "3px"
                   }
+                },
+                'ul, ol': {
+                  // This changes how margin around list items works, and has
+                  // the side effect of adding some indentation which is nice
+                  listStylePosition: 'inside'
                 }
               }}
             >
