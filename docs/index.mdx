@@ -5,8 +5,6 @@ title: Introduction
 ### 🚧 TODO 🚧
 - Fix overflow issue
 - Citations in embed
-- Introduce images/figures under Basic formatting
-- Callout component
 - Show copy button on hover
 - Make embed grow to fit preview
 
@@ -67,10 +65,11 @@ In the example above, two things are different from most other Markdown tools:
 2. Images are given a caption, and they are automatically numbered
 
 Other than that, Web$\TeX$ follows the [CommonMark spec](https://commonmark.org/).
+{/* NOTE: well, I'm not sure because we're doing a bunch of other things */}
 
-💡 Headings with one `#` are not numbered, so you can use these as the title of the document.
+<Callout>Headings with one `#` are not numbered, so you can use these as the title of the document.</Callout>
 
-💡 If you don't want to use captions or automatic numbering, check out the section on [HTML](#html).
+<Callout>If you don't want to use captions or automatic numbering, check out the section on [HTML](#html).</Callout>
 
 ## Math
 
@@ -124,9 +123,9 @@ More text.
 And :ref[another-section] works too!`}
 />
 
-⚠️ Be careful when referencing sections without giving them an ID. When you change the title of the section, the reference will break.
+<Callout variant="warning">Be careful when referencing sections without giving them an ID. When you change the title of the section, the reference will break.</Callout>
 
-💡 You can find the ID of any section by hovering over the heading in the preview.
+<Callout>You can find the ID of any section by hovering over the heading in the preview.</Callout>
 
 ## HTML
 
@@ -155,4 +154,4 @@ Or a heading without numbering:
 `}
 />
 
-💡 There are a lot of HTML elements, take a look at [this list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics) for some useful ones.
+<Callout>There are a lot of HTML elements, take a look at [this list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics) for some useful ones.</Callout>

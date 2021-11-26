@@ -3,6 +3,7 @@ import "@fontsource/inter";
 import "@fontsource/jetbrains-mono";
 import { MDXProvider } from "@mdx-js/react";
 import type { AppProps } from "next/app";
+import { Callout } from "../components/Callout";
 import { Embed } from "../components/Embed";
 import { components } from "../mdxComponents";
 
@@ -23,7 +24,7 @@ const theme = extendTheme({
 function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <MDXProvider components={{ ...components, Embed }}>
+      <MDXProvider components={{ ...components, Embed, Callout }}>
         {/* @ts-expect-error bug in @mdx-js/react, should be fixed in next release */}
         <Component {...pageProps} />
       </MDXProvider>
