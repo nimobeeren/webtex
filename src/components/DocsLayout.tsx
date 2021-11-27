@@ -128,7 +128,8 @@ function DocsLayout({ children, allDocs }: Props) {
                   my: 4
                 },
                 "h1,h2,h3,h4,h5,h6": {
-                  my: 4,
+                  mt: 12,
+                  mb: 4,
                   ':first-child': {
                     mt: 0
                   }

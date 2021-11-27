@@ -59,6 +59,7 @@ export function Embed({ defaultValue, ...restProps }: EmbedProps) {
   return (
     <Flex {...restProps}>
       <Box
+        role="group"
         flex="1 0 0"
         pos="relative"
         border="1px"
@@ -74,12 +75,14 @@ export function Embed({ defaultValue, ...restProps }: EmbedProps) {
           pos="absolute"
           top={4}
           right={4}
+          opacity={0}
           zIndex="docked"
           size="xs"
           bg="pink.100"
           color="pink.900"
           _hover={{ bg: "pink.200" }}
           _active={{ bg: "pink.300" }}
+          _groupHover={{ opacity: 1 }}
           onClick={onCopy}
         >
           {hasCopied ? "COPIED" : "COPY"}
