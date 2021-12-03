@@ -130,7 +130,7 @@ function DocsLayout({ children, allDocs }: Props) {
                 "h1,h2,h3,h4,h5,h6": {
                   mt: 12,
                   mb: 4,
-                  ':first-child': {
+                  ":first-child": {
                     mt: 0
                   }
                 },
@@ -142,10 +142,18 @@ function DocsLayout({ children, allDocs }: Props) {
                     textUnderlineOffset: "3px"
                   }
                 },
-                'ul, ol': {
+                "ul, ol": {
                   // This changes how margin around list items works, and has
                   // the side effect of adding some indentation which is nice
-                  listStylePosition: 'inside'
+                  listStylePosition: "inside"
+                },
+                // This fixes an issue where KaTeX elements cause overflow.
+                // The .katex-mathml element is visually hidden but accessible
+                // to screen readers. This change could cause issues when
+                // focusing the element, but that seems unlikely to happen.
+                // See also https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+                ".katex .katex-mathml": {
+                  top: "-99999px"
                 }
               }}
             >
