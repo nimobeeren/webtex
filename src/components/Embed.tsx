@@ -17,18 +17,18 @@ export type EmbedProps = {
 export function Embed({ defaultValue, defaultBibliography, ...restProps }: EmbedProps) {
   const theme = useTheme();
 
-  const [markdown, setMarkdown] = useState(String(defaultValue) || "");
+  const [content, setContent] = useState(String(defaultValue) || "");
   const [bibliography, setBibliography] = useState(String(defaultBibliography) || "");
 
   const [output, setOutput] = useState<JSX.Element | null>(null);
 
   const previewRef = useRef<HTMLIFrameElement>(null);
 
-  function renderSource(md: string, bibtex: string = "") {
+  function renderSource(content: string, bibliography: string = "") {
     processor
       // Store the bibliography as a data attribute on the virtual file, because
       // it's not part of the markdown, but it is still needed to create citations
-      .process({ value: md, data: { bibliography: bibtex } })
+      .process({ value: content, data: { bibliography } })
       .then((vfile) => {
         if (vfile.value === "") {
           // Input was empty
@@ -51,11 +51,11 @@ export function Embed({ defaultValue, defaultBibliography, ...restProps }: Embed
 
   // Things to do when the source code of the document is changed
   useEffect(() => {
-    throttledRenderSource(markdown, bibliography);
-  }, [markdown, bibliography, throttledRenderSource]);
+    throttledRenderSource(content, bibliography);
+  }, [content, bibliography, throttledRenderSource]);
 
-  // TODO: copy markdown or bibliography based on what tab is active
-  const { hasCopied, onCopy } = useClipboard(markdown);
+  // TODO: copy content or bibliography based on what tab is active
+  const { hasCopied, onCopy } = useClipboard(content);
 
   return (
     <Flex {...restProps}>
@@ -90,8 +90,8 @@ export function Embed({ defaultValue, defaultBibliography, ...restProps }: Embed
         </Button>
         <Editor
           autoHeight
-          value={markdown}
-          onChange={(event) => setMarkdown(event.target.value)}
+          value={content}
+          onChange={(event) => setContent(event.target.value)}
           placeholder="Enter Markdown here"
         />
       </Box>

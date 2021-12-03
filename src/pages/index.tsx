@@ -38,8 +38,8 @@ function loadSource() {
     return undefined;
   }
   try {
-    const { markdown, bibliography } = JSON.parse(json);
-    return { markdown, bibliography };
+    const { content, bibliography } = JSON.parse(json);
+    return { content, bibliography };
   } catch {
     console.warn(
       `Got unexpected value from storage (key "${STORAGE_KEY_SOURCE}"), value:\n"${json}"`
@@ -48,19 +48,19 @@ function loadSource() {
   }
 }
 
-function saveSource(markdown: string, bibliography: string) {
+function saveSource(content: string, bibliography: string) {
   if (typeof window === "undefined") {
     return undefined;
   }
-  const state = JSON.stringify({ markdown, bibliography });
+  const state = JSON.stringify({ content, bibliography });
   window.localStorage.setItem(STORAGE_KEY_SOURCE, state);
 }
 
 function Index() {
   const theme = useTheme();
 
-  const [markdown, setMarkdown] = useState(
-    () => loadSource()?.markdown || example.markdown
+  const [content, setContent] = useState(
+    () => loadSource()?.content || example.content
   );
   const [bibliography, setBibliography] = useState(
     () => loadSource()?.bibliography || example.bibliography
@@ -69,13 +69,13 @@ function Index() {
 
   const previewRef = useRef<HTMLIFrameElement>(null);
 
-  function renderSource(md: string, bibtex: string) {
+  function renderSource(content: string, bibliography: string) {
     const startTime = performance.now();
 
     processor
       // Store the bibliography as a data attribute on the virtual file, because
       // it's not part of the markdown, but it is still needed to create citations
-      .process({ value: md, data: { bibliography: bibtex } })
+      .process({ value: content, data: { bibliography } })
       .then((vfile) => {
         const endTime = performance.now();
         console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`);
@@ -105,9 +105,9 @@ function Index() {
 
   // Things to do when the source code of the document is changed
   useEffect(() => {
-    throttledRenderSource(markdown, bibliography);
-    throttledSaveSource(markdown, bibliography);
-  }, [markdown, bibliography, throttledRenderSource, throttledSaveSource]);
+    throttledRenderSource(content, bibliography);
+    throttledSaveSource(content, bibliography);
+  }, [content, bibliography, throttledRenderSource, throttledSaveSource]);
 
   return (
     <Flex width="100%" height="100vh" position="relative">
@@ -142,8 +142,8 @@ function Index() {
           >
             <TabPanel p={0} height="100%" tabIndex={-1}>
               <Editor
-                value={markdown}
-                onChange={(event) => setMarkdown(event.target.value)}
+                value={content}
+                onChange={(event) => setContent(event.target.value)}
                 placeholder="Enter Markdown here"
                 height="100%"
               />
