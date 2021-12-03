@@ -11,12 +11,14 @@ const RENDER_THROTTLE_FPS = 10;
 
 export type EmbedProps = {
   defaultValue: TextareaProps["defaultValue"];
+  defaultBibliography?: string;
 } & FlexProps;
 
-export function Embed({ defaultValue, ...restProps }: EmbedProps) {
+export function Embed({ defaultValue, defaultBibliography, ...restProps }: EmbedProps) {
   const theme = useTheme();
 
   const [markdown, setMarkdown] = useState(String(defaultValue) || "");
+  const [bibliography, setBibliography] = useState(String(defaultBibliography) || "");
 
   const [output, setOutput] = useState<JSX.Element | null>(null);
 
@@ -49,13 +51,12 @@ export function Embed({ defaultValue, ...restProps }: EmbedProps) {
 
   // Things to do when the source code of the document is changed
   useEffect(() => {
-    throttledRenderSource(markdown);
-  }, [markdown, throttledRenderSource]);
+    throttledRenderSource(markdown, bibliography);
+  }, [markdown, bibliography, throttledRenderSource]);
 
+  // TODO: copy markdown or bibliography based on what tab is active
   const { hasCopied, onCopy } = useClipboard(markdown);
 
-  // TODO: add flag to show bibliography tab
-  // TODO: vertical mode
   return (
     <Flex {...restProps}>
       <Box
