@@ -1,6 +1,14 @@
 import { Box, Flex, FlexProps } from "@chakra-ui/layout";
-import { Button, useClipboard, useTheme } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonProps,
+  Icon,
+  useClipboard,
+  useTheme
+} from "@chakra-ui/react";
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/tabs";
 import { TextareaProps } from "@chakra-ui/textarea";
+import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
 import React, { useEffect, useRef, useState } from "react";
 import { Preview } from "../components/Preview";
@@ -9,16 +17,42 @@ import { Editor } from "./Editor";
 
 const RENDER_THROTTLE_FPS = 10;
 
+function CopyButton(props: ButtonProps) {
+  return (
+    <Button
+      pos="absolute"
+      top={4}
+      right={4}
+      opacity={0}
+      zIndex="docked"
+      size="xs"
+      bg="pink.100"
+      color="pink.900"
+      _hover={{ bg: "pink.200" }}
+      _active={{ bg: "pink.300" }}
+      _focus={{ opacity: 1, boxShadow: "outline" }}
+      _groupHover={{ opacity: 1 }}
+      {...props}
+    />
+  );
+}
+
 export type EmbedProps = {
   defaultValue: TextareaProps["defaultValue"];
   defaultBibliography?: string;
 } & FlexProps;
 
-export function Embed({ defaultValue, defaultBibliography, ...restProps }: EmbedProps) {
+export function Embed({
+  defaultValue,
+  defaultBibliography,
+  ...restProps
+}: EmbedProps) {
   const theme = useTheme();
 
   const [content, setContent] = useState(String(defaultValue) || "");
-  const [bibliography, setBibliography] = useState(String(defaultBibliography) || "");
+  const [bibliography, setBibliography] = useState(
+    String(defaultBibliography) || ""
+  );
 
   const [output, setOutput] = useState<JSX.Element | null>(null);
 
@@ -54,8 +88,10 @@ export function Embed({ defaultValue, defaultBibliography, ...restProps }: Embed
     throttledRenderSource(content, bibliography);
   }, [content, bibliography, throttledRenderSource]);
 
-  // TODO: copy content or bibliography based on what tab is active
-  const { hasCopied, onCopy } = useClipboard(content);
+  const { hasCopied: hasCopiedContent, onCopy: onCopyContent } =
+    useClipboard(content);
+  const { hasCopied: hasCopiedBibliography, onCopy: onCopyBibliography } =
+    useClipboard(bibliography);
 
   return (
     <Flex {...restProps}>
@@ -67,33 +103,51 @@ export function Embed({ defaultValue, defaultBibliography, ...restProps }: Embed
         borderColor="gray.200"
         borderTopLeftRadius="md"
         borderBottomLeftRadius="md"
-        _focusWithin={{
-          boxShadow: `inset ${theme.shadows.outline}`
-        }}
-        transitionDuration="normal"
       >
-        <Button
-          pos="absolute"
-          top={4}
-          right={4}
-          opacity={0}
-          zIndex="docked"
-          size="xs"
-          bg="pink.100"
-          color="pink.900"
-          _hover={{ bg: "pink.200" }}
-          _active={{ bg: "pink.300" }}
-          _groupHover={{ opacity: 1 }}
-          onClick={onCopy}
-        >
-          {hasCopied ? "COPIED" : "COPY"}
-        </Button>
-        <Editor
-          autoHeight
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-          placeholder="Enter Markdown here"
-        />
+        <Tabs variant="enclosed-colored">
+          <TabList>
+            <Tab>
+              <Icon as={Edit} mr={2} />
+              Content
+            </Tab>
+            <Tab>
+              <Icon as={Book} mr={2} />
+              Bibliography
+            </Tab>
+          </TabList>
+
+          <TabPanels
+            height="100%"
+            _focusWithin={{
+              boxShadow: `inset ${theme.shadows.outline}`
+            }}
+            transitionDuration="normal"
+          >
+            <TabPanel position="relative" p={0} height="100%" tabIndex={-1}>
+              <Editor
+                autoHeight
+                value={content}
+                onChange={(event) => setContent(event.target.value)}
+                placeholder="Enter Markdown here"
+              />
+              <CopyButton onClick={onCopyContent}>
+                {hasCopiedContent ? "COPIED" : "COPY"}
+              </CopyButton>
+            </TabPanel>
+            <TabPanel position="relative" p={0} height="100%" tabIndex={-1}>
+              <Editor
+                autoHeight
+                value={bibliography}
+                onChange={(event) => setBibliography(event.target.value)}
+                placeholder="Enter BibTeX here"
+                height="100%"
+              />
+              <CopyButton onClick={onCopyBibliography}>
+                {hasCopiedBibliography ? "COPIED" : "COPY"}
+              </CopyButton>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Box>
       <Box flex="1 0 0">
         <Preview
