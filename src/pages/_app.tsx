@@ -1,4 +1,5 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import defaultTheme from "@chakra-ui/theme";
 import "@fontsource/inter";
 import "@fontsource/jetbrains-mono";
 import { MDXProvider } from "@mdx-js/react";
@@ -16,6 +17,16 @@ const theme = extendTheme({
     Button: {
       baseStyle: {
         letterSpacing: "wide"
+      }
+    },
+    Tabs: {
+      parts: ["tab"],
+      baseStyle: {
+        tab: {
+          _focus: {
+            boxShadow: `inset ${defaultTheme.shadows.outline}`
+          }
+        }
       }
     }
   }

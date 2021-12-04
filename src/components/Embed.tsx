@@ -1,13 +1,19 @@
-import { Box, Flex, FlexProps } from "@chakra-ui/layout";
 import {
+  Box,
   Button,
   ButtonProps,
+  Flex,
+  FlexProps,
   Icon,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  TextareaProps,
   useClipboard,
   useTheme
 } from "@chakra-ui/react";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/tabs";
-import { TextareaProps } from "@chakra-ui/textarea";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
 import React, { useEffect, useRef, useState } from "react";
@@ -108,7 +114,12 @@ export function Embed({
         <Tabs>
           {!!showBibliography && (
             <TabList>
-              <Tab>
+              <Tab
+                // Container has radius `md`, but because this outline is inside
+                // the element (box-shadow: inset), the radius should be
+                // slightly smaller
+                borderTopLeftRadius={`calc(${theme.radii.md} - 1.5px)`}
+              >
                 <Icon as={Edit} mr={2} />
                 Content
               </Tab>
@@ -122,10 +133,14 @@ export function Embed({
           <TabPanels
             role="group"
             height="100%"
+            // Container has radius `md`, but because this outline is inside
+            // the element (box-shadow: inset), the radius should be
+            // slightly smaller
+            borderBottomLeftRadius={`calc(${theme.radii.md} - 1.5px)`}
+            transitionDuration="normal"
             _focusWithin={{
               boxShadow: `inset ${theme.shadows.outline}`
             }}
-            transitionDuration="normal"
           >
             <TabPanel position="relative" p={0} height="100%" tabIndex={-1}>
               <Editor
