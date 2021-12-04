@@ -98,7 +98,6 @@ export function Embed({
   return (
     <Flex {...restProps}>
       <Box
-        role="group"
         flex="1 0 0"
         pos="relative"
         border="2px"
@@ -121,6 +120,7 @@ export function Embed({
           )}
 
           <TabPanels
+            role="group"
             height="100%"
             _focusWithin={{
               boxShadow: `inset ${theme.shadows.outline}`
