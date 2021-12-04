@@ -40,18 +40,20 @@ function CopyButton(props: ButtonProps) {
 export type EmbedProps = {
   defaultValue: TextareaProps["defaultValue"];
   defaultBibliography?: string;
+  showBibliography?: boolean;
 } & FlexProps;
 
 export function Embed({
   defaultValue,
   defaultBibliography,
+  showBibliography,
   ...restProps
 }: EmbedProps) {
   const theme = useTheme();
 
-  const [content, setContent] = useState(String(defaultValue) || "");
+  const [content, setContent] = useState(String(defaultValue || ""));
   const [bibliography, setBibliography] = useState(
-    String(defaultBibliography) || ""
+    String(defaultBibliography || "")
   );
 
   const [output, setOutput] = useState<JSX.Element | null>(null);
@@ -105,16 +107,18 @@ export function Embed({
         borderBottomLeftRadius="md"
       >
         <Tabs variant="enclosed-colored">
-          <TabList>
-            <Tab>
-              <Icon as={Edit} mr={2} />
-              Content
-            </Tab>
-            <Tab>
-              <Icon as={Book} mr={2} />
-              Bibliography
-            </Tab>
-          </TabList>
+          {!!showBibliography && (
+            <TabList>
+              <Tab>
+                <Icon as={Edit} mr={2} />
+                Content
+              </Tab>
+              <Tab>
+                <Icon as={Book} mr={2} />
+                Bibliography
+              </Tab>
+            </TabList>
+          )}
 
           <TabPanels
             height="100%"
@@ -134,18 +138,20 @@ export function Embed({
                 {hasCopiedContent ? "COPIED" : "COPY"}
               </CopyButton>
             </TabPanel>
-            <TabPanel position="relative" p={0} height="100%" tabIndex={-1}>
-              <Editor
-                autoHeight
-                value={bibliography}
-                onChange={(event) => setBibliography(event.target.value)}
-                placeholder="Enter BibTeX here"
-                height="100%"
-              />
-              <CopyButton onClick={onCopyBibliography}>
-                {hasCopiedBibliography ? "COPIED" : "COPY"}
-              </CopyButton>
-            </TabPanel>
+            {!!showBibliography && (
+              <TabPanel position="relative" p={0} height="100%" tabIndex={-1}>
+                <Editor
+                  autoHeight
+                  value={bibliography}
+                  onChange={(event) => setBibliography(event.target.value)}
+                  placeholder="Enter BibTeX here"
+                  height="100%"
+                />
+                <CopyButton onClick={onCopyBibliography}>
+                  {hasCopiedBibliography ? "COPIED" : "COPY"}
+                </CopyButton>
+              </TabPanel>
+            )}
           </TabPanels>
         </Tabs>
       </Box>
