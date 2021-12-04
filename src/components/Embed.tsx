@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
+import hash from "hash-sum";
 import React, { useEffect, useRef, useState } from "react";
 import { Preview } from "../components/Preview";
 import { processor } from "../markdown/processor";
@@ -111,7 +112,11 @@ export function Embed({
         borderTopLeftRadius="md"
         borderBottomLeftRadius="md"
       >
-        <Tabs>
+        <Tabs 
+          // Need to set an ID to fix rehydration id mismatch
+          // This assumes no embed has the same default value and bibliography
+          id={`tabs-${hash({ defaultValue, defaultBibliography })}`}
+        >
           {!!showBibliography && (
             <TabList>
               <Tab
