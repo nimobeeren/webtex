@@ -117,7 +117,6 @@ function Index() {
       <Box flex="1 0 0">
         <Tabs
           id="editor-tabs" // added to fix rehydration id mismatch
-          variant="enclosed-colored"
           display="flex"
           flexDir="column"
           height="100%"
@@ -167,7 +166,7 @@ function Index() {
           spacing={2}
           height={42}
           px={2}
-          borderBottom="1px"
+          borderBottom="2px"
           borderColor="gray.200"
         >
           <FeedbackButton
@@ -223,7 +222,7 @@ function Index() {
         <Preview
           ref={previewRef}
           flexGrow={1}
-          borderLeft="1px"
+          borderLeft="2px"
           borderColor="gray.200"
           overflowY="auto"
         >

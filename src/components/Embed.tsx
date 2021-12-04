@@ -101,12 +101,12 @@ export function Embed({
         role="group"
         flex="1 0 0"
         pos="relative"
-        border="1px"
+        border="2px"
         borderColor="gray.200"
         borderTopLeftRadius="md"
         borderBottomLeftRadius="md"
       >
-        <Tabs variant="enclosed-colored">
+        <Tabs>
           {!!showBibliography && (
             <TabList>
               <Tab>
@@ -160,7 +160,7 @@ export function Embed({
           ref={previewRef}
           width="100%"
           height="100%"
-          border="1px"
+          border="2px"
           borderLeft="none"
           borderColor="gray.200"
           borderTopRightRadius="md"
