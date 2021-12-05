@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   ButtonProps,
+  Center,
   Flex,
   FlexProps,
   Icon,
@@ -175,23 +176,27 @@ export function Embed({
           </TabPanels>
         </Tabs>
       </Box>
-      <Box flex="1 0 0">
+      <Box
+        flex="1 0 0"
+        border="2px"
+        borderLeft="none"
+        borderColor="gray.200"
+        borderTopRightRadius="md"
+        borderBottomRightRadius="md"
+      >
         {output ? (
           <Preview
             ref={previewRef}
             width="100%"
             height="100%"
-            border="2px"
-            borderLeft="none"
-            borderColor="gray.200"
-            borderTopRightRadius="md"
-            borderBottomRightRadius="md"
             styleOverrides={`body { margin: 1rem; }`}
           >
             {output}
           </Preview>
         ) : (
-          <PreviewPlaceholder />
+          <Center p={8} width="100%" height="100%">
+            <PreviewPlaceholder />
+          </Center>
         )}
       </Box>
     </Flex>

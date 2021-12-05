@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Center,
   Flex,
   HStack,
   Icon,
@@ -219,19 +220,22 @@ function Index() {
             />
           </NextLink>
         </HStack>
-        {output ? (
-          <Preview
-            ref={previewRef}
-            flexGrow={1}
-            borderLeft="2px"
-            borderColor="gray.200"
-            overflowY="auto"
-          >
-            {output}
-          </Preview>
-        ) : (
-          <PreviewPlaceholder />
-        )}
+        <Box flexGrow={1} borderLeft="2px" borderColor="gray.200">
+          {output ? (
+            <Preview
+              ref={previewRef}
+              width="100%"
+              height="100%"
+              overflowY="auto"
+            >
+              {output}
+            </Preview>
+          ) : (
+            <Center p={8} width="100%" height="100%">
+              <PreviewPlaceholder />
+            </Center>
+          )}
+        </Box>
       </Flex>
     </Flex>
   );

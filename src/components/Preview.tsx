@@ -1,4 +1,4 @@
-import { Center, CenterProps, Text } from "@chakra-ui/react";
+import { Text, TextProps } from "@chakra-ui/react";
 import React from "react";
 import { PortalFrame, PortalFrameProps } from "./PortalFrame";
 
@@ -14,12 +14,10 @@ export const Preview = React.forwardRef<HTMLIFrameElement, PreviewProps>(
   }
 );
 
-export function PreviewPlaceholder(props: CenterProps) {
+export function PreviewPlaceholder(props: TextProps) {
   return (
-    <Center p={8} {...props}>
-      <Text fontSize="lg" color="gray.600">
-        When you write content on the left, a preview will be shown here
-      </Text>
-    </Center>
+    <Text fontSize="lg" color="gray.600" {...props}>
+      When you write content on the left, a preview will be shown here
+    </Text>
   );
 }
