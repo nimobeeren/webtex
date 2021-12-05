@@ -187,6 +187,7 @@ export function Embed({
             borderTopRightRadius="md"
             borderBottomRightRadius="md"
             styleOverrides={`body { margin: 1rem; }`}
+            autoHeight
           >
             {output}
           </Preview>
