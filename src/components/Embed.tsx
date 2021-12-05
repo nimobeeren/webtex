@@ -117,6 +117,7 @@ export function Embed({
           // Need to set an ID to fix rehydration id mismatch
           // This assumes no embed has the same default value and bibliography
           id={`tabs-${hash({ defaultValue, defaultBibliography })}`}
+          height="100%"
         >
           {!!showBibliography && (
             <TabList>
