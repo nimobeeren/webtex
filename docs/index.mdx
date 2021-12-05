@@ -2,9 +2,6 @@
 title: Getting Started
 ---
 
-### 🚧 TODO 🚧
-- Indicate that examples are editable
-
 # WebTeX
 
 Web$\TeX$ is tool that helps with scientific and technical writing. It builds on Markdown, which lets you do the basic formatting that you expect from any writing app. Web$\TeX$ extends Markdown by adding support for math expressions, citations, and cross-referencing.
@@ -16,7 +13,7 @@ To make things like headings, **bold** text, _italic_ text, and [links](#), you 
 It works like this:
 
 <Embed 
-  minHeight={770}
+  minHeight={810}
   defaultValue=
 {`**Bold**
 
@@ -66,9 +63,15 @@ In the example above, two things are different from most other Markdown tools:
 Other than that, Web$\TeX$ follows the [CommonMark spec](https://commonmark.org/).
 {/* NOTE: well, I'm not sure because we're doing a bunch of other things */}
 
-<Callout>Headings with one `#` are not numbered, so you can use these as the title of the document.</Callout>
+<Callout>
+  Headings with one `#` are not numbered, so you can use these as the title of
+  the document.
+</Callout>
 
-<Callout>If you don't want to use captions or automatic numbering, check out the section on [HTML](#html).</Callout>
+<Callout>
+  If you don't want to use captions or automatic numbering, check out the
+  section on [HTML](#html).
+</Callout>
 
 ## Math
 
@@ -96,8 +99,8 @@ Figures and sections can be referenced using the `:ref[id]` command, where `id` 
 
 For example, this is how you reference a figure:
 
-<Embed 
-  minHeight={260}
+<Embed
+  minHeight={300}
   defaultValue=
 {`![Look at this graph!](/nickelback.jpg) :id[graph]
 
@@ -108,8 +111,8 @@ Now :ref[graph] is a reference to the figure.`}
 
 Referencing sections is even easier, because you don't have to give them an ID unless you want to. Check this out:
 
-<Embed 
-  minHeight={290}
+<Embed
+  minHeight={330}
   defaultValue=
 {`## A section :id[first-section]
 
@@ -136,8 +139,8 @@ A great feature of Markdown is that you can include any HTML you want.
 
 Just look at the possibilities:
 
-<Embed 
-  minHeight={490}
+<Embed
+  minHeight={530}
   defaultValue=
 {`You can use many HTML elements, for example to create <mark>marked text</mark>.
 

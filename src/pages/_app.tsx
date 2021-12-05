@@ -1,6 +1,7 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import defaultTheme from "@chakra-ui/theme";
-import "@fontsource/inter";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/700.css";
 import "@fontsource/jetbrains-mono";
 import { MDXProvider } from "@mdx-js/react";
 import type { AppProps } from "next/app";

@@ -1,16 +1,17 @@
 import {
   Box,
+  BoxProps,
   Button,
   ButtonProps,
   Center,
   Flex,
-  FlexProps,
   Icon,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   TextareaProps,
   useClipboard,
   useTheme
@@ -49,7 +50,7 @@ export type EmbedProps = {
   defaultValue: TextareaProps["defaultValue"];
   defaultBibliography?: string;
   showBibliography?: boolean;
-} & FlexProps;
+} & BoxProps;
 
 export function Embed({
   defaultValue,
@@ -104,102 +105,120 @@ export function Embed({
     useClipboard(bibliography);
 
   return (
-    <Flex {...restProps}>
-      <Box
-        flex="1 0 0"
-        pos="relative"
+    <Flex direction="column" {...restProps}>
+      <Text
+        as="div"
+        p={2}
+        textAlign="center"
+        bg="blue.50"
+        color="blue.700"
+        fontSize="sm"
+        fontWeight="black"
+        letterSpacing="wider"
+        casing="uppercase"
         border="2px"
+        borderBottom="none"
         borderColor="gray.200"
         borderTopLeftRadius="md"
-        borderBottomLeftRadius="md"
+        borderTopRightRadius="md"
       >
-        <Tabs
-          // Need to set an ID to fix rehydration id mismatch
-          // This assumes no embed has the same default value and bibliography
-          id={`tabs-${hash({ defaultValue, defaultBibliography })}`}
-          height="100%"
+        Editable Example
+      </Text>
+      <Flex flexGrow={1}>
+        <Box
+          flex="1 0 0"
+          pos="relative"
+          border="2px"
+          borderColor="gray.200"
+          borderBottomLeftRadius="md"
         >
-          {!!showBibliography && (
-            <TabList>
-              <Tab
-                // Container has radius `md`, but because this outline is inside
-                // the element (box-shadow: inset), the radius should be
-                // slightly smaller
-                borderTopLeftRadius={`calc(${theme.radii.md} - 1.5px)`}
-              >
-                <Icon as={Edit} mr={2} />
-                Content
-              </Tab>
-              <Tab>
-                <Icon as={Book} mr={2} />
-                Bibliography
-              </Tab>
-            </TabList>
-          )}
-
-          <TabPanels
-            role="group"
+          <Tabs
+            // Need to set an ID to fix rehydration id mismatch
+            // This assumes no embed has the same default value and bibliography
+            id={`tabs-${hash({ defaultValue, defaultBibliography })}`}
             height="100%"
-            // Container has radius `md`, but because this outline is inside
-            // the element (box-shadow: inset), the radius should be
-            // slightly smaller
-            borderBottomLeftRadius={`calc(${theme.radii.md} - 1.5px)`}
-            transitionDuration="normal"
-            _focusWithin={{
-              boxShadow: `inset ${theme.shadows.outline}`
-            }}
           >
-            <TabPanel position="relative" p={0} height="100%" tabIndex={-1}>
-              <Editor
-                autoHeight
-                value={content}
-                onChange={(event) => setContent(event.target.value)}
-                placeholder="Enter Markdown here"
-              />
-              <CopyButton onClick={onCopyContent}>
-                {hasCopiedContent ? "COPIED" : "COPY"}
-              </CopyButton>
-            </TabPanel>
             {!!showBibliography && (
+              <TabList>
+                <Tab
+                  // Container has radius `md`, but because this outline is inside
+                  // the element (box-shadow: inset), the radius should be
+                  // slightly smaller
+                  borderTopLeftRadius={`calc(${theme.radii.md} - 1.5px)`}
+                >
+                  <Icon as={Edit} mr={2} />
+                  Content
+                </Tab>
+                <Tab>
+                  <Icon as={Book} mr={2} />
+                  Bibliography
+                </Tab>
+              </TabList>
+            )}
+
+            <TabPanels
+              role="group"
+              height="100%"
+              // Container has radius `md`, but because this outline is inside
+              // the element (box-shadow: inset), the radius should be
+              // slightly smaller
+              borderBottomLeftRadius={`calc(${theme.radii.md} - 1.5px)`}
+              transitionDuration="normal"
+              _focusWithin={{
+                boxShadow: `inset ${theme.shadows.outline}`
+              }}
+            >
               <TabPanel position="relative" p={0} height="100%" tabIndex={-1}>
                 <Editor
                   autoHeight
-                  value={bibliography}
-                  onChange={(event) => setBibliography(event.target.value)}
-                  placeholder="Enter BibTeX here"
-                  height="100%"
+                  value={content}
+                  onChange={(event) => setContent(event.target.value)}
+                  placeholder="Enter Markdown here"
                 />
-                <CopyButton onClick={onCopyBibliography}>
-                  {hasCopiedBibliography ? "COPIED" : "COPY"}
+                <CopyButton onClick={onCopyContent}>
+                  {hasCopiedContent ? "COPIED" : "COPY"}
                 </CopyButton>
               </TabPanel>
-            )}
-          </TabPanels>
-        </Tabs>
-      </Box>
-      <Box
-        flex="1 0 0"
-        border="2px"
-        borderLeft="none"
-        borderColor="gray.200"
-        borderTopRightRadius="md"
-        borderBottomRightRadius="md"
-      >
-        {output ? (
-          <Preview
-            ref={previewRef}
-            width="100%"
-            height="100%"
-            styleOverrides={`body { margin: 1rem; }`}
-          >
-            {output}
-          </Preview>
-        ) : (
-          <Center p={8} width="100%" height="100%">
-            <PreviewPlaceholder />
-          </Center>
-        )}
-      </Box>
+              {!!showBibliography && (
+                <TabPanel position="relative" p={0} height="100%" tabIndex={-1}>
+                  <Editor
+                    autoHeight
+                    value={bibliography}
+                    onChange={(event) => setBibliography(event.target.value)}
+                    placeholder="Enter BibTeX here"
+                    height="100%"
+                  />
+                  <CopyButton onClick={onCopyBibliography}>
+                    {hasCopiedBibliography ? "COPIED" : "COPY"}
+                  </CopyButton>
+                </TabPanel>
+              )}
+            </TabPanels>
+          </Tabs>
+        </Box>
+        <Box
+          flex="1 0 0"
+          border="2px"
+          borderLeft="none"
+          borderColor="gray.200"
+          borderBottomRightRadius="md"
+        >
+          {output ? (
+            <Preview
+              ref={previewRef}
+              width="100%"
+              height="100%"
+              styleOverrides={`body { margin: 1rem; }`}
+            >
+              {output}
+            </Preview>
+          ) : (
+            <Center p={8} width="100%" height="100%">
+              <PreviewPlaceholder />
+            </Center>
+          )}
+        </Box>
+      </Flex>
     </Flex>
   );
 }
