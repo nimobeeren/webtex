@@ -21,7 +21,7 @@ import NextLink from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "../components/Editor";
 import { FeedbackButton } from "../components/FeedbackButton";
-import { Preview } from "../components/Preview";
+import { Preview, PreviewPlaceholder } from "../components/Preview";
 import example from "../example.json";
 import { processor } from "../markdown/processor";
 
@@ -219,15 +219,19 @@ function Index() {
             />
           </NextLink>
         </HStack>
-        <Preview
-          ref={previewRef}
-          flexGrow={1}
-          borderLeft="2px"
-          borderColor="gray.200"
-          overflowY="auto"
-        >
-          {output}
-        </Preview>
+        {output ? (
+          <Preview
+            ref={previewRef}
+            flexGrow={1}
+            borderLeft="2px"
+            borderColor="gray.200"
+            overflowY="auto"
+          >
+            {output}
+          </Preview>
+        ) : (
+          <PreviewPlaceholder />
+        )}
       </Flex>
     </Flex>
   );

@@ -18,7 +18,7 @@ import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
 import hash from "hash-sum";
 import React, { useEffect, useRef, useState } from "react";
-import { Preview } from "../components/Preview";
+import { Preview, PreviewPlaceholder } from "../components/Preview";
 import { processor } from "../markdown/processor";
 import { Editor } from "./Editor";
 
@@ -112,7 +112,7 @@ export function Embed({
         borderTopLeftRadius="md"
         borderBottomLeftRadius="md"
       >
-        <Tabs 
+        <Tabs
           // Need to set an ID to fix rehydration id mismatch
           // This assumes no embed has the same default value and bibliography
           id={`tabs-${hash({ defaultValue, defaultBibliography })}`}
@@ -176,19 +176,23 @@ export function Embed({
         </Tabs>
       </Box>
       <Box flex="1 0 0">
-        <Preview
-          ref={previewRef}
-          width="100%"
-          height="100%"
-          border="2px"
-          borderLeft="none"
-          borderColor="gray.200"
-          borderTopRightRadius="md"
-          borderBottomRightRadius="md"
-          styleOverrides={`body { margin: 1rem; }`}
-        >
-          {output}
-        </Preview>
+        {output ? (
+          <Preview
+            ref={previewRef}
+            width="100%"
+            height="100%"
+            border="2px"
+            borderLeft="none"
+            borderColor="gray.200"
+            borderTopRightRadius="md"
+            borderBottomRightRadius="md"
+            styleOverrides={`body { margin: 1rem; }`}
+          >
+            {output}
+          </Preview>
+        ) : (
+          <PreviewPlaceholder />
+        )}
       </Box>
     </Flex>
   );
