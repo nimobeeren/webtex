@@ -15,7 +15,9 @@ To make things like headings, **bold** text, _italic_ text, and [links](#), you 
 
 It works like this:
 
-<Embed defaultValue=
+<Embed 
+  minHeight={770}
+  defaultValue=
 {`**Bold**
 
 _Italic_
@@ -94,7 +96,9 @@ Figures and sections can be referenced using the `:ref[id]` command, where `id` 
 
 For example, this is how you reference a figure:
 
-<Embed defaultValue=
+<Embed 
+  minHeight={260}
+  defaultValue=
 {`![Look at this graph!](/nickelback.jpg) :id[graph]
 
 ---
@@ -104,7 +108,9 @@ Now :ref[graph] is a reference to the figure.`}
 
 Referencing sections is even easier, because you don't have to give them an ID unless you want to. Check this out:
 
-<Embed defaultValue=
+<Embed 
+  minHeight={290}
+  defaultValue=
 {`## A section :id[first-section]
 
 Some text.
@@ -130,7 +136,9 @@ A great feature of Markdown is that you can include any HTML you want.
 
 Just look at the possibilities:
 
-<Embed defaultValue=
+<Embed 
+  minHeight={490}
+  defaultValue=
 {`You can use many HTML elements, for example to create <mark>marked text</mark>.
 
 ---

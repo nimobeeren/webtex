@@ -46,7 +46,6 @@ export function Editor({ autoHeight, value, ...restProps }: EditorProps) {
     <Box
       pos="relative"
       height="100%"
-      minHeight="202px" // exactly enough for 10 lines (on Chrome at least)
     >
       <Box as="pre" {...sharedStyles} display="block" visibility="hidden">
         <span>{value}</span>
