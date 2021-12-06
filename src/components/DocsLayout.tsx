@@ -52,6 +52,7 @@ function DocsLayout({ children, allDocs }: Props) {
               fontWeight={700}
               whiteSpace="nowrap"
               lineHeight="none"
+              letterSpacing="tighter"
             >
               WebTeX
             </Text>
