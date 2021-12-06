@@ -105,7 +105,7 @@ export function Embed({
     useClipboard(bibliography);
 
   return (
-    <Flex direction="column" {...restProps}>
+    <Flex direction="column" my={6} {...restProps}>
       <Text
         as="div"
         p={2}
