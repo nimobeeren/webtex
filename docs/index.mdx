@@ -2,9 +2,9 @@
 title: Getting Started
 ---
 
-# WebTeX
+# Getting Started
 
-Web$\TeX$ is tool that helps with scientific and technical writing. It builds on Markdown, which lets you do the basic formatting that you expect from any writing app. Web$\TeX$ extends Markdown by adding support for math expressions, citations, and cross-referencing.
+WebTeX is tool for technical and scientific writing. It builds on Markdown, which lets you do the basic formatting that you expect from any writing app. WebTeX extends Markdown by adding support for math expressions, citations, and cross-referencing.
 
 ## Basic formatting
 
@@ -60,7 +60,7 @@ In the example above, two things are different from most other Markdown tools:
 1. Section headings are automatically numbered
 2. Images are given a caption, and they are automatically numbered
 
-Other than that, Web$\TeX$ follows the [CommonMark spec](https://commonmark.org/).
+Other than that, WebTeX follows the [CommonMark spec](https://commonmark.org/).
 {/* NOTE: well, I'm not sure because we're doing a bunch of other things */}
 
 <Callout>
@@ -91,7 +91,28 @@ Many $\TeX$ functions are supported, including macros using `\newcommand` etc. F
 
 ## Citations
 
-TODO
+You can cite your sources using the `:cite[source]` command, where `source` is the ID of one the items in your bibliography. The Bibliography tab is where you can enter your sources in BibTeX format. You can get BibTeX citations from many places, such as [Google Scholar](https://scholar.google.com/) and [arXiv](https://arxiv.org/).
+
+Here's an example:
+
+<Embed
+  showBibliography
+  defaultValue=
+{`Let's cite a source :cite[dijkstra1959].
+
+A section of references is generated:`}
+  defaultBibliography=
+{`@article{dijkstra1959,
+  title={A note on two problems in connexion with graphs},
+  author={Dijkstra, Edsger W and others},
+  journal={Numerische mathematik},
+  volume={1},
+  number={1},
+  pages={269--271},
+  year={1959}
+}
+`}
+/>
 
 ## Cross-referencing
 
@@ -129,9 +150,13 @@ More text.
 And :ref[another-section] works too!`}
 />
 
-<Callout variant="warning">Be careful when referencing sections without giving them an ID. When you change the title of the section, the reference will break.</Callout>
+<Callout variant="warning">
+  Be careful when referencing sections without giving them an ID. When you change the title of the section, the reference will break.
+</Callout>
 
-<Callout>You can find the ID of any section by hovering over the heading in the preview.</Callout>
+<Callout>
+  You can find the ID of any section by hovering over the heading in the preview.
+</Callout>
 
 ## HTML
 
@@ -162,4 +187,7 @@ Or a heading without numbering:
 `}
 />
 
-<Callout>There are a lot of HTML elements, take a look at [this list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics) for some useful ones.</Callout>
+<Callout>
+  There are a lot of HTML elements, take a look at [this list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics) for some useful ones.
+</Callout>
+
