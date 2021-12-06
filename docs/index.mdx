@@ -97,22 +97,42 @@ Here's an example:
 
 <Embed
   showBibliography
+  minHeight={540}
   defaultValue=
-{`Let's cite a source :cite[dijkstra1959].
+{`Let's cite a source :cite[knuth1984].
 
-A section of references is generated:`}
+And let's cite some more :cite[tesler2012, victor2012].
+
+A section with references is created at the end of the document.`}
   defaultBibliography=
-{`@article{dijkstra1959,
-  title={A note on two problems in connexion with graphs},
-  author={Dijkstra, Edsger W and others},
-  journal={Numerische mathematik},
-  volume={1},
-  number={1},
-  pages={269--271},
-  year={1959}
+{`@book{knuth1984,
+  title={The {TeX}book},
+  author={Knuth, Donald Ervin and Bibby, Duane},
+  volume={15},
+  year={1984},
+  publisher={Addison-Wesley Reading}
 }
-`}
+@article{tesler2012,
+  author = {Tesler, Larry},
+  title = {A Personal History of Modeless Text Editing and Cut/Copy-Paste},
+  year = {2012},
+  volume = {19},
+  number = {4},
+  doi = {10.1145/2212877.2212896},
+  journal = {ACM Interactions},
+  pages = {70–75}
+}
+@misc{victor2012,
+  title={Inventing on Principle},
+  author={Victor, Bret},
+  year={2012},
+  url={https://youtu.be/PUv66718DII}
+}`}
 />
+
+<Callout>
+  Currently, WebTeX uses the [ACM citation style](https://www.acm.org/publications/authors/reference-formatting). We plan to support other styles in the future.
+</Callout>
 
 ## Cross-referencing
 
@@ -183,11 +203,9 @@ And this is how you insert an image without a caption:
 
 Or a heading without numbering:
 
-<h2>Don't count on me!</h2>
-`}
+<h2>Don't count on me!</h2>`}
 />
 
 <Callout>
   There are a lot of HTML elements, take a look at [this list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics) for some useful ones.
 </Callout>
-
