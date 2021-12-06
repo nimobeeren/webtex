@@ -30,6 +30,7 @@ export function Callout(props: CalloutProps) {
       display="flex"
       flexFlow="row nowrap"
       my={4}
+      py={0}
       border="1px"
       borderRadius="md"
       {...variantProps}
