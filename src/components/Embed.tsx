@@ -136,16 +136,13 @@ export function Embed({
             // Need to set an ID to fix rehydration id mismatch
             // This assumes no embed has the same default value and bibliography
             id={`tabs-${hash({ defaultValue, defaultBibliography })}`}
+            display="flex"
+            flexDirection="column"
             height="100%"
           >
             {!!showBibliography && (
               <TabList>
-                <Tab
-                  // Container has radius `md`, but because this outline is inside
-                  // the element (box-shadow: inset), the radius should be
-                  // slightly smaller
-                  borderTopLeftRadius={`calc(${theme.radii.md} - 1.5px)`}
-                >
+                <Tab>
                   <Icon as={Edit} mr={2} />
                   Content
                 </Tab>
@@ -158,7 +155,7 @@ export function Embed({
 
             <TabPanels
               role="group"
-              height="100%"
+              flexGrow={1}
               // Container has radius `md`, but because this outline is inside
               // the element (box-shadow: inset), the radius should be
               // slightly smaller
