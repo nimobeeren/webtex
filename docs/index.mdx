@@ -8,7 +8,7 @@ WebTeX is a tool for technical and scientific writing. It builds on Markdown, wh
 
 ## Basic formatting
 
-To make things like headings, **bold** text, _italic_ text, and [links](#), you can use Markdown. You may have used Markdown before on sites like Reddit or GitHub.
+To make things like headings, **bold** text, _italic_ text, and [links](#), you can use Markdown. You may have used Markdown before on sites like Reddit or GitHub. Just like these sites, WebTeX is based on the [CommonMark spec](https://commonmark.org/).
 
 It works like this:
 
@@ -40,7 +40,7 @@ _Italic_
 
 ---
 
-![This is a figure.](/nickelback.jpg)
+![Look at this graph!](/nickelback.jpg)
 
 ---
 
@@ -60,16 +60,9 @@ In the example above, two things are different from most other Markdown tools:
 1. Section headings are automatically numbered
 2. Images are given a caption, and they are automatically numbered
 
-Other than that, WebTeX follows the [CommonMark spec](https://commonmark.org/).
-{/* NOTE: well, I'm not sure because we're doing a bunch of other things */}
-
 <Callout>
   Headings with one `#` are not numbered, so you can use these as the title of
-  the document.
-</Callout>
-
-<Callout>
-  If you don't want to use captions or automatic numbering, check out the
+  the document. If you don't want to use captions or automatic numbering, check out the
   section on [HTML](#html).
 </Callout>
 
@@ -163,7 +156,7 @@ A section with references is created at the end of the document.`}
 />
 
 <Callout>
-  Currently, WebTeX uses the [ACM citation style](https://www.acm.org/publications/authors/reference-formatting). We plan to support other styles in the future.
+  Currently, WebTeX supports the [ACM citation style](https://www.acm.org/publications/authors/reference-formatting). We plan to support other styles in the future.
 </Callout>
 
 ## Cross-referencing
@@ -239,5 +232,5 @@ Or a heading without numbering:
 />
 
 <Callout>
-  There are a lot of HTML elements, take a look at [this list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics) for some useful ones.
+  There are a lot of HTML elements, here's [a list of some useful ones](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics).
 </Callout>
