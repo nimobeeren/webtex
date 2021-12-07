@@ -1,4 +1,4 @@
 {
-  "content": "# Web$\\TeX$\n\nWebTeX is a tool for technical and scientific writing. It builds on Markdown, which lets you do the basic formatting that you expect from any writing app. WebTeX extends Markdown by adding support for math expressions, citations, and cross-referencing.\n\nCheck out the [Documentation](/docs), or just start writing!",
+  "content": "# Web$\\TeX$\n\nWebTeX is a tool for technical and scientific writing. It builds on Markdown, which lets you do the basic formatting that you expect from any writing app. WebTeX extends Markdown by adding support for math expressions, citations, and cross-referencing.\n\nCheck out the documentation, or just start writing!",
   "bibliography": ""
 }
