@@ -170,24 +170,16 @@ function Index() {
           borderBottom="2px"
           borderColor="gray.200"
         >
-          <FeedbackButton
-            leftIcon={<Icon as={Bulb} />}
-            colorScheme="blue"
-            variant="solid"
-            size="sm"
-          >
-            Give us Feedback
-          </FeedbackButton>
           <NextLink href="/docs" passHref>
             <Button
               as="a"
               target="_blank"
               leftIcon={<Icon as={BookOpen} />}
               colorScheme="blue"
-              variant="ghost"
+              variant="solid"
               size="sm"
             >
-              Docs
+              Documentation
             </Button>
           </NextLink>
           <Button
@@ -205,6 +197,14 @@ function Index() {
           >
             Print
           </Button>
+          <FeedbackButton
+            leftIcon={<Icon as={Bulb} />}
+            colorScheme="blue"
+            variant="ghost"
+            size="sm"
+          >
+            Give us Feedback
+          </FeedbackButton>
           <NextLink href="https://github.com/nimobeeren/webtex" passHref>
             <IconButton
               as="a"
