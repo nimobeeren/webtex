@@ -115,6 +115,7 @@ export function Embed({
         fontSize="sm"
         fontWeight="black"
         letterSpacing="wider"
+        lineHeight="none"
         casing="uppercase"
         border="2px"
         borderBottom="none"

@@ -73,9 +73,41 @@ Other than that, WebTeX follows the [CommonMark spec](https://commonmark.org/).
   section on [HTML](#html).
 </Callout>
 
+## Tables
+
+Let's make some tables!
+
+<Embed
+  minHeight={590}
+  defaultValue=
+{`Here's a simple table:
+
+| Fruit   | Count |
+| ------- | ----- |
+| Apples  | 4     |
+| Oranges | 2     |
+| Pears   | 1     |
+
+You can set the alignment of columns like this:
+
+| Left  | Center   | Right      |
+| :---- | :------: | ---------: |
+| Apple | Fruit    | $1         |
+| Car   | Vehicle  | $1,000     |
+| House | Property | $1,000,000 |
+
+Note that you don't need to format it nicely, this will still work:
+
+|Fruit|Count|
+|--|--|
+|Apples|4|
+|Oranges|2|
+|Pears|1|`}
+/>
+
 ## Math
 
-Math works just like in $\LaTeX$, by wrapping it in $-signs:
+Math works just like in $\TeX$, by wrapping it in $-signs:
 
 <Embed defaultValue=
 {`Inline math: $e^{i\\pi} = -1$
