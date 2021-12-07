@@ -19,7 +19,10 @@ const sharedStyles: TextareaProps & BoxProps = {
   fontSize: "sm",
   lineHeight: "shorter",
   whiteSpace: "pre-wrap",
-  wordBreak: "break-word"
+  wordBreak: "break-word",
+  sx: {
+    "font-variant-ligatures": "none"
+  }
 };
 
 function TheTextarea({ value, ...restProps }: TextareaProps) {
@@ -43,10 +46,7 @@ export function Editor({ autoHeight, value, ...restProps }: EditorProps) {
   }
 
   return (
-    <Box
-      pos="relative"
-      height="100%"
-    >
+    <Box pos="relative" height="100%">
       <Box as="pre" {...sharedStyles} display="block" visibility="hidden">
         <span>{value}</span>
         <br />
