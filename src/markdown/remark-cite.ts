@@ -24,7 +24,7 @@ type CiteProcCitationTriple = [
 class CitationEngine {
   bibliography: Record<string, CSLEntry> = {};
   citations: Citation[] = [];
-  style = "ieee";
+  style = "association-for-computing-machinery";
   locale = "en-US";
 
   citeProc: any;

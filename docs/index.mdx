@@ -1,0 +1,236 @@
+---
+title: Getting Started
+---
+
+# Getting Started
+
+WebTeX is a tool for technical and scientific writing. It builds on Markdown, which lets you do the basic formatting that you expect from any writing app. WebTeX extends Markdown by adding support for math expressions, citations, and cross-referencing.
+
+## Basic formatting
+
+To make things like headings, **bold** text, _italic_ text, and [links](#), you can use Markdown. You may have used Markdown before on sites like Reddit or GitHub. Just like these sites, WebTeX is based on the [CommonMark spec](https://commonmark.org/).
+
+It works like this:
+
+<Embed 
+  minHeight={810}
+  defaultValue=
+{`**Bold**
+
+_Italic_
+
+[Link](https://webtex.vercel.app/)
+
+---
+
+## Section
+
+### Subsection
+
+---
+
+- Apples
+- Oranges
+- Pears
+
+1. Eat
+2. Sleep
+3. Write
+4. Repeat
+
+---
+
+![Look at this graph!](/nickelback.jpg)
+
+---
+
+> This is a quote.
+
+---
+
+Inline \`code\` with backticks
+
+\`\`\`
+Code blocks with triple backticks
+\`\`\``}
+/>
+
+In the example above, two things are different from most other Markdown tools:
+
+1. Section headings are automatically numbered
+2. Images are given a caption, and they are automatically numbered
+
+<Callout>
+  Headings with one `#` are not numbered, so you can use these as the title of
+  the document. If you don't want to use captions or automatic numbering, check out the
+  section on [HTML](#html).
+</Callout>
+
+## Tables
+
+Let's make some tables!
+
+<Embed
+  minHeight={590}
+  defaultValue=
+{`Here's a simple table:
+
+| Fruit   | Count |
+| ------- | ----- |
+| Apples  | 4     |
+| Oranges | 2     |
+| Pears   | 1     |
+
+You can set the alignment of columns like this:
+
+| Left  | Center   | Right      |
+| :---- | :------: | ---------: |
+| Apple | Fruit    | $1         |
+| Car   | Vehicle  | $1,000     |
+| House | Property | $1,000,000 |
+
+Note that you don't need to format it nicely, this will still work:
+
+|Fruit|Count|
+|-|-|
+|Apples|4|
+|Oranges|2|
+|Pears|1|`}
+/>
+
+## Math
+
+Math works just like in $\TeX$, by wrapping it in $-signs:
+
+<Embed defaultValue=
+{`Inline math: $e^{i\\pi} = -1$
+
+And here is a math block:
+
+$$
+\\binom{n}{k} = \\frac{n!}{k!(n-k)!}
+$$`}
+/>
+
+Many $\TeX$ functions are supported, including macros using `\newcommand` etc. For a full list of supported functions, refer to the [KaTeX docs](https://katex.org/docs/supported.html).
+
+## Citations
+
+You can cite your sources using the `:cite[source]` command, where `source` is the ID of one the items in your bibliography. The Bibliography tab is where you can enter your sources in BibTeX format. You can get BibTeX citations from many places, such as [Google Scholar](https://scholar.google.com/) and [arXiv](https://arxiv.org/).
+
+Here's an example:
+
+<Embed
+  showBibliography
+  minHeight={540}
+  defaultValue=
+{`Let's cite a source :cite[knuth1984].
+
+And let's cite some more :cite[tesler2012, victor2012].
+
+A section with references is created at the end of the document.`}
+  defaultBibliography=
+{`@book{knuth1984,
+  title={The {TeX}book},
+  author={Knuth, Donald Ervin and Bibby, Duane},
+  volume={15},
+  year={1984},
+  publisher={Addison-Wesley Reading}
+}
+@article{tesler2012,
+  author = {Tesler, Larry},
+  title = {A Personal History of Modeless Text Editing and Cut/Copy-Paste},
+  year = {2012},
+  volume = {19},
+  number = {4},
+  doi = {10.1145/2212877.2212896},
+  journal = {ACM Interactions},
+  pages = {70–75}
+}
+@misc{victor2012,
+  title={Inventing on Principle},
+  author={Victor, Bret},
+  year={2012},
+  url={https://youtu.be/PUv66718DII}
+}`}
+/>
+
+<Callout>
+  Currently, WebTeX supports the [ACM citation style](https://www.acm.org/publications/authors/reference-formatting). We plan to support other styles in the future.
+</Callout>
+
+## Cross-referencing
+
+Figures and sections can be referenced using the `:ref[id]` command, where `id` is the ID of the element you want to reference. Before something can be referenced, it must have an ID. You can give something an ID using the `:id[your-id]` command.
+
+For example, this is how you reference a figure:
+
+<Embed
+  minHeight={300}
+  defaultValue=
+{`![Look at this graph!](/nickelback.jpg) :id[graph]
+
+---
+
+Now :ref[graph] is a reference to the figure.`}
+/>
+
+Referencing sections is even easier, because you don't have to give them an ID unless you want to. Check this out:
+
+<Embed
+  minHeight={330}
+  defaultValue=
+{`## A section :id[first-section]
+
+Some text.
+
+## Another section
+
+More text.
+
+---
+
+:ref[first-section] works.
+
+And :ref[another-section] works too!`}
+/>
+
+<Callout variant="warning">
+  Be careful when referencing sections without giving them an ID. When you change the title of the section, the reference will break.
+</Callout>
+
+<Callout>
+  You can find the ID of any section by hovering over the heading in the preview.
+</Callout>
+
+## HTML
+
+A great feature of Markdown is that you can include any HTML you want.
+
+Just look at the possibilities:
+
+<Embed
+  minHeight={530}
+  defaultValue=
+{`You can use many HTML elements, for example to create <mark>marked text</mark>.
+
+---
+
+You can do custom styling with CSS:
+
+<p style="color: blue; text-align: center;">I'm blue, da ba dee da ba daa</p>
+
+---
+
+And this is how you insert an image without a caption:
+
+<img src="/nickelback.jpg">
+
+Or a heading without numbering:
+
+<h2>Don't count on me!</h2>`}
+/>
+
+<Callout>
+  There are a lot of HTML elements, here's [a list of some useful ones](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics).
+</Callout>
