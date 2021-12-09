@@ -36,7 +36,7 @@
     "hash-sum": "^2.0.0",
     "hastscript": "7.0.2",
     "lodash-es": "4.17.21",
-    "next": "12.0.2",
+    "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "rehype-external-links": "1.0.0",
