@@ -21,7 +21,7 @@ const sharedStyles: TextareaProps & BoxProps = {
   whiteSpace: "pre-wrap",
   wordBreak: "break-word",
   sx: {
-    "font-variant-ligatures": "none"
+    fontVariantLigatures: "none"
   }
 };
 
