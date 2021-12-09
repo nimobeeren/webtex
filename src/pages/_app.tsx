@@ -1,7 +1,13 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import "@fontsource/inter";
+import defaultTheme from "@chakra-ui/theme";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/700.css";
 import "@fontsource/jetbrains-mono";
+import { MDXProvider } from "@mdx-js/react";
 import type { AppProps } from "next/app";
+import { Callout } from "../components/Callout";
+import { Embed } from "../components/Embed";
+import { components } from "../mdxComponents";
 
 const theme = extendTheme({
   fonts: {
@@ -13,6 +19,16 @@ const theme = extendTheme({
       baseStyle: {
         letterSpacing: "wide"
       }
+    },
+    Tabs: {
+      parts: ["tab"],
+      baseStyle: {
+        tab: {
+          _focus: {
+            boxShadow: `inset ${defaultTheme.shadows.outline}`
+          }
+        }
+      }
     }
   }
 });
@@ -20,7 +36,10 @@ const theme = extendTheme({
 function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
+      <MDXProvider components={{ ...components, Embed, Callout }}>
+        {/* @ts-expect-error bug in @mdx-js/react, should be fixed in next release */}
+        <Component {...pageProps} />
+      </MDXProvider>
     </ChakraProvider>
   );
 }

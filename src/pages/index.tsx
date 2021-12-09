@@ -1,25 +1,28 @@
 import {
   Box,
   Button,
+  Center,
   Flex,
+  HStack,
   Icon,
   IconButton,
-  Stack,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
-  Tabs
+  Tabs,
+  useTheme
 } from "@chakra-ui/react";
 import { Github } from "@emotion-icons/boxicons-logos";
-import { Bulb, Printer } from "@emotion-icons/boxicons-regular";
+import { BookOpen, Bulb, Printer } from "@emotion-icons/boxicons-regular";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
-import Link from "next/link";
+import Head from "next/head";
+import NextLink from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "../components/Editor";
 import { FeedbackButton } from "../components/FeedbackButton";
-import { Preview } from "../components/Preview";
+import { Preview, PreviewPlaceholder } from "../components/Preview";
 import example from "../example.json";
 import { processor } from "../markdown/processor";
 
@@ -36,8 +39,8 @@ function loadSource() {
     return undefined;
   }
   try {
-    const { markdown, bibliography } = JSON.parse(json);
-    return { markdown, bibliography };
+    const { content, bibliography } = JSON.parse(json);
+    return { content, bibliography };
   } catch {
     console.warn(
       `Got unexpected value from storage (key "${STORAGE_KEY_SOURCE}"), value:\n"${json}"`
@@ -46,17 +49,19 @@ function loadSource() {
   }
 }
 
-function saveSource(markdown: string, bibliography: string) {
+function saveSource(content: string, bibliography: string) {
   if (typeof window === "undefined") {
     return undefined;
   }
-  const state = JSON.stringify({ markdown, bibliography });
+  const state = JSON.stringify({ content, bibliography });
   window.localStorage.setItem(STORAGE_KEY_SOURCE, state);
 }
 
 function Index() {
-  const [markdown, setMarkdown] = useState(
-    () => loadSource()?.markdown || example.markdown
+  const theme = useTheme();
+
+  const [content, setContent] = useState(
+    () => loadSource()?.content || example.content
   );
   const [bibliography, setBibliography] = useState(
     () => loadSource()?.bibliography || example.bibliography
@@ -65,13 +70,13 @@ function Index() {
 
   const previewRef = useRef<HTMLIFrameElement>(null);
 
-  function renderSource(md: string, bibtex: string) {
+  function renderSource(content: string, bibliography: string) {
     const startTime = performance.now();
 
     processor
       // Store the bibliography as a data attribute on the virtual file, because
       // it's not part of the markdown, but it is still needed to create citations
-      .process({ value: md, data: { bibliography: bibtex } })
+      .process({ value: content, data: { bibliography } })
       .then((vfile) => {
         const endTime = performance.now();
         console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`);
@@ -101,16 +106,18 @@ function Index() {
 
   // Things to do when the source code of the document is changed
   useEffect(() => {
-    throttledRenderSource(markdown, bibliography);
-    throttledSaveSource(markdown, bibliography);
-  }, [markdown, bibliography, throttledRenderSource, throttledSaveSource]);
+    throttledRenderSource(content, bibliography);
+    throttledSaveSource(content, bibliography);
+  }, [content, bibliography, throttledRenderSource, throttledSaveSource]);
 
   return (
     <Flex width="100%" height="100vh" position="relative">
+      <Head>
+        <title>WebTeX</title>
+      </Head>
       <Box flex="1 0 0">
         <Tabs
           id="editor-tabs" // added to fix rehydration id mismatch
-          variant="enclosed-colored"
           display="flex"
           flexDir="column"
           height="100%"
@@ -126,11 +133,17 @@ function Index() {
             </Tab>
           </TabList>
 
-          <TabPanels height="100%">
+          <TabPanels
+            height="100%"
+            _focusWithin={{
+              boxShadow: `inset ${theme.shadows.outline}`
+            }}
+            transitionDuration="normal"
+          >
             <TabPanel p={0} height="100%" tabIndex={-1}>
               <Editor
-                value={markdown}
-                onChange={(event) => setMarkdown(event.target.value)}
+                value={content}
+                onChange={(event) => setContent(event.target.value)}
                 placeholder="Enter Markdown here"
                 height="100%"
               />
@@ -148,37 +161,27 @@ function Index() {
       </Box>
       <Flex flex="1 0 0" direction="column">
         {/* Similar style as the <TabList /> */}
-        <Stack
-          direction="row"
+        <HStack
           justify="flex-end"
           align="center"
           spacing={2}
           height={42}
           px={2}
-          borderBottom="1px"
+          borderBottom="2px"
           borderColor="gray.200"
         >
-          <FeedbackButton
-            leftIcon={<Icon as={Bulb} />}
-            colorScheme="blue"
-            variant="solid"
-            size="sm"
-          >
-            Give us Feedback
-          </FeedbackButton>
-          {/* <Link href="/docs" passHref>
+          <NextLink href="/docs" passHref>
             <Button
               as="a"
-              isDisabled
-              title="Coming soon!"
+              target="_blank"
               leftIcon={<Icon as={BookOpen} />}
               colorScheme="blue"
-              variant="ghost"
+              variant="solid"
               size="sm"
             >
-              Docs
+              Documentation
             </Button>
-          </Link> */}
+          </NextLink>
           <Button
             onClick={() => {
               if (previewRef.current?.contentWindow) {
@@ -194,7 +197,15 @@ function Index() {
           >
             Print
           </Button>
-          <Link href="https://github.com/nimobeeren/webtex" passHref>
+          <FeedbackButton
+            leftIcon={<Icon as={Bulb} />}
+            colorScheme="blue"
+            variant="ghost"
+            size="sm"
+          >
+            Give us Feedback
+          </FeedbackButton>
+          <NextLink href="https://github.com/nimobeeren/webtex" passHref>
             <IconButton
               as="a"
               target="_blank"
@@ -207,17 +218,24 @@ function Index() {
               size="sm"
               fontSize="3xl"
             />
-          </Link>
-        </Stack>
-        <Preview
-          ref={previewRef}
-          flexGrow={1}
-          borderLeft="1px"
-          borderColor="gray.200"
-          overflowY="auto"
-        >
-          {output}
-        </Preview>
+          </NextLink>
+        </HStack>
+        <Box flexGrow={1} borderLeft="2px" borderColor="gray.200">
+          {output ? (
+            <Preview
+              ref={previewRef}
+              width="100%"
+              height="100%"
+              overflowY="auto"
+            >
+              {output}
+            </Preview>
+          ) : (
+            <Center p={8} width="100%" height="100%">
+              <PreviewPlaceholder />
+            </Center>
+          )}
+        </Box>
       </Flex>
     </Flex>
   );
