@@ -128,12 +128,13 @@ function DocsLayout({ children, allDocs }: Props) {
                 p: {
                   my: 4
                 },
-                "h1,h2,h3,h4,h5,h6": {
+                h1: {
+                  mt: 0,
+                  mb: 4
+                },
+                "h2,h3,h4,h5,h6": {
                   mt: 12,
-                  mb: 4,
-                  ":first-child": {
-                    mt: 0
-                  }
+                  mb: 4
                 },
                 a: {
                   color: "blue.600",
