@@ -1,0 +1,63 @@
+{
+  "name": "web",
+  "version": "0.2.0",
+  "private": true,
+  "browserslist": {
+    "development": [
+      "last 1 version"
+    ],
+    "production": [
+      "defaults",
+      "not IE 11",
+      "not IE_Mob 11"
+    ]
+  },
+  "dependencies": {
+    "@chakra-ui/react": "1.6.6",
+    "@emotion-icons/boxicons-logos": "3.18.0",
+    "@emotion-icons/boxicons-regular": "3.18.0",
+    "@emotion-icons/boxicons-solid": "3.18.0",
+    "@emotion/react": "11",
+    "@emotion/styled": "11",
+    "@feedback-fish/react": "1.2.1",
+    "@fontsource/inter": "4.5.1",
+    "@fontsource/jetbrains-mono": "4.5.0",
+    "@mdx-js/loader": "2.0.0-rc.1",
+    "@mdx-js/mdx": "2.0.0-rc.1",
+    "@mdx-js/react": "2.0.0-rc.1",
+    "@react-hook/throttle": "2.2.0",
+    "@redwoodjs/forms": "0.41.0",
+    "@redwoodjs/router": "0.41.0",
+    "@redwoodjs/web": "0.41.0",
+    "biblatex-csl-converter": "2.0.1",
+    "citeproc": "2.4.59",
+    "cross-fetch": "3.1.4",
+    "framer-motion": "4",
+    "hash-sum": "^2.0.0",
+    "hastscript": "7.0.2",
+    "lodash-es": "4.17.21",
+    "prop-types": "15.7.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "rehype-external-links": "1.0.0",
+    "rehype-katex": "6.0.1",
+    "rehype-raw": "6.1.0",
+    "rehype-react": "7.0.1",
+    "rehype-sanitize": "5.0.0",
+    "rehype-stringify": "9.0.2",
+    "remark-directive": "2.0.0",
+    "remark-frontmatter": "4.0.1",
+    "remark-gfm": "2.0.0",
+    "remark-math": "5.1.0",
+    "remark-parse": "10.0.0",
+    "remark-rehype": "9.0.0",
+    "remark-slug": "7.0.1",
+    "unified": "10.1.0",
+    "unist-builder": "3.0.0",
+    "unist-util-modify-children": "3.0.0",
+    "unist-util-remove": "3.1.0",
+    "unist-util-visit": "4.0.0",
+    "unist-util-visit-parents": "5.0.0",
+    "vfile": "5.0.2"
+  }
+}
