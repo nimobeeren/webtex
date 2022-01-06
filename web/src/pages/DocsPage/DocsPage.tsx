@@ -1,21 +1,7 @@
-import { Link, routes } from '@redwoodjs/router'
-import { MetaTags } from '@redwoodjs/web'
+import DocCell from 'src/components/DocCell'
 
-const DocsPage = () => {
-  return (
-    <>
-      <MetaTags title="Docs" description="Docs page" />
-
-      <h1>DocsPage</h1>
-      <p>
-        Find me in <code>./web/src/pages/DocsPage/DocsPage.tsx</code>
-      </p>
-      <p>
-        My default route is named <code>docs</code>, link to me with `
-        <Link to={routes.docs()}>Docs</Link>`
-      </p>
-    </>
-  )
+const DocsPage = ({ slug }) => {
+  return <DocCell slug={slug} />
 }
 
 export default DocsPage

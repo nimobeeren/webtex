@@ -7,7 +7,7 @@ export const schema = gql`
 
   type Query {
     docBySlug(slug: String!): Doc @skipAuth
-    docSlugs: [String!]! @skipAuth
+    docSlugs: [String!]! @skipAuth @deprecated
     docs: [Doc!]! @skipAuth
   }
 `

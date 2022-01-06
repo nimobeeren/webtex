@@ -3,7 +3,8 @@
   "files.trimTrailingWhitespace": true,
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
   },
   "[prisma]": {
     "editor.formatOnSave": true

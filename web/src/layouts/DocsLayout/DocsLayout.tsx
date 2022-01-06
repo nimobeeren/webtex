@@ -1,28 +1,24 @@
-import Icon from "@chakra-ui/icon";
 import {
   Box,
   Flex,
   HStack,
-  List,
-  ListItem,
+  Icon,
+  IconButton,
   Spacer,
   Text
-} from "@chakra-ui/layout";
-import { IconButton } from "@chakra-ui/react";
-import { Github } from "@emotion-icons/boxicons-logos";
-import { Bulb } from "@emotion-icons/boxicons-regular";
-import Head from "next/head";
-import NextLink from "next/link";
-import type { Doc } from "../docs";
-import { ActiveLink } from "./ActiveLink";
-import { FeedbackButton } from "./FeedbackButton";
+} from '@chakra-ui/react'
+import { Github } from '@emotion-icons/boxicons-logos'
+import { Bulb } from '@emotion-icons/boxicons-regular'
+import { Link as RedwoodLink, routes } from '@redwoodjs/router'
+import { Head } from '@redwoodjs/web'
+import DocsNavCell from 'src/components/DocsNavCell'
+import { FeedbackButton } from 'src/components/FeedbackButton'
 
-type Props = {
-  children: React.ReactNode;
-  allDocs: Doc[];
-};
+type DocsLayoutProps = {
+  children?: React.ReactNode
+}
 
-function DocsLayout({ children, allDocs }: Props) {
+const DocsLayout = ({ children }: DocsLayoutProps) => {
   return (
     <>
       <Head>
@@ -45,7 +41,7 @@ function DocsLayout({ children, allDocs }: Props) {
           borderBottom="1px"
           borderColor="gray.200"
         >
-          <NextLink href="/" passHref>
+          <RedwoodLink to={routes.editor()}>
             <Text
               as="a"
               fontSize="xl"
@@ -56,7 +52,7 @@ function DocsLayout({ children, allDocs }: Props) {
             >
               WebTeX
             </Text>
-          </NextLink>
+          </RedwoodLink>
           <Spacer />
           <FeedbackButton
             leftIcon={<Icon as={Bulb} />}
@@ -66,7 +62,7 @@ function DocsLayout({ children, allDocs }: Props) {
           >
             Give us Feedback
           </FeedbackButton>
-          <NextLink href="https://github.com/nimobeeren/webtex" passHref>
+          <RedwoodLink to="https://github.com/nimobeeren/webtex">
             <IconButton
               as="a"
               aria-label="View the source code on GitHub"
@@ -77,7 +73,7 @@ function DocsLayout({ children, allDocs }: Props) {
               size="sm"
               fontSize="3xl"
             />
-          </NextLink>
+          </RedwoodLink>
         </HStack>
         <Flex flexGrow={1} minHeight={0}>
           <Box
@@ -88,32 +84,7 @@ function DocsLayout({ children, allDocs }: Props) {
             borderRight="1px"
             borderColor="gray.200"
           >
-            <List>
-              {allDocs.map((doc) => (
-                <ListItem key={doc.slug} display="block">
-                  <NextLink
-                    href={doc.slug === "index" ? "/docs" : `/docs/${doc.slug}`}
-                    passHref
-                  >
-                    <ActiveLink
-                      display="block"
-                      w="100%"
-                      h="100%"
-                      px={8}
-                      lineHeight="taller"
-                      _hover={{
-                        background: "blue.50"
-                      }}
-                      _activeLink={{
-                        background: "blue.100"
-                      }}
-                    >
-                      {doc.frontmatter.title || doc.slug}
-                    </ActiveLink>
-                  </NextLink>
-                </ListItem>
-              ))}
-            </List>
+            <DocsNavCell />
           </Box>
           <Flex flexGrow={1} overflowY="auto">
             <Box
@@ -132,30 +103,30 @@ function DocsLayout({ children, allDocs }: Props) {
                   mt: 0,
                   mb: 4
                 },
-                "h2,h3,h4,h5,h6": {
+                'h2,h3,h4,h5,h6': {
                   mt: 12,
                   mb: 4
                 },
                 a: {
-                  color: "blue.600",
-                  ":hover": {
+                  color: 'blue.600',
+                  ':hover': {
                     // Must be in :hover to fix specificity
-                    textDecorationColor: "blue.100",
-                    textUnderlineOffset: "3px"
+                    textDecorationColor: 'blue.100',
+                    textUnderlineOffset: '3px'
                   }
                 },
-                "ul, ol": {
+                'ul, ol': {
                   // This changes how margin around list items works, and has
                   // the side effect of adding some indentation which is nice
-                  listStylePosition: "inside"
+                  listStylePosition: 'inside'
                 },
                 // This fixes an issue where KaTeX elements cause overflow.
                 // The .katex-mathml element is visually hidden but accessible
                 // to screen readers. This change could cause issues when
                 // focusing the element, but that seems unlikely to happen.
                 // See also https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
-                ".katex .katex-mathml": {
-                  top: "-99999px"
+                '.katex .katex-mathml': {
+                  top: '-99999px'
                 }
               }}
             >
@@ -166,14 +137,14 @@ function DocsLayout({ children, allDocs }: Props) {
             </Box>
             <Box
               flexShrink={0}
-              display={["none", null, null, null, "block"]}
+              display={['none', null, null, null, 'block']}
               w={56}
             />
           </Flex>
         </Flex>
       </Flex>
     </>
-  );
+  )
 }
 
-export default DocsLayout;
+export default DocsLayout

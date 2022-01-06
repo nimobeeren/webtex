@@ -1,6 +1,3 @@
-import { Link, routes } from '@redwoodjs/router'
-import { MetaTags } from '@redwoodjs/web'
-
 import {
   Box,
   Button,
@@ -15,101 +12,100 @@ import {
   TabPanels,
   Tabs,
   useTheme
-} from "@chakra-ui/react";
-import { Github } from "@emotion-icons/boxicons-logos";
-import { BookOpen, Bulb, Printer } from "@emotion-icons/boxicons-regular";
-import { Book, Edit } from "@emotion-icons/boxicons-solid";
-import { useThrottleCallback } from "@react-hook/throttle";
-import React, { useEffect, useRef, useState } from "react";
-import { Editor } from "../../components/Editor";
-import { FeedbackButton } from "../../components/FeedbackButton";
-import { Preview, PreviewPlaceholder } from "../../components/Preview";
-import example from "./example.json";
-import { processor } from "../../markdown/processor";
+} from '@chakra-ui/react'
+import { Github } from '@emotion-icons/boxicons-logos'
+import { BookOpen, Bulb, Printer } from '@emotion-icons/boxicons-regular'
+import { Book, Edit } from '@emotion-icons/boxicons-solid'
+import { useThrottleCallback } from '@react-hook/throttle'
+import { Link, routes } from '@redwoodjs/router'
+import React, { useEffect, useRef, useState } from 'react'
+import { Editor } from '../../components/Editor'
+import { FeedbackButton } from '../../components/FeedbackButton'
+import { Preview, PreviewPlaceholder } from '../../components/Preview'
+import { processor } from '../../markdown/processor'
+import example from './example.json'
 
-const STORAGE_KEY_SOURCE = "saved-source-v1";
-const RENDER_THROTTLE_FPS = 10;
-const SAVE_THROTTLE_FPS = 1;
+
+const STORAGE_KEY_SOURCE = 'saved-source-v1'
+const RENDER_THROTTLE_FPS = 10
+const SAVE_THROTTLE_FPS = 1
 
 function loadSource() {
-  if (typeof window === "undefined") {
-    return undefined;
+  if (typeof window === 'undefined') {
+    return undefined
   }
-  const json = window.localStorage.getItem(STORAGE_KEY_SOURCE);
+  const json = window.localStorage.getItem(STORAGE_KEY_SOURCE)
   if (json === null) {
-    return undefined;
+    return undefined
   }
   try {
-    const { content, bibliography } = JSON.parse(json);
-    return { content, bibliography };
+    const { content, bibliography } = JSON.parse(json)
+    return { content, bibliography }
   } catch {
     console.warn(
       `Got unexpected value from storage (key "${STORAGE_KEY_SOURCE}"), value:\n"${json}"`
-    );
-    return undefined;
+    )
+    return undefined
   }
 }
 
 function saveSource(content: string, bibliography: string) {
-  if (typeof window === "undefined") {
-    return undefined;
+  if (typeof window === 'undefined') {
+    return undefined
   }
-  const state = JSON.stringify({ content, bibliography });
-  window.localStorage.setItem(STORAGE_KEY_SOURCE, state);
+  const state = JSON.stringify({ content, bibliography })
+  window.localStorage.setItem(STORAGE_KEY_SOURCE, state)
 }
 
 function EditorPage() {
-  const theme = useTheme();
+  const theme = useTheme()
 
   const [content, setContent] = useState(
     () => loadSource()?.content || example.content
-  );
+  )
   const [bibliography, setBibliography] = useState(
     () => loadSource()?.bibliography || example.bibliography
-  );
-  const [output, setOutput] = useState<JSX.Element | null>(null);
+  )
+  const [output, setOutput] = useState<JSX.Element | null>(null)
 
-  const previewRef = useRef<HTMLIFrameElement>(null);
+  const previewRef = useRef<HTMLIFrameElement>(null)
 
   function renderSource(content: string, bibliography: string) {
-    const startTime = performance.now();
+    const startTime = performance.now()
 
     processor
       // Store the bibliography as a data attribute on the virtual file, because
       // it's not part of the markdown, but it is still needed to create citations
       .process({ value: content, data: { bibliography } })
       .then((vfile) => {
-        const endTime = performance.now();
-        console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`);
-        if (vfile.value === "") {
+        const endTime = performance.now()
+        console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`)
+        if (vfile.value === '') {
           // Input was empty
-          setOutput(null);
+          setOutput(null)
         } else {
-          setOutput(vfile.result as JSX.Element);
+          setOutput(vfile.result as JSX.Element)
         }
       })
       .catch((err) => {
-        console.error(err);
-        setOutput(<p>{String(err)}</p>);
-      });
+        console.error(err)
+        setOutput(<p>{String(err)}</p>)
+      })
   }
 
   const throttledRenderSource = useThrottleCallback(
     renderSource,
     RENDER_THROTTLE_FPS,
     true // run on leading and trailing edge
-  );
+  )
 
-  const throttledSaveSource = useThrottleCallback(
-    saveSource,
-    SAVE_THROTTLE_FPS
-  );
+  const throttledSaveSource = useThrottleCallback(saveSource, SAVE_THROTTLE_FPS)
 
   // Things to do when the source code of the document is changed
   useEffect(() => {
-    throttledRenderSource(content, bibliography);
-    throttledSaveSource(content, bibliography);
-  }, [content, bibliography, throttledRenderSource, throttledSaveSource]);
+    throttledRenderSource(content, bibliography)
+    throttledSaveSource(content, bibliography)
+  }, [content, bibliography, throttledRenderSource, throttledSaveSource])
 
   return (
     <Flex width="100%" height="100vh" position="relative">
@@ -168,7 +164,7 @@ function EditorPage() {
           borderBottom="2px"
           borderColor="gray.200"
         >
-          <Link to={routes.docs()}>
+          <Link to={routes.docsIndex()}>
             <Button
               as="a"
               target="_blank"
@@ -183,9 +179,9 @@ function EditorPage() {
           <Button
             onClick={() => {
               if (previewRef.current?.contentWindow) {
-                previewRef.current.contentWindow.print();
+                previewRef.current.contentWindow.print()
               } else {
-                console.error("Could not print document");
+                console.error('Could not print document')
               }
             }}
             leftIcon={<Icon as={Printer} />}
@@ -236,7 +232,7 @@ function EditorPage() {
         </Box>
       </Flex>
     </Flex>
-  );
+  )
 }
 
-export default EditorPage;
+export default EditorPage
