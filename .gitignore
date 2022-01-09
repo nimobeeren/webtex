@@ -4,7 +4,10 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 *.db
-.env
+
+# env
+.env*
+!.env*.example
 
 # ide
 .vscode/
