@@ -3,13 +3,13 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
-  await prisma.document.create({
+  await prisma.project.create({
     data: {
-      title: "My First Document"
+      title: "My First Project"
     }
   });
 
-  const documents = await prisma.document.findMany();
+  const projects = await prisma.project.findMany();
 
-  res.status(200).json(documents);
+  res.status(200).json(projects);
 }

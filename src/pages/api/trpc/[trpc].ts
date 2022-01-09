@@ -1,17 +1,17 @@
+import { PrismaClient } from "@prisma/client";
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
-import { z } from "zod";
 
-const appRouter = trpc.router().query("hello", {
-  input: z
-    .object({
-      text: z.string().nullish()
-    })
-    .nullish(),
-  resolve({ input }) {
-    return {
-      greeting: `hello ${input?.text ?? "world"}`
-    };
+const prisma = new PrismaClient();
+
+const appRouter = trpc.router().query("projects", {
+  resolve() {
+    return prisma.project.findMany({
+      select: {
+        id: true,
+        title: true
+      }
+    });
   }
 });
 

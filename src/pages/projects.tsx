@@ -2,11 +2,11 @@ import { Code, Spinner } from "@chakra-ui/react";
 import { trpc } from "../utils/trpc";
 
 function ProjectsPage() {
-  const hello = trpc.useQuery(["hello", { text: "nimo" }]);
-  if (!hello.data) {
+  const projects = trpc.useQuery(["projects"]);
+  if (!projects.data) {
     return <Spinner />;
   }
-  return <Code>{JSON.stringify(hello.data, null, 2)}</Code>;
+  return <Code>{JSON.stringify(projects.data, null, 2)}</Code>;
 }
 
 export default ProjectsPage;
