@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Document {
+model Project {
   id           String @id @default(cuid())
   title        String
   content      String @default("")
