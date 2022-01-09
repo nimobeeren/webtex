@@ -3,8 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "dev:prisma": "dotenv -e .env.dev prisma",
-    "dev": "dotenv -e .env.dev next-remote-watch docs/",
+    "dev": "next-remote-watch docs/",
     "lint": "next lint",
     "check-types": "tsc",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
