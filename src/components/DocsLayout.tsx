@@ -1,5 +1,5 @@
 import Icon from "@chakra-ui/icon";
-import { Box, Flex, HStack, List, ListItem, Spacer } from "@chakra-ui/layout";
+import { Box, Flex, List, ListItem, Spacer } from "@chakra-ui/layout";
 import { IconButton } from "@chakra-ui/react";
 import { Github } from "@emotion-icons/boxicons-logos";
 import { Bulb } from "@emotion-icons/boxicons-regular";
@@ -9,6 +9,7 @@ import type { Doc } from "../services/docs";
 import { ActiveLink } from "./ActiveLink";
 import { FeedbackButton } from "./FeedbackButton";
 import { Logo } from "./Logo";
+import { Nav } from "./Nav";
 
 type Props = {
   children: React.ReactNode;
@@ -27,17 +28,7 @@ function DocsLayout({ children, allDocs }: Props) {
         />
       </Head>
       <Flex direction="column" h="100vh">
-        <HStack
-          as="header"
-          flexShrink={0}
-          align="center"
-          spacing={2}
-          h={42}
-          pl={8}
-          pr={2}
-          borderBottom="1px"
-          borderColor="gray.200"
-        >
+        <Nav as="header" flexShrink={0} pl={8}>
           <NextLink href="/" passHref>
             <Logo as="a" />
           </NextLink>
@@ -62,7 +53,7 @@ function DocsLayout({ children, allDocs }: Props) {
               fontSize="3xl"
             />
           </NextLink>
-        </HStack>
+        </Nav>
         <Flex flexGrow={1} minHeight={0}>
           <Box
             as="nav"

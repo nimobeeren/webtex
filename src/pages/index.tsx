@@ -3,7 +3,6 @@ import {
   Button,
   Center,
   Flex,
-  HStack,
   Icon,
   IconButton,
   Tab,
@@ -22,6 +21,7 @@ import NextLink from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "../components/Editor";
 import { FeedbackButton } from "../components/FeedbackButton";
+import { Nav } from "../components/Nav";
 import { Preview, PreviewPlaceholder } from "../components/Preview";
 import example from "../example.json";
 import { processor } from "../markdown/processor";
@@ -161,15 +161,7 @@ function Index() {
       </Box>
       <Flex flex="1 0 0" direction="column">
         {/* Similar style as the <TabList /> */}
-        <HStack
-          justify="flex-end"
-          align="center"
-          spacing={2}
-          height={42}
-          px={2}
-          borderBottom="2px"
-          borderColor="gray.200"
-        >
+        <Nav justify="flex-end">
           <NextLink href="/docs" passHref>
             <Button
               as="a"
@@ -219,7 +211,7 @@ function Index() {
               fontSize="3xl"
             />
           </NextLink>
-        </HStack>
+        </Nav>
         <Box flexGrow={1} borderLeft="2px" borderColor="gray.200">
           {output ? (
             <Preview
