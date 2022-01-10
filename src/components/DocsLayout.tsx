@@ -25,9 +25,9 @@ function DocsLayout({ children, allDocs }: Props) {
         />
       </Head>
       <Flex direction="column" h="100vh">
-        <Header flexShrink={0} pl={8}>
+        <Header flexShrink={0}>
           <NextLink href="/" passHref>
-            <Logo as="a" />
+            <Logo as="a" ml={6} />
           </NextLink>
           <Spacer />
           <FeedbackButton />
