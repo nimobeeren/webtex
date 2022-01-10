@@ -1,13 +1,5 @@
 import Icon from "@chakra-ui/icon";
-import {
-  Box,
-  Flex,
-  HStack,
-  List,
-  ListItem,
-  Spacer,
-  Text
-} from "@chakra-ui/layout";
+import { Box, Flex, HStack, List, ListItem, Spacer } from "@chakra-ui/layout";
 import { IconButton } from "@chakra-ui/react";
 import { Github } from "@emotion-icons/boxicons-logos";
 import { Bulb } from "@emotion-icons/boxicons-regular";
@@ -16,6 +8,7 @@ import NextLink from "next/link";
 import type { Doc } from "../services/docs";
 import { ActiveLink } from "./ActiveLink";
 import { FeedbackButton } from "./FeedbackButton";
+import { Logo } from "./Logo";
 
 type Props = {
   children: React.ReactNode;
@@ -46,16 +39,7 @@ function DocsLayout({ children, allDocs }: Props) {
           borderColor="gray.200"
         >
           <NextLink href="/" passHref>
-            <Text
-              as="a"
-              fontSize="xl"
-              fontWeight={700}
-              whiteSpace="nowrap"
-              lineHeight="none"
-              letterSpacing="tighter"
-            >
-              WebTeX
-            </Text>
+            <Logo as="a" />
           </NextLink>
           <Spacer />
           <FeedbackButton
