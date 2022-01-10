@@ -8,7 +8,7 @@ import { withTRPC } from "@trpc/next";
 import type { AppProps } from "next/app";
 import { Callout } from "../components/Callout";
 import { Embed } from "../components/Embed";
-import { components } from "../mdxComponents";
+import { components } from "../components/mdxComponents";
 import type { AppRouter } from "./api/trpc/[trpc]";
 
 const theme = extendTheme({
