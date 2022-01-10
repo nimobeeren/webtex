@@ -1,15 +1,12 @@
-import Icon from "@chakra-ui/icon";
 import { Box, Flex, List, ListItem, Spacer } from "@chakra-ui/layout";
-import { IconButton } from "@chakra-ui/react";
-import { Github } from "@emotion-icons/boxicons-logos";
-import { Bulb } from "@emotion-icons/boxicons-regular";
 import Head from "next/head";
 import NextLink from "next/link";
 import type { Doc } from "../services/docs";
 import { ActiveLink } from "./ActiveLink";
 import { FeedbackButton } from "./FeedbackButton";
-import { Logo } from "./Logo";
+import { GitHubButton } from "./GitHubButton";
 import { Header } from "./Header";
+import { Logo } from "./Logo";
 
 type Props = {
   children: React.ReactNode;
@@ -33,25 +30,9 @@ function DocsLayout({ children, allDocs }: Props) {
             <Logo as="a" />
           </NextLink>
           <Spacer />
-          <FeedbackButton
-            leftIcon={<Icon as={Bulb} />}
-            colorScheme="blue"
-            variant="solid"
-            size="sm"
-          >
-            Give us Feedback
-          </FeedbackButton>
+          <FeedbackButton />
           <NextLink href="https://github.com/nimobeeren/webtex" passHref>
-            <IconButton
-              as="a"
-              aria-label="View the source code on GitHub"
-              title="View the source code on GitHub"
-              icon={<Icon as={Github} />}
-              colorScheme="blue"
-              variant="ghost"
-              size="sm"
-              fontSize="3xl"
-            />
+            <GitHubButton as="a" />
           </NextLink>
         </Header>
         <Flex flexGrow={1} minHeight={0}>

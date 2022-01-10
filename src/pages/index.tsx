@@ -4,7 +4,6 @@ import {
   Center,
   Flex,
   Icon,
-  IconButton,
   Tab,
   TabList,
   TabPanel,
@@ -12,15 +11,16 @@ import {
   Tabs,
   useTheme
 } from "@chakra-ui/react";
-import { Github } from "@emotion-icons/boxicons-logos";
-import { BookOpen, Bulb, Printer } from "@emotion-icons/boxicons-regular";
+import { Printer } from "@emotion-icons/boxicons-regular";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
 import Head from "next/head";
 import NextLink from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import { DocsButton } from "../components/DocsButton";
 import { Editor } from "../components/Editor";
 import { FeedbackButton } from "../components/FeedbackButton";
+import { GitHubButton } from "../components/GitHubButton";
 import { Header } from "../components/Header";
 import { Preview, PreviewPlaceholder } from "../components/Preview";
 import example from "../example.json";
@@ -163,16 +163,8 @@ function Index() {
         {/* Similar style as the <TabList /> */}
         <Header justify="flex-end">
           <NextLink href="/docs" passHref>
-            <Button
-              as="a"
-              target="_blank"
-              leftIcon={<Icon as={BookOpen} />}
-              colorScheme="blue"
-              variant="solid"
-              size="sm"
-            >
-              Documentation
-            </Button>
+            {/* @ts-expect-error target prop is not recognized even though it's rendered as an <a> */}
+            <DocsButton as="a" target="_blank" />
           </NextLink>
           <Button
             onClick={() => {
@@ -189,27 +181,10 @@ function Index() {
           >
             Print
           </Button>
-          <FeedbackButton
-            leftIcon={<Icon as={Bulb} />}
-            colorScheme="blue"
-            variant="ghost"
-            size="sm"
-          >
-            Give us Feedback
-          </FeedbackButton>
+          <FeedbackButton variant="ghost" />
           <NextLink href="https://github.com/nimobeeren/webtex" passHref>
-            <IconButton
-              as="a"
-              target="_blank"
-              rel="noopener"
-              aria-label="View the source code on GitHub"
-              title="View the source code on GitHub"
-              icon={<Icon as={Github} />}
-              colorScheme="blue"
-              variant="ghost"
-              size="sm"
-              fontSize="3xl"
-            />
+            {/* @ts-expect-error anchor props are not recognized even though it's rendered as an <a> */}
+            <GitHubButton as="a" target="_blank" />
           </NextLink>
         </Header>
         <Box flexGrow={1} borderLeft="2px" borderColor="gray.200">
