@@ -1,8 +1,9 @@
 import { HStack, StackProps } from "@chakra-ui/react";
 
-export const Nav = (props: StackProps) => {
+export const Header = (props: StackProps) => {
   return (
     <HStack
+      as="header"
       align="center"
       spacing={2}
       height={42}

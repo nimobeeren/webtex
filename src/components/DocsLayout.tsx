@@ -9,7 +9,7 @@ import type { Doc } from "../services/docs";
 import { ActiveLink } from "./ActiveLink";
 import { FeedbackButton } from "./FeedbackButton";
 import { Logo } from "./Logo";
-import { Nav } from "./Nav";
+import { Header } from "./Header";
 
 type Props = {
   children: React.ReactNode;
@@ -28,7 +28,7 @@ function DocsLayout({ children, allDocs }: Props) {
         />
       </Head>
       <Flex direction="column" h="100vh">
-        <Nav as="header" flexShrink={0} pl={8}>
+        <Header flexShrink={0} pl={8}>
           <NextLink href="/" passHref>
             <Logo as="a" />
           </NextLink>
@@ -53,7 +53,7 @@ function DocsLayout({ children, allDocs }: Props) {
               fontSize="3xl"
             />
           </NextLink>
-        </Nav>
+        </Header>
         <Flex flexGrow={1} minHeight={0}>
           <Box
             as="nav"

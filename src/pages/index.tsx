@@ -21,7 +21,7 @@ import NextLink from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "../components/Editor";
 import { FeedbackButton } from "../components/FeedbackButton";
-import { Nav } from "../components/Nav";
+import { Header } from "../components/Header";
 import { Preview, PreviewPlaceholder } from "../components/Preview";
 import example from "../example.json";
 import { processor } from "../markdown/processor";
@@ -161,7 +161,7 @@ function Index() {
       </Box>
       <Flex flex="1 0 0" direction="column">
         {/* Similar style as the <TabList /> */}
-        <Nav justify="flex-end">
+        <Header justify="flex-end">
           <NextLink href="/docs" passHref>
             <Button
               as="a"
@@ -211,7 +211,7 @@ function Index() {
               fontSize="3xl"
             />
           </NextLink>
-        </Nav>
+        </Header>
         <Box flexGrow={1} borderLeft="2px" borderColor="gray.200">
           {output ? (
             <Preview
