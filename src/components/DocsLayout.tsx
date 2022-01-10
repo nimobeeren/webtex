@@ -60,7 +60,7 @@ function DocsLayout({ children, allDocs }: Props) {
             flexShrink={0}
             py={8}
             w={56}
-            borderRight="1px"
+            borderRight="2px"
             borderColor="gray.200"
           >
             <List>
