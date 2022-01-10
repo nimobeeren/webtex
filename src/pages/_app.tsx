@@ -1,5 +1,4 @@
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import defaultTheme from "@chakra-ui/theme";
+import { ChakraProvider } from "@chakra-ui/react";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/700.css";
 import "@fontsource/jetbrains-mono";
@@ -9,34 +8,8 @@ import type { AppProps } from "next/app";
 import { Callout } from "../components/Callout";
 import { Embed } from "../components/Embed";
 import { components } from "../components/mdxComponents";
+import { theme } from "../utils/theme";
 import type { AppRouter } from "./api/trpc/[trpc]";
-
-const theme = extendTheme({
-  fonts: {
-    body: `Inter, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
-    mono: `"JetBrains Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`
-  },
-  components: {
-    Button: {
-      baseStyle: {
-        letterSpacing: "wide"
-      },
-      defaultProps: {
-        colorScheme: "blue"
-      }
-    },
-    Tabs: {
-      parts: ["tab"],
-      baseStyle: {
-        tab: {
-          _focus: {
-            boxShadow: `inset ${defaultTheme.shadows.outline}`
-          }
-        }
-      }
-    }
-  }
-});
 
 function App({ Component, pageProps }: AppProps) {
   return (
