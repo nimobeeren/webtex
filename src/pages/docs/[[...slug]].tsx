@@ -10,7 +10,7 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkSlug from "remark-slug";
 import DocsLayout from "../../components/DocsLayout";
-import { Doc, getAllDocs, getAllDocSlugs, getDocBySlug } from "../../docs";
+import { Doc, getAllDocs, getAllDocSlugs, getDocBySlug } from "../../services/docs";
 
 /**
  * Synchronously run code.

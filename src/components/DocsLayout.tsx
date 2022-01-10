@@ -13,7 +13,7 @@ import { Github } from "@emotion-icons/boxicons-logos";
 import { Bulb } from "@emotion-icons/boxicons-regular";
 import Head from "next/head";
 import NextLink from "next/link";
-import type { Doc } from "../docs";
+import type { Doc } from "../services/docs";
 import { ActiveLink } from "./ActiveLink";
 import { FeedbackButton } from "./FeedbackButton";
 
