@@ -5,7 +5,6 @@ export const DocsButton = (props: ButtonProps) => {
   return (
     <Button
       leftIcon={<Icon as={BookOpen} />}
-      colorScheme="blue"
       variant="solid"
       size="sm"
       {...props}

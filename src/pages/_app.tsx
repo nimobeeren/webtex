@@ -20,6 +20,9 @@ const theme = extendTheme({
     Button: {
       baseStyle: {
         letterSpacing: "wide"
+      },
+      defaultProps: {
+        colorScheme: "blue"
       }
     },
     Tabs: {

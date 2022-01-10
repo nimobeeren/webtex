@@ -175,7 +175,6 @@ function Index() {
               }
             }}
             leftIcon={<Icon as={Printer} />}
-            colorScheme="blue"
             variant="ghost"
             size="sm"
           >

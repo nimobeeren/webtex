@@ -11,7 +11,6 @@ export const GitHubButton = (props: GitHubButtonProps) => {
       aria-label="View the source code on GitHub"
       title="View the source code on GitHub"
       icon={<Icon as={Github} />}
-      colorScheme="blue"
       variant="ghost"
       size="sm"
       fontSize="3xl"

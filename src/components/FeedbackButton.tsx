@@ -7,7 +7,6 @@ export function FeedbackButton(props: ButtonProps) {
     <FeedbackFish projectId="4156f111e7a8ae">
       <Button
         leftIcon={<Icon as={Bulb} />}
-        colorScheme="blue"
         size="sm"
         {...props}
       >
