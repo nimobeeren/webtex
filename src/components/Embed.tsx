@@ -21,7 +21,7 @@ import { useThrottleCallback } from "@react-hook/throttle";
 import hash from "hash-sum";
 import React, { useEffect, useRef, useState } from "react";
 import { Preview, PreviewPlaceholder } from "../components/Preview";
-import { processor } from "../markdown/processor";
+import { processor } from "../services/markdown/processor";
 import { Editor } from "./Editor";
 
 const RENDER_THROTTLE_FPS = 10;

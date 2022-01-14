@@ -24,7 +24,7 @@ import { GitHubButton } from "../components/GitHubButton";
 import { Header } from "../components/Header";
 import { Preview, PreviewPlaceholder } from "../components/Preview";
 import example from "../example.json";
-import { processor } from "../markdown/processor";
+import { processor } from "../services/markdown/processor";
 
 const STORAGE_KEY_SOURCE = "saved-source-v1";
 const RENDER_THROTTLE_FPS = 10;
