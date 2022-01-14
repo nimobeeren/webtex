@@ -15,6 +15,17 @@ export const theme = extendTheme({
         colorScheme: "blue"
       }
     },
+    Link: {
+      baseStyle: {
+        color: "blue.600",
+        _hover: {
+          // Must be in :hover to fix specificity
+          textDecoration: "underline",
+          textUnderlineOffset: "3px",
+          textDecorationColor: "blue.100"
+        }
+      }
+    },
     Tabs: {
       parts: ["tab"],
       baseStyle: {
