@@ -1,4 +1,20 @@
-import { Flex, Spacer, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Spacer,
+  Spinner,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  VStack
+} from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
 import { DocsButton } from "../components/DocsButton";
@@ -32,6 +48,48 @@ function ProjectsPage() {
             <GitHubButton as="a" />
           </NextLink>
         </Header>
+        <Box
+          as="main"
+          flexGrow={1}
+          w="100%"
+          maxW={960}
+          m="0 auto"
+          px={8}
+          pt={16}
+        >
+          <Heading as="h1" mb={8}>
+            Projects
+          </Heading>
+          {projects.data.length == 0 ? (
+            <VStack spacing={8} align="flex-start">
+              <Text>{"Looks like you haven't saved any projects yet."}</Text>
+              <NextLink href="/" passHref>
+                <Button as="a">Start writing!</Button>
+              </NextLink>
+            </VStack>
+          ) : (
+            <Table size="lg">
+              <Thead>
+                <Tr>
+                  <Th>Title</Th>
+                  <Th>Last changed</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {projects.data.map((project) => (
+                  <Tr key={project.id} _hover={{ bg: "gray.50" }}>
+                    <Td>
+                      <NextLink href={`/projects/${project.id}`} passHref>
+                        <Link>{project.title || "Untitled"}</Link>
+                      </NextLink>
+                    </Td>
+                    <Td>Unknown</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          )}
+        </Box>
       </Flex>
     </>
   );
