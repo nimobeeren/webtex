@@ -79,7 +79,7 @@ function ProjectsPage() {
                 {projects.data.map((project) => (
                   <Tr key={project.id} _hover={{ bg: "gray.50" }}>
                     <Td>
-                      <NextLink href={`/projects/${project.id}`} passHref>
+                      <NextLink href={`/project/${project.id}`} passHref>
                         <Link>{project.title || "Untitled"}</Link>
                       </NextLink>
                     </Td>
