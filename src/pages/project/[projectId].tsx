@@ -60,6 +60,14 @@ function saveSource(content: string, bibliography: string) {
 function ProjectPage() {
   const theme = useTheme();
 
+  // LEFT HERE:
+  // First idea was to replace content and bibliography state with react-query
+  // queries, but that doens't really work because we still need to keep local
+  // state.
+  // The challenge will be to keep app state/localStorage/db in sync.
+  // Maybe the next easiest step would be to rely fully on the db, then add back
+  // localStorage.
+
   const [content, setContent] = useState(
     () => loadSource()?.content || example.content
   );
