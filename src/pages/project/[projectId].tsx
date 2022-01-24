@@ -14,8 +14,9 @@ import {
   Tabs,
   useTheme
 } from "@chakra-ui/react";
-import { ArrowBack, Printer } from "@emotion-icons/boxicons-regular";
+import { ArrowBack, Printer, Check } from "@emotion-icons/boxicons-regular";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
+import { Project } from "@prisma/client";
 import { useThrottleCallback } from "@react-hook/throttle";
 import Head from "next/head";
 import NextLink from "next/link";
@@ -37,6 +38,7 @@ function ProjectPage() {
   const { query } = useRouter();
   const projectId = query.projectId as string;
 
+  // TODO: improve loading/up-to-date indicators (bottom status bar?)
   // TODO: draft project
   // TODO: error handling such as 404
 
@@ -44,40 +46,44 @@ function ProjectPage() {
     onError: (error) => {
       const message = `Oops, something went wrong when loading the project:\n${error.message}`;
       console.error(message);
-      // Never overwrite the local state with server state
-      if (content === undefined && bibliography === undefined) {
-        setContent(message);
-        setBibliography(message);
-      }
     },
-    onSuccess: (project) => {
+    onSuccess: (newProject) => {
       // Never overwrite the local state with server state
-      if (content === undefined && bibliography === undefined) {
-        setContent(project.content);
-        setBibliography(project.bibliography);
+      if (!project) {
+        setProject(newProject);
       }
     }
   });
-  const updateProjectMutation = trpc.useMutation(["updateProject"]);
+  const updateProjectMutation = trpc.useMutation(["updateProject"], {
+    onSuccess: (newProject) => {
+      if (
+        project?.title === newProject.title &&
+        project?.content === newProject.content &&
+        project?.bibliography === newProject.bibliography
+      ) {
+        setHasUnsavedChanges(false);
+      }
+    }
+  });
 
-  const [content, setContent] = useState(
-    projectQuery.isSuccess ? projectQuery.data.content : undefined
+  const [project, setProject] = useState(
+    projectQuery.isSuccess ? projectQuery.data : undefined
   );
-  const [bibliography, setBibliography] = useState(
-    projectQuery.isSuccess ? projectQuery.data.bibliography : undefined
-  );
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [output, setOutput] = useState<JSX.Element | null>(null);
 
   const previewRef = useRef<HTMLIFrameElement>(null);
   const theme = useTheme();
 
-  function renderDocument(content: string, bibliography: string) {
+  function renderProject(project: Project) {
     const startTime = performance.now();
-
     processor
       // Store the bibliography as a data attribute on the virtual file, because
       // it's not part of the markdown, but it is still needed to create citations
-      .process({ value: content, data: { bibliography } })
+      .process({
+        value: project.content,
+        data: { bibliography: project.bibliography }
+      })
       .then((vfile) => {
         const endTime = performance.now();
         console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`);
@@ -94,28 +100,25 @@ function ProjectPage() {
       });
   }
 
-  function saveDocument(content: string, bibliography: string) {
-    updateProjectMutation.mutate({ id: projectId, content, bibliography });
-  }
-
-  const throttledRenderDocument = useThrottleCallback(
-    renderDocument,
+  const throttledRenderProject = useThrottleCallback(
+    renderProject,
     RENDER_THROTTLE_FPS,
     true // run on leading and trailing edge
   );
 
-  const throttledSaveDocument = useThrottleCallback(
-    saveDocument,
+  const throttledUpdateProject = useThrottleCallback(
+    updateProjectMutation.mutate,
     SAVE_THROTTLE_FPS
   );
 
   // Things to do when the source code of the document is changed
   useEffect(() => {
-    if (content !== undefined && bibliography !== undefined) {
-      throttledRenderDocument(content, bibliography);
-      throttledSaveDocument(content, bibliography);
+    if (project) {
+      setHasUnsavedChanges(true);
+      throttledRenderProject(project);
+      throttledUpdateProject(project);
     }
-  }, [content, bibliography, throttledRenderDocument, throttledSaveDocument]);
+  }, [project, throttledRenderProject, throttledUpdateProject]);
 
   return (
     <Flex width="100%" height="100vh" position="relative">
@@ -161,6 +164,8 @@ function ProjectPage() {
                 Bibliography
               </Tab>
             </TabList>
+            {updateProjectMutation.isLoading && <Spinner />}
+            {!hasUnsavedChanges && <Icon as={Check} />}
           </HStack>
 
           {!projectQuery.isLoading && (
@@ -173,16 +178,33 @@ function ProjectPage() {
             >
               <TabPanel p={0} height="100%" tabIndex={-1}>
                 <Editor
-                  value={content}
-                  onChange={(event) => setContent(event.target.value)}
+                  value={project?.content}
+                  onChange={(event) =>
+                    setProject((prevProject) => {
+                      if (!prevProject) {
+                        return prevProject;
+                      }
+                      return { ...prevProject, content: event.target.value };
+                    })
+                  }
                   placeholder="Enter Markdown here"
                   height="100%"
                 />
               </TabPanel>
               <TabPanel p={0} height="100%" tabIndex={-1}>
                 <Editor
-                  value={bibliography}
-                  onChange={(event) => setBibliography(event.target.value)}
+                  value={project?.bibliography}
+                  onChange={(event) =>
+                    setProject((prevProject) => {
+                      if (!prevProject) {
+                        return prevProject;
+                      }
+                      return {
+                        ...prevProject,
+                        bibliography: event.target.value
+                      };
+                    })
+                  }
                   placeholder="Enter BibTeX here"
                   height="100%"
                 />
