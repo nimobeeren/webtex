@@ -65,14 +65,6 @@ function ProjectPage() {
   const { query } = useRouter();
   const projectId = query.projectId as string;
 
-  // LEFT HERE:
-  // First idea was to replace content and bibliography state with react-query
-  // queries, but that doens't really work because we still need to keep local
-  // state.
-  // The challenge will be to keep app state/localStorage/db in sync.
-  // Maybe the next easiest step would be to rely fully on the db, then add back
-  // localStorage.
-
   // TODO: draft project
   // TODO: error handling such as 404
 
@@ -83,8 +75,11 @@ function ProjectPage() {
       setBibliography(message);
     },
     onSuccess: (project) => {
-      setContent(project.content);
-      setBibliography(project.bibliography);
+      // Never overwrite the local state with server state
+      if (content === undefined && bibliography === undefined) {
+        setContent(project.content);
+        setBibliography(project.bibliography);
+      }
     }
   });
 
@@ -95,9 +90,8 @@ function ProjectPage() {
     projectQuery.isSuccess ? projectQuery.data.bibliography : undefined
   );
   const [output, setOutput] = useState<JSX.Element | null>(null);
-
+  
   const previewRef = useRef<HTMLIFrameElement>(null);
-
   const theme = useTheme();
 
   function renderSource(content: string, bibliography: string) {
