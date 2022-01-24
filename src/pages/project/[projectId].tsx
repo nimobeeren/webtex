@@ -3,8 +3,8 @@ import {
   Button,
   Center,
   Flex,
+  HStack,
   Icon,
-  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -141,16 +141,13 @@ function ProjectPage() {
     }
   }, [content, bibliography, throttledRenderSource, throttledSaveSource]);
 
-  console.log(projectQuery.isLoading);
-  console.log(projectQuery.data);
-
-  if (projectQuery.isLoading) {
-    return (
-      <Center height="100vh">
-        <Spinner size="xl" />
-      </Center>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <Center height="100vh">
+  //       <Spinner size="xl" />
+  //     </Center>
+  //   );
+  // }
 
   return (
     <Flex width="100%" height="100vh" position="relative">
@@ -164,16 +161,24 @@ function ProjectPage() {
           flexDir="column"
           height="100%"
         >
-          <TabList>
-            <Tab>
-              <Icon as={Edit} mr={2} />
-              Content
-            </Tab>
-            <Tab>
-              <Icon as={Book} mr={2} />
-              Bibliography
-            </Tab>
-          </TabList>
+          <HStack
+            spacing={2}
+            h={42}
+            // px={2}
+            borderBottom="2px"
+            borderColor="gray.200"
+          >
+            <TabList borderBottom="none">
+              <Tab isDisabled={projectQuery.isLoading}>
+                <Icon as={Edit} mr={2} />
+                Content
+              </Tab>
+              <Tab isDisabled={projectQuery.isLoading}>
+                <Icon as={Book} mr={2} />
+                Bibliography
+              </Tab>
+            </TabList>
+          </HStack>
 
           <TabPanels
             height="100%"
@@ -219,6 +224,7 @@ function ProjectPage() {
             leftIcon={<Icon as={Printer} />}
             variant="ghost"
             size="sm"
+            isDisabled={projectQuery.isLoading}
           >
             Print
           </Button>
