@@ -34,7 +34,7 @@ const STORAGE_KEY_SOURCE = "saved-source-v1";
 const RENDER_THROTTLE_FPS = 10;
 const SAVE_THROTTLE_FPS = 1;
 
-function loadSource() {
+function loadDocument() {
   if (typeof window === "undefined") {
     return undefined;
   }
@@ -53,7 +53,7 @@ function loadSource() {
   }
 }
 
-function saveSource(content: string, bibliography: string) {
+function saveDocument(content: string, bibliography: string) {
   if (typeof window === "undefined") {
     return undefined;
   }
@@ -94,7 +94,7 @@ function ProjectPage() {
   const previewRef = useRef<HTMLIFrameElement>(null);
   const theme = useTheme();
 
-  function renderSource(content: string, bibliography: string) {
+  function renderDocument(content: string, bibliography: string) {
     const startTime = performance.now();
 
     processor
@@ -117,25 +117,24 @@ function ProjectPage() {
       });
   }
 
-  // TODO: change "source" to "document"?
-  const throttledRenderSource = useThrottleCallback(
-    renderSource,
+  const throttledRenderDocument = useThrottleCallback(
+    renderDocument,
     RENDER_THROTTLE_FPS,
     true // run on leading and trailing edge
   );
 
-  const throttledSaveSource = useThrottleCallback(
-    saveSource,
+  const throttledSaveDocument = useThrottleCallback(
+    saveDocument,
     SAVE_THROTTLE_FPS
   );
 
   // Things to do when the source code of the document is changed
   useEffect(() => {
     if (content !== undefined && bibliography !== undefined) {
-      throttledRenderSource(content, bibliography);
-      // throttledSaveSource(content, bibliography); TODO
+      throttledRenderDocument(content, bibliography);
+      // throttledSaveDocument(content, bibliography); TODO
     }
-  }, [content, bibliography, throttledRenderSource, throttledSaveSource]);
+  }, [content, bibliography, throttledRenderDocument, throttledSaveDocument]);
 
   return (
     <Flex width="100%" height="100vh" position="relative">
