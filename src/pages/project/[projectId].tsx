@@ -71,8 +71,12 @@ function ProjectPage() {
   const projectQuery = trpc.useQuery(["project", { id: projectId }], {
     onError: (error) => {
       const message = `Oops, something went wrong when loading the project:\n${error.message}`;
-      setContent(message);
-      setBibliography(message);
+      console.error(message);
+      // Never overwrite the local state with server state
+      if (content === undefined && bibliography === undefined) {
+        setContent(message);
+        setBibliography(message);
+      }
     },
     onSuccess: (project) => {
       // Never overwrite the local state with server state
@@ -90,7 +94,7 @@ function ProjectPage() {
     projectQuery.isSuccess ? projectQuery.data.bibliography : undefined
   );
   const [output, setOutput] = useState<JSX.Element | null>(null);
-  
+
   const previewRef = useRef<HTMLIFrameElement>(null);
   const theme = useTheme();
 
