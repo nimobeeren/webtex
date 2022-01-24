@@ -8,8 +8,8 @@ import type { AppProps } from "next/app";
 import { Callout } from "../components/Callout";
 import { Embed } from "../components/Embed";
 import { components } from "../components/mdxComponents";
+import type { AppRouter } from "../server/router";
 import { theme } from "../utils/theme";
-import type { AppRouter } from "./api/trpc/[trpc]";
 
 function App({ Component, pageProps }: AppProps) {
   return (
