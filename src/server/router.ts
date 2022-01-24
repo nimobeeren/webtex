@@ -24,6 +24,26 @@ export const appRouter = trpc
         rejectOnNotFound: true
       });
     }
+  })
+  .mutation("updateProject", {
+    input: z.object({
+      id: z.string(),
+      title: z.string().optional(),
+      content: z.string().optional(),
+      bibliography: z.string().optional()
+    }),
+    resolve({ ctx, input }) {
+      return ctx.db.project.update({
+        where: {
+          id: input.id
+        },
+        data: {
+          title: input.title,
+          content: input.content,
+          bibliography: input.bibliography
+        }
+      });
+    }
   });
 
 export type AppRouter = typeof appRouter;

@@ -30,36 +30,8 @@ import { Preview, PreviewPlaceholder } from "../../components/Preview";
 import { processor } from "../../services/markdown/processor";
 import { trpc } from "../../utils/trpc";
 
-const STORAGE_KEY_SOURCE = "saved-source-v1";
 const RENDER_THROTTLE_FPS = 10;
 const SAVE_THROTTLE_FPS = 1;
-
-function loadDocument() {
-  if (typeof window === "undefined") {
-    return undefined;
-  }
-  const json = window.localStorage.getItem(STORAGE_KEY_SOURCE);
-  if (json === null) {
-    return undefined;
-  }
-  try {
-    const { content, bibliography } = JSON.parse(json);
-    return { content, bibliography };
-  } catch {
-    console.warn(
-      `Got unexpected value from storage (key "${STORAGE_KEY_SOURCE}"), value:\n"${json}"`
-    );
-    return undefined;
-  }
-}
-
-function saveDocument(content: string, bibliography: string) {
-  if (typeof window === "undefined") {
-    return undefined;
-  }
-  const state = JSON.stringify({ content, bibliography });
-  window.localStorage.setItem(STORAGE_KEY_SOURCE, state);
-}
 
 function ProjectPage() {
   const { query } = useRouter();
@@ -86,6 +58,7 @@ function ProjectPage() {
       }
     }
   });
+  const updateProjectMutation = trpc.useMutation(["updateProject"]);
 
   const [content, setContent] = useState(
     projectQuery.isSuccess ? projectQuery.data.content : undefined
@@ -121,6 +94,10 @@ function ProjectPage() {
       });
   }
 
+  function saveDocument(content: string, bibliography: string) {
+    updateProjectMutation.mutate({ id: projectId, content, bibliography });
+  }
+
   const throttledRenderDocument = useThrottleCallback(
     renderDocument,
     RENDER_THROTTLE_FPS,
@@ -136,7 +113,7 @@ function ProjectPage() {
   useEffect(() => {
     if (content !== undefined && bibliography !== undefined) {
       throttledRenderDocument(content, bibliography);
-      // throttledSaveDocument(content, bibliography); TODO
+      throttledSaveDocument(content, bibliography);
     }
   }, [content, bibliography, throttledRenderDocument, throttledSaveDocument]);
 
