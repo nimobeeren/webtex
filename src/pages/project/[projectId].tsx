@@ -5,6 +5,7 @@ import {
   Flex,
   HStack,
   Icon,
+  IconButton,
   Tab,
   TabList,
   TabPanel,
@@ -12,7 +13,7 @@ import {
   Tabs,
   useTheme
 } from "@chakra-ui/react";
-import { Printer } from "@emotion-icons/boxicons-regular";
+import { ArrowBack, Printer } from "@emotion-icons/boxicons-regular";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
 import Head from "next/head";
@@ -164,10 +165,20 @@ function ProjectPage() {
           <HStack
             spacing={2}
             h={42}
-            // px={2}
+            px={2}
             borderBottom="2px"
             borderColor="gray.200"
           >
+            <NextLink href="/projects" passHref>
+              <IconButton
+                aria-label="Go back to the project list"
+                title="Go back to the project list"
+                icon={<ArrowBack />}
+                variant="ghost"
+                size="sm"
+                p={1}
+              />
+            </NextLink>
             <TabList borderBottom="none">
               <Tab isDisabled={projectQuery.isLoading}>
                 <Icon as={Edit} mr={2} />
@@ -207,7 +218,6 @@ function ProjectPage() {
         </Tabs>
       </Box>
       <Flex flex="1 0 0" direction="column">
-        {/* Similar style as the <TabList /> */}
         <Header justify="flex-end">
           <NextLink href="/docs" passHref>
             {/* @ts-expect-error target prop is not recognized even though it's rendered as an <a> */}

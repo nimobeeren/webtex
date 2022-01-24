@@ -1,6 +1,7 @@
 import { HStack, StackProps } from "@chakra-ui/react";
 
 export const Header = (props: StackProps) => {
+  // Similar style as the <TabList />
   return (
     <HStack
       as="header"
