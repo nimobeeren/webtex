@@ -4,6 +4,7 @@ import {
   Center,
   Flex,
   Icon,
+  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -16,6 +17,7 @@ import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { useThrottleCallback } from "@react-hook/throttle";
 import Head from "next/head";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { DocsButton } from "../../components/DocsButton";
 import { Editor } from "../../components/Editor";
@@ -23,8 +25,8 @@ import { FeedbackButton } from "../../components/FeedbackButton";
 import { GitHubButton } from "../../components/GitHubButton";
 import { Header } from "../../components/Header";
 import { Preview, PreviewPlaceholder } from "../../components/Preview";
-import example from "../../example.json";
 import { processor } from "../../services/markdown/processor";
+import { trpc } from "../../utils/trpc";
 
 const STORAGE_KEY_SOURCE = "saved-source-v1";
 const RENDER_THROTTLE_FPS = 10;
@@ -58,7 +60,8 @@ function saveSource(content: string, bibliography: string) {
 }
 
 function ProjectPage() {
-  const theme = useTheme();
+  const { query } = useRouter();
+  const projectId = query.projectId as string;
 
   // LEFT HERE:
   // First idea was to replace content and bibliography state with react-query
@@ -68,15 +71,32 @@ function ProjectPage() {
   // Maybe the next easiest step would be to rely fully on the db, then add back
   // localStorage.
 
+  // TODO: draft project
+  // TODO: error handling such as 404
+
+  const projectQuery = trpc.useQuery(["project", { id: projectId }], {
+    onError: (error) => {
+      const message = `Oops, something went wrong when loading the project:\n${error.message}`;
+      setContent(message);
+      setBibliography(message);
+    },
+    onSuccess: (project) => {
+      setContent(project.content);
+      setBibliography(project.bibliography);
+    }
+  });
+
   const [content, setContent] = useState(
-    () => loadSource()?.content || example.content
+    projectQuery.isSuccess ? projectQuery.data.content : undefined
   );
   const [bibliography, setBibliography] = useState(
-    () => loadSource()?.bibliography || example.bibliography
+    projectQuery.isSuccess ? projectQuery.data.bibliography : undefined
   );
   const [output, setOutput] = useState<JSX.Element | null>(null);
 
   const previewRef = useRef<HTMLIFrameElement>(null);
+
+  const theme = useTheme();
 
   function renderSource(content: string, bibliography: string) {
     const startTime = performance.now();
@@ -101,6 +121,7 @@ function ProjectPage() {
       });
   }
 
+  // TODO: change "source" to "document"?
   const throttledRenderSource = useThrottleCallback(
     renderSource,
     RENDER_THROTTLE_FPS,
@@ -114,9 +135,22 @@ function ProjectPage() {
 
   // Things to do when the source code of the document is changed
   useEffect(() => {
-    throttledRenderSource(content, bibliography);
-    throttledSaveSource(content, bibliography);
+    if (content !== undefined && bibliography !== undefined) {
+      throttledRenderSource(content, bibliography);
+      // throttledSaveSource(content, bibliography); TODO
+    }
   }, [content, bibliography, throttledRenderSource, throttledSaveSource]);
+
+  console.log(projectQuery.isLoading);
+  console.log(projectQuery.data);
+
+  if (projectQuery.isLoading) {
+    return (
+      <Center height="100vh">
+        <Spinner size="xl" />
+      </Center>
+    );
+  }
 
   return (
     <Flex width="100%" height="100vh" position="relative">
