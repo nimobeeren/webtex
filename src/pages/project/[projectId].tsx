@@ -6,6 +6,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -142,19 +143,16 @@ function ProjectPage() {
     }
   }, [content, bibliography, throttledRenderSource, throttledSaveSource]);
 
-  // if (isLoading) {
-  //   return (
-  //     <Center height="100vh">
-  //       <Spinner size="xl" />
-  //     </Center>
-  //   );
-  // }
-
   return (
     <Flex width="100%" height="100vh" position="relative">
       <Head>
         <title>WebTeX</title>
       </Head>
+      {projectQuery.isLoading && (
+        <Center position="absolute" top={42} left={0} right={0} bottom={0}>
+          <Spinner size="xl" />
+        </Center>
+      )}
       <Box flex="1 0 0">
         <Tabs
           id="editor-tabs" // added to fix rehydration id mismatch
@@ -191,30 +189,32 @@ function ProjectPage() {
             </TabList>
           </HStack>
 
-          <TabPanels
-            height="100%"
-            _focusWithin={{
-              boxShadow: `inset ${theme.shadows.outline}`
-            }}
-            transitionDuration="normal"
-          >
-            <TabPanel p={0} height="100%" tabIndex={-1}>
-              <Editor
-                value={content}
-                onChange={(event) => setContent(event.target.value)}
-                placeholder="Enter Markdown here"
-                height="100%"
-              />
-            </TabPanel>
-            <TabPanel p={0} height="100%" tabIndex={-1}>
-              <Editor
-                value={bibliography}
-                onChange={(event) => setBibliography(event.target.value)}
-                placeholder="Enter BibTeX here"
-                height="100%"
-              />
-            </TabPanel>
-          </TabPanels>
+          {!projectQuery.isLoading && (
+            <TabPanels
+              height="100%"
+              _focusWithin={{
+                boxShadow: `inset ${theme.shadows.outline}`
+              }}
+              transitionDuration="normal"
+            >
+              <TabPanel p={0} height="100%" tabIndex={-1}>
+                <Editor
+                  value={content}
+                  onChange={(event) => setContent(event.target.value)}
+                  placeholder="Enter Markdown here"
+                  height="100%"
+                />
+              </TabPanel>
+              <TabPanel p={0} height="100%" tabIndex={-1}>
+                <Editor
+                  value={bibliography}
+                  onChange={(event) => setBibliography(event.target.value)}
+                  placeholder="Enter BibTeX here"
+                  height="100%"
+                />
+              </TabPanel>
+            </TabPanels>
+          )}
         </Tabs>
       </Box>
       <Flex flex="1 0 0" direction="column">
@@ -244,22 +244,24 @@ function ProjectPage() {
             <GitHubButton as="a" target="_blank" />
           </NextLink>
         </Header>
-        <Box flexGrow={1} borderLeft="2px" borderColor="gray.200">
-          {output ? (
-            <Preview
-              ref={previewRef}
-              width="100%"
-              height="100%"
-              overflowY="auto"
-            >
-              {output}
-            </Preview>
-          ) : (
-            <Center p={8} width="100%" height="100%">
-              <PreviewPlaceholder />
-            </Center>
-          )}
-        </Box>
+        {!projectQuery.isLoading && (
+          <Box flexGrow={1} borderLeft="2px" borderColor="gray.200">
+            {output ? (
+              <Preview
+                ref={previewRef}
+                width="100%"
+                height="100%"
+                overflowY="auto"
+              >
+                {output}
+              </Preview>
+            ) : (
+              <Center p={8} width="100%" height="100%">
+                <PreviewPlaceholder />
+              </Center>
+            )}
+          </Box>
+        )}
       </Flex>
     </Flex>
   );
