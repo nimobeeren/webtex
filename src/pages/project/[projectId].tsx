@@ -14,7 +14,7 @@ import {
   Tabs,
   useTheme
 } from "@chakra-ui/react";
-import { ArrowBack, Printer, Check } from "@emotion-icons/boxicons-regular";
+import { ArrowBack, Check, Printer } from "@emotion-icons/boxicons-regular";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { Project } from "@prisma/client";
 import { useThrottleCallback } from "@react-hook/throttle";
@@ -39,6 +39,7 @@ function ProjectPage() {
   const projectId = query.projectId as string;
 
   // TODO: improve loading/up-to-date indicators (bottom status bar?)
+  // TODO: improve layout: wrap everything in <Tabs> and use <Header> across full width
   // TODO: draft project
   // TODO: error handling such as 404
 
