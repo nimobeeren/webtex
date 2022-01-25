@@ -30,11 +30,10 @@ function ProjectsPage() {
     return <Spinner />;
   }
   return (
-    <>
+      <Flex direction="column" height="100%">
       <Head>
         <title>WebTeX | Projects</title>
       </Head>
-      <Flex direction="column" height="100vh">
         <Header flexShrink={0}>
           <NextLink href="/" passHref>
             <Logo as="a" ml={6} />
@@ -91,7 +90,6 @@ function ProjectsPage() {
           )}
         </Box>
       </Flex>
-    </>
   );
 }
 
