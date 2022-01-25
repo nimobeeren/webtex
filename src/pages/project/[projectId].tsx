@@ -3,9 +3,9 @@ import {
   Button,
   Center,
   Flex,
-  HStack,
   Icon,
   IconButton,
+  Spacer,
   Spinner,
   Tab,
   TabList,
@@ -39,7 +39,6 @@ function ProjectPage() {
   const projectId = query.projectId as string;
 
   // TODO: improve loading/up-to-date indicators (bottom status bar?)
-  // TODO: improve layout: wrap everything in <Tabs> and use <Header> across full width
   // TODO: draft project
   // TODO: error handling such as 404
 
@@ -122,100 +121,41 @@ function ProjectPage() {
   }, [project, throttledRenderProject, throttledUpdateProject]);
 
   return (
-    <Flex width="100%" height="100vh" position="relative">
+    <Tabs
+      id="editor-tabs" // added to fix rehydration id mismatch
+      display="flex"
+      flexDir="column"
+      width="100%"
+      height="100%"
+    >
       <Head>
         <title>WebTeX</title>
       </Head>
-      {projectQuery.isLoading && (
-        <Center position="absolute" top={42} left={0} right={0} bottom={0}>
-          <Spinner size="xl" />
-        </Center>
-      )}
-      <Box flex="1 0 0">
-        <Tabs
-          id="editor-tabs" // added to fix rehydration id mismatch
-          display="flex"
-          flexDir="column"
-          height="100%"
-        >
-          <HStack
-            spacing={2}
-            h={42}
-            px={2}
-            borderBottom="2px"
-            borderColor="gray.200"
-          >
-            <NextLink href="/projects" passHref>
-              <IconButton
-                aria-label="Go back to the project list"
-                title="Go back to the project list"
-                icon={<ArrowBack />}
-                variant="ghost"
-                size="sm"
-                p={1}
-              />
-            </NextLink>
-            <TabList borderBottom="none">
-              <Tab isDisabled={projectQuery.isLoading}>
-                <Icon as={Edit} mr={2} />
-                Content
-              </Tab>
-              <Tab isDisabled={projectQuery.isLoading}>
-                <Icon as={Book} mr={2} />
-                Bibliography
-              </Tab>
-            </TabList>
-            {updateProjectMutation.isLoading && <Spinner />}
-            {!hasUnsavedChanges && <Icon as={Check} />}
-          </HStack>
-
-          {!projectQuery.isLoading && (
-            <TabPanels
-              height="100%"
-              _focusWithin={{
-                boxShadow: `inset ${theme.shadows.outline}`
-              }}
-              transitionDuration="normal"
-            >
-              <TabPanel p={0} height="100%" tabIndex={-1}>
-                <Editor
-                  value={project?.content}
-                  onChange={(event) =>
-                    setProject((prevProject) => {
-                      if (!prevProject) {
-                        return prevProject;
-                      }
-                      return { ...prevProject, content: event.target.value };
-                    })
-                  }
-                  placeholder="Enter Markdown here"
-                  height="100%"
-                />
-              </TabPanel>
-              <TabPanel p={0} height="100%" tabIndex={-1}>
-                <Editor
-                  value={project?.bibliography}
-                  onChange={(event) =>
-                    setProject((prevProject) => {
-                      if (!prevProject) {
-                        return prevProject;
-                      }
-                      return {
-                        ...prevProject,
-                        bibliography: event.target.value
-                      };
-                    })
-                  }
-                  placeholder="Enter BibTeX here"
-                  height="100%"
-                />
-              </TabPanel>
-            </TabPanels>
-          )}
-        </Tabs>
-      </Box>
-      <Flex flex="1 0 0" direction="column">
-        <Header justify="flex-end">
+      <Flex direction="column" h="100%">
+        <Header>
+          <NextLink href="/projects" passHref>
+            <IconButton
+              aria-label="Go back to the project list"
+              title="Go back to the project list"
+              icon={<ArrowBack />}
+              variant="ghost"
+              size="sm"
+              p={1}
+            />
+          </NextLink>
+          <TabList borderBottom="none">
+            <Tab isDisabled={projectQuery.isLoading}>
+              <Icon as={Edit} mr={2} />
+              Content
+            </Tab>
+            <Tab isDisabled={projectQuery.isLoading}>
+              <Icon as={Book} mr={2} />
+              Bibliography
+            </Tab>
+          </TabList>
+          {updateProjectMutation.isLoading && <Spinner />}
+          {!hasUnsavedChanges && <Icon as={Check} />}
+          <Spacer />
           <NextLink href="/docs" passHref>
             {/* @ts-expect-error target prop is not recognized even though it's rendered as an <a> */}
             <DocsButton as="a" target="_blank" />
@@ -241,26 +181,82 @@ function ProjectPage() {
             <GitHubButton as="a" target="_blank" />
           </NextLink>
         </Header>
-        {!projectQuery.isLoading && (
-          <Box flexGrow={1} borderLeft="2px" borderColor="gray.200">
-            {output ? (
-              <Preview
-                ref={previewRef}
-                width="100%"
-                height="100%"
-                overflowY="auto"
-              >
-                {output}
-              </Preview>
-            ) : (
-              <Center p={8} width="100%" height="100%">
-                <PreviewPlaceholder />
-              </Center>
-            )}
-          </Box>
+        {projectQuery.isLoading ? (
+          <Center flexGrow={1}>
+            <Spinner size="xl" />
+          </Center>
+        ) : (
+          <Flex flexGrow={1}>
+            <Box flex="1 0 0">
+                <TabPanels
+                  height="100%"
+                  _focusWithin={{
+                    boxShadow: `inset ${theme.shadows.outline}`
+                  }}
+                  transitionDuration="normal"
+                >
+                  <TabPanel p={0} height="100%" tabIndex={-1}>
+                    <Editor
+                      value={project?.content}
+                      onChange={(event) =>
+                        setProject((prevProject) => {
+                          if (!prevProject) {
+                            return prevProject;
+                          }
+                          return {
+                            ...prevProject,
+                            content: event.target.value
+                          };
+                        })
+                      }
+                      placeholder="Enter Markdown here"
+                      height="100%"
+                    />
+                  </TabPanel>
+                  <TabPanel p={0} height="100%" tabIndex={-1}>
+                    <Editor
+                      value={project?.bibliography}
+                      onChange={(event) =>
+                        setProject((prevProject) => {
+                          if (!prevProject) {
+                            return prevProject;
+                          }
+                          return {
+                            ...prevProject,
+                            bibliography: event.target.value
+                          };
+                        })
+                      }
+                      placeholder="Enter BibTeX here"
+                      height="100%"
+                    />
+                  </TabPanel>
+                </TabPanels>
+            </Box>
+            <Box
+              flex="1 0 0"
+              borderLeft="2px"
+              borderColor="gray.200"
+            >
+              {output ? (
+                <Preview
+                  ref={previewRef}
+                  width="100%"
+                  height="100%"
+                  overflowY="auto"
+                >
+                  {output}
+                </Preview>
+              ) : (
+                <Center p={8} width="100%" height="100%">
+                  <PreviewPlaceholder />
+                </Center>
+              )}
+            </Box>
+          </Flex>
         )}
       </Flex>
-    </Flex>
+    </Tabs>
   );
 }
 

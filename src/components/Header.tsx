@@ -5,6 +5,7 @@ export const Header = (props: StackProps) => {
   return (
     <HStack
       as="header"
+      flexShrink={0}
       align="center"
       spacing={2}
       height={42}
