@@ -26,6 +26,8 @@ import { trpc } from "../utils/trpc";
 
 function ProjectsPage() {
   const projects = trpc.useQuery(["projects"]);
+  // TODO: should probably extract a <ProjectsList> component and still render
+  // the header and stuff while loading
   if (!projects.data) {
     return <Spinner />;
   }
@@ -34,7 +36,7 @@ function ProjectsPage() {
       <Head>
         <title>WebTeX | Projects</title>
       </Head>
-      <Header flexShrink={0}>
+      <Header>
         <NextLink href="/" passHref>
           <Logo as="a" ml={6} />
         </NextLink>
