@@ -3,6 +3,7 @@ import {
   Button,
   Center,
   Flex,
+  HStack,
   Icon,
   IconButton,
   Spacer,
@@ -12,9 +13,15 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   useTheme
 } from "@chakra-ui/react";
-import { ArrowBack, Check, Printer } from "@emotion-icons/boxicons-regular";
+import {
+  ArrowBack,
+  Check,
+  CloudUpload,
+  Printer
+} from "@emotion-icons/boxicons-regular";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
 import { Project } from "@prisma/client";
 import { useThrottleCallback } from "@react-hook/throttle";
@@ -153,8 +160,6 @@ function ProjectPage() {
               Bibliography
             </Tab>
           </TabList>
-          {updateProjectMutation.isLoading && <Spinner />}
-          {!hasUnsavedChanges && <Icon as={Check} />}
           <Spacer />
           <NextLink href="/docs" passHref>
             {/* @ts-expect-error target prop is not recognized even though it's rendered as an <a> */}
@@ -188,56 +193,52 @@ function ProjectPage() {
         ) : (
           <Flex flexGrow={1}>
             <Box flex="1 0 0">
-                <TabPanels
-                  height="100%"
-                  _focusWithin={{
-                    boxShadow: `inset ${theme.shadows.outline}`
-                  }}
-                  transitionDuration="normal"
-                >
-                  <TabPanel p={0} height="100%" tabIndex={-1}>
-                    <Editor
-                      value={project?.content}
-                      onChange={(event) =>
-                        setProject((prevProject) => {
-                          if (!prevProject) {
-                            return prevProject;
-                          }
-                          return {
-                            ...prevProject,
-                            content: event.target.value
-                          };
-                        })
-                      }
-                      placeholder="Enter Markdown here"
-                      height="100%"
-                    />
-                  </TabPanel>
-                  <TabPanel p={0} height="100%" tabIndex={-1}>
-                    <Editor
-                      value={project?.bibliography}
-                      onChange={(event) =>
-                        setProject((prevProject) => {
-                          if (!prevProject) {
-                            return prevProject;
-                          }
-                          return {
-                            ...prevProject,
-                            bibliography: event.target.value
-                          };
-                        })
-                      }
-                      placeholder="Enter BibTeX here"
-                      height="100%"
-                    />
-                  </TabPanel>
-                </TabPanels>
+              <TabPanels
+                height="100%"
+                _focusWithin={{
+                  boxShadow: `inset ${theme.shadows.outline}`
+                }}
+                transitionDuration="normal"
+              >
+                <TabPanel p={0} height="100%" tabIndex={-1}>
+                  <Editor
+                    value={project?.content}
+                    onChange={(event) =>
+                      setProject((prevProject) => {
+                        if (!prevProject) {
+                          return prevProject;
+                        }
+                        return {
+                          ...prevProject,
+                          content: event.target.value
+                        };
+                      })
+                    }
+                    placeholder="Enter Markdown here"
+                    height="100%"
+                  />
+                </TabPanel>
+                <TabPanel p={0} height="100%" tabIndex={-1}>
+                  <Editor
+                    value={project?.bibliography}
+                    onChange={(event) =>
+                      setProject((prevProject) => {
+                        if (!prevProject) {
+                          return prevProject;
+                        }
+                        return {
+                          ...prevProject,
+                          bibliography: event.target.value
+                        };
+                      })
+                    }
+                    placeholder="Enter BibTeX here"
+                    height="100%"
+                  />
+                </TabPanel>
+              </TabPanels>
             </Box>
-            <Box
-              flex="1 0 0"
-              borderLeft="2px"
-              borderColor="gray.200"
-            >
+            <Box flex="1 0 0" borderLeft="2px" borderColor="gray.200">
               {output ? (
                 <Preview
                   ref={previewRef}
@@ -255,6 +256,35 @@ function ProjectPage() {
             </Box>
           </Flex>
         )}
+        <HStack
+          flexShrink={0}
+          justify="flex-end"
+          h={6}
+          px={2}
+          spacing={2}
+          borderTop="2px"
+          borderColor="gray.200"
+        >
+          {hasUnsavedChanges ? (
+            <>
+              <Text id="save-state-label" fontSize="xs" color="gray.700">
+                Saving to cloud
+              </Text>
+              <Icon
+                aria-labelledby="save-state-label"
+                as={CloudUpload}
+                size="xs"
+              />
+            </>
+          ) : (
+            <>
+              <Text id="save-state-label" fontSize="xs" color="gray.700">
+                Saved
+              </Text>
+              <Icon aria-labelledby="save-state-label" as={Check} size="xs" />
+            </>
+          )}
+        </HStack>
       </Flex>
     </Tabs>
   );
