@@ -69,15 +69,15 @@ function ProjectPage() {
         project?.bibliography === newProject.bibliography
       ) {
         setHasUnsavedChanges(false);
+        setLastSaved(newProject.updatedAt);
       }
     }
   });
 
-  const [project, setProject] = useState(
-    projectQuery.isSuccess ? projectQuery.data : undefined
-  );
+  const [project, setProject] = useState(projectQuery.data);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [output, setOutput] = useState<JSX.Element | null>(null);
+  const [lastSaved, setLastSaved] = useState(projectQuery.data?.updatedAt);
 
   const previewRef = useRef<HTMLIFrameElement>(null);
   const theme = useTheme();
@@ -279,7 +279,7 @@ function ProjectPage() {
           ) : (
             <>
               <Text id="save-state-label" fontSize="xs" color="gray.700">
-                Saved
+                Saved {lastSaved}
               </Text>
               <Icon aria-labelledby="save-state-label" as={Check} size="xs" />
             </>
