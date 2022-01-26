@@ -24,7 +24,7 @@ function DocsLayout({ children, allDocs }: Props) {
           crossOrigin="anonymous"
         />
       </Head>
-      <Header flexShrink={0}>
+      <Header>
         <NextLink href="/" passHref>
           <Logo as="a" ml={6} />
         </NextLink>
