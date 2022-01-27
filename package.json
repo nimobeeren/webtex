@@ -61,6 +61,7 @@
     "remark-parse": "10.0.0",
     "remark-rehype": "9.0.0",
     "remark-slug": "7.0.1",
+    "superjson": "1.8.0",
     "unified": "10.1.0",
     "unist-builder": "3.0.0",
     "unist-util-modify-children": "3.0.0",

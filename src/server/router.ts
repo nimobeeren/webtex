@@ -1,9 +1,11 @@
 import * as trpc from "@trpc/server";
+import superjson from "superjson";
 import { z } from "zod";
 import { Context } from "./context";
 
 export const appRouter = trpc
   .router<Context>()
+  .transformer(superjson)
   .query("projects", {
     resolve({ ctx }) {
       return ctx.db.project.findMany({

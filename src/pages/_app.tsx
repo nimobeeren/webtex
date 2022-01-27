@@ -5,6 +5,7 @@ import "@fontsource/jetbrains-mono";
 import { MDXProvider } from "@mdx-js/react";
 import { withTRPC } from "@trpc/next";
 import type { AppProps } from "next/app";
+import superjson from "superjson";
 import { Callout } from "../components/Callout";
 import { Embed } from "../components/Embed";
 import { components } from "../components/mdxComponents";
@@ -23,25 +24,28 @@ function App({ Component, pageProps }: AppProps) {
 }
 
 export default withTRPC<AppRouter>({
-  config({ ctx }) {
+  config() {
+    let url: string | undefined;
+    let headers = {};
+
     if (process.browser) {
-      return {
-        url: "/api/trpc"
+      url = "/api/trpc";
+    } else {
+      // During SSR
+      url = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}/api/trpc`
+        : "http://localhost:3000/api/trpc";
+
+      headers = {
+        // inform server that it's an ssr request
+        "x-ssr": "1"
       };
     }
 
-    // During SSR below
-
-    const url = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}/api/trpc`
-      : "http://localhost:3000/api/trpc";
-
     return {
       url,
-      headers: {
-        // optional - inform server that it's an ssr request
-        "x-ssr": "1"
-      }
+      headers,
+      transformer: superjson
     };
   },
   ssr: true
