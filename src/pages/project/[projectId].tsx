@@ -58,7 +58,6 @@ function ProjectPage() {
       console.error(message);
     },
     onSuccess: (newProject) => {
-      console.log("query");
       // Never overwrite the local state with server state
       if (content === undefined) {
         setContent(newProject.content);
@@ -71,7 +70,6 @@ function ProjectPage() {
   const updateProjectMutation = trpc.useMutation(["updateProject"], {
     // Automatically update the project query data using the mutation response
     onSuccess: (newProject) => {
-      console.log("mutation");
       queryClient.setQueryData(["project", { id: projectId }], newProject);
     }
   });
@@ -133,6 +131,7 @@ function ProjectPage() {
   }, [content, bibliography, throttledRenderProject]);
 
   // Update the project when it is changed
+  // FIXME: slightly weird behavior when making a change and undoing it quickly
   useEffect(() => {
     if (hasUnsavedChanges) {
       throttledUpdateProject({
