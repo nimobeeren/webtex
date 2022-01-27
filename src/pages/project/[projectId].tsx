@@ -36,7 +36,7 @@ import { FeedbackButton } from "../../components/FeedbackButton";
 import { GitHubButton } from "../../components/GitHubButton";
 import { Header } from "../../components/Header";
 import { Preview, PreviewPlaceholder } from "../../components/Preview";
-import { RelativeTime } from "../../components/RelativeTime";
+import { TimeAgo } from "../../components/TimeAgo";
 import { processor } from "../../services/markdown/processor";
 import { trpc } from "../../utils/trpc";
 
@@ -295,7 +295,7 @@ function ProjectPage() {
           ) : (
             <>
               <Text id="save-state-label" fontSize="xs" color="gray.700">
-                Saved <RelativeTime date={projectQuery.data.updatedAt} />
+                Saved <TimeAgo date={projectQuery.data.updatedAt} />
               </Text>
               <Icon as={Check} aria-labelledby="save-state-label" size="xs" />
             </>
