@@ -36,6 +36,7 @@ import { FeedbackButton } from "../../components/FeedbackButton";
 import { GitHubButton } from "../../components/GitHubButton";
 import { Header } from "../../components/Header";
 import { Preview, PreviewPlaceholder } from "../../components/Preview";
+import { RelativeTime } from "../../components/RelativeTime";
 import { processor } from "../../services/markdown/processor";
 import { trpc } from "../../utils/trpc";
 
@@ -267,7 +268,7 @@ function ProjectPage() {
           borderTop="2px"
           borderColor="gray.200"
         >
-          {hasUnsavedChanges ? (
+          {!projectQuery.data ? null : hasUnsavedChanges ? (
             updateProjectMutation.isError ? (
               <>
                 <Text id="save-state-label" fontSize="xs" color="gray.700">
@@ -294,8 +295,7 @@ function ProjectPage() {
           ) : (
             <>
               <Text id="save-state-label" fontSize="xs" color="gray.700">
-                {/* Saved <RelativeTime date={project.updatedAt} /> */}
-                Saved {projectQuery.data?.updatedAt.toString()}
+                Saved <RelativeTime date={projectQuery.data.updatedAt} />
               </Text>
               <Icon as={Check} aria-labelledby="save-state-label" size="xs" />
             </>

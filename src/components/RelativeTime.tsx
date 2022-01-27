@@ -12,15 +12,12 @@ export function RelativeTime({
   date,
   updateInterval = 1000
 }: RelativeTimeProps) {
-  const [seconds, setSeconds] = useState<number>();
+  const [currentDate, setCurrentDate] = useState<Date>(() => new Date());
 
   useEffect(() => {
-    console.log(date);
-    setSeconds(new Date().getUTCSeconds() - date.getUTCSeconds());
-
     if (0 < updateInterval && updateInterval < Infinity) {
       const intervalId = window.setInterval(() => {
-        setSeconds(new Date().getUTCSeconds() - date.getUTCSeconds());
+        setCurrentDate(new Date());
       }, updateInterval);
 
       return () => {
@@ -29,33 +26,33 @@ export function RelativeTime({
         }
       };
     }
-  }, [date, updateInterval]);
+  }, [updateInterval]);
 
-  if (seconds === undefined) {
-    return null;
-  }
+  const millis = currentDate.getTime() - date.getTime()
+  const seconds = Math.floor(millis / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / DAYS_PER_MONTH);
+  const years = Math.floor(days / DAYS_PER_YEAR);
+
   if (seconds < 10) {
-    return <span>Just now</span>;
+    return <span>just now</span>;
   }
-  if (seconds < 60) {
+  if (minutes < 1) {
     return <span>{`${seconds} seconds ago`}</span>;
   }
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) {
+  if (hours < 1) {
     return <span>{`${minutes} minutes ago`}</span>;
   }
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) {
+  if (days < 1) {
     return <span>{`${hours} hours ago`}</span>;
   }
-  const days = Math.floor(hours / 24);
-  if (days < DAYS_PER_MONTH) {
+  if (months < 1) {
     return <span>{`${days} days ago`}</span>;
   }
-  const months = Math.floor(days / DAYS_PER_MONTH);
-  if (months < 12) {
+  if (years < 1) {
     return <span>{`${months} months ago`}</span>;
   }
-  const years = Math.floor(days / DAYS_PER_YEAR);
   return <span>{`${years} years ago`}</span>;
 }
