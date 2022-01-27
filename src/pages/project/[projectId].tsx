@@ -20,15 +20,16 @@ import {
   ArrowBack,
   Check,
   CloudUpload,
+  Error as ErrorIcon,
   Printer
 } from "@emotion-icons/boxicons-regular";
 import { Book, Edit } from "@emotion-icons/boxicons-solid";
-import { Project } from "@prisma/client";
 import { useThrottleCallback } from "@react-hook/throttle";
 import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "react-query";
 import { DocsButton } from "../../components/DocsButton";
 import { Editor } from "../../components/Editor";
 import { FeedbackButton } from "../../components/FeedbackButton";
@@ -45,51 +46,56 @@ function ProjectPage() {
   const { query } = useRouter();
   const projectId = query.projectId as string;
 
-  // TODO: improve loading/up-to-date indicators (bottom status bar?)
   // TODO: draft project
   // TODO: error handling such as 404
 
+  const queryClient = useQueryClient();
+  // TODO: disable the query after initial load of project?
   const projectQuery = trpc.useQuery(["project", { id: projectId }], {
     onError: (error) => {
       const message = `Oops, something went wrong when loading the project:\n${error.message}`;
       console.error(message);
     },
     onSuccess: (newProject) => {
+      console.log("query");
       // Never overwrite the local state with server state
-      if (!project) {
-        setProject(newProject);
+      if (content === undefined) {
+        setContent(newProject.content);
+      }
+      if (bibliography === undefined) {
+        setBibliography(newProject.bibliography);
       }
     }
   });
   const updateProjectMutation = trpc.useMutation(["updateProject"], {
+    // Automatically update the project query data using the mutation response
     onSuccess: (newProject) => {
-      if (
-        project?.title === newProject.title &&
-        project?.content === newProject.content &&
-        project?.bibliography === newProject.bibliography
-      ) {
-        setHasUnsavedChanges(false);
-        setLastSaved(newProject.updatedAt);
-      }
+      console.log("mutation");
+      queryClient.setQueryData(["project", { id: projectId }], newProject);
     }
   });
 
-  const [project, setProject] = useState(projectQuery.data);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [content, setContent] = useState(projectQuery.data?.content);
+  const [bibliography, setBibliography] = useState(
+    projectQuery.data?.bibliography
+  );
   const [output, setOutput] = useState<JSX.Element | null>(null);
-  const [lastSaved, setLastSaved] = useState(projectQuery.data?.updatedAt);
+
+  const hasUnsavedChanges =
+    content !== projectQuery.data?.content ||
+    bibliography !== projectQuery.data?.bibliography;
 
   const previewRef = useRef<HTMLIFrameElement>(null);
   const theme = useTheme();
 
-  function renderProject(project: Project) {
+  function renderProject(content: string, bibliography: string) {
     const startTime = performance.now();
     processor
       // Store the bibliography as a data attribute on the virtual file, because
       // it's not part of the markdown, but it is still needed to create citations
       .process({
-        value: project.content,
-        data: { bibliography: project.bibliography }
+        value: content,
+        data: { bibliography }
       })
       .then((vfile) => {
         const endTime = performance.now();
@@ -118,14 +124,29 @@ function ProjectPage() {
     SAVE_THROTTLE_FPS
   );
 
-  // Things to do when the source code of the document is changed
+  // Render the project when it is changed
   useEffect(() => {
-    if (project) {
-      setHasUnsavedChanges(true);
-      throttledRenderProject(project);
-      throttledUpdateProject(project);
+    if (content !== undefined && bibliography !== undefined) {
+      throttledRenderProject(content, bibliography);
     }
-  }, [project, throttledRenderProject, throttledUpdateProject]);
+  }, [content, bibliography, throttledRenderProject]);
+
+  // Update the project when it is changed
+  useEffect(() => {
+    if (hasUnsavedChanges) {
+      throttledUpdateProject({
+        id: projectId,
+        content,
+        bibliography
+      });
+    }
+  }, [
+    projectId,
+    content,
+    bibliography,
+    throttledUpdateProject,
+    hasUnsavedChanges
+  ]);
 
   return (
     <Tabs
@@ -202,36 +223,16 @@ function ProjectPage() {
               >
                 <TabPanel p={0} height="100%" tabIndex={-1}>
                   <Editor
-                    value={project?.content}
-                    onChange={(event) =>
-                      setProject((prevProject) => {
-                        if (!prevProject) {
-                          return prevProject;
-                        }
-                        return {
-                          ...prevProject,
-                          content: event.target.value
-                        };
-                      })
-                    }
+                    value={content}
+                    onChange={(event) => setContent(event.target.value)}
                     placeholder="Enter Markdown here"
                     height="100%"
                   />
                 </TabPanel>
                 <TabPanel p={0} height="100%" tabIndex={-1}>
                   <Editor
-                    value={project?.bibliography}
-                    onChange={(event) =>
-                      setProject((prevProject) => {
-                        if (!prevProject) {
-                          return prevProject;
-                        }
-                        return {
-                          ...prevProject,
-                          bibliography: event.target.value
-                        };
-                      })
-                    }
+                    value={bibliography}
+                    onChange={(event) => setBibliography(event.target.value)}
                     placeholder="Enter BibTeX here"
                     height="100%"
                   />
@@ -257,6 +258,7 @@ function ProjectPage() {
           </Flex>
         )}
         <HStack
+          as="footer"
           flexShrink={0}
           justify="flex-end"
           h={6}
@@ -266,22 +268,36 @@ function ProjectPage() {
           borderColor="gray.200"
         >
           {hasUnsavedChanges ? (
-            <>
-              <Text id="save-state-label" fontSize="xs" color="gray.700">
-                Saving to cloud
-              </Text>
-              <Icon
-                aria-labelledby="save-state-label"
-                as={CloudUpload}
-                size="xs"
-              />
-            </>
+            updateProjectMutation.isError ? (
+              <>
+                <Text id="save-state-label" fontSize="xs" color="gray.700">
+                  Failed to save
+                </Text>
+                <Icon
+                  as={ErrorIcon}
+                  aria-labelledby="save-state-label"
+                  size="xs"
+                />
+              </>
+            ) : (
+              <>
+                <Text id="save-state-label" fontSize="xs" color="gray.700">
+                  Saving...
+                </Text>
+                <Icon
+                  as={CloudUpload}
+                  aria-labelledby="save-state-label"
+                  size="xs"
+                />
+              </>
+            )
           ) : (
             <>
               <Text id="save-state-label" fontSize="xs" color="gray.700">
-                Saved {lastSaved}
+                {/* Saved <RelativeTime date={project.updatedAt} /> */}
+                Saved {projectQuery.data?.updatedAt.toString()}
               </Text>
-              <Icon aria-labelledby="save-state-label" as={Check} size="xs" />
+              <Icon as={Check} aria-labelledby="save-state-label" size="xs" />
             </>
           )}
         </HStack>
