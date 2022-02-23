@@ -5,6 +5,7 @@ import "@fontsource/jetbrains-mono";
 import { MDXProvider } from "@mdx-js/react";
 import { withTRPC } from "@trpc/next";
 import type { AppProps } from "next/app";
+import { ReactQueryDevtools } from "react-query/devtools";
 import superjson from "superjson";
 import { Callout } from "../components/Callout";
 import { Embed } from "../components/Embed";
@@ -19,6 +20,7 @@ function App({ Component, pageProps }: AppProps) {
         {/* @ts-expect-error bug in @mdx-js/react, should be fixed in next release */}
         <Component {...pageProps} />
       </MDXProvider>
+      <ReactQueryDevtools />
     </ChakraProvider>
   );
 }

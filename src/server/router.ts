@@ -1,4 +1,5 @@
 import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod";
 import { Context } from "./context";
@@ -18,13 +19,20 @@ export const appRouter = trpc
   })
   .query("project", {
     input: z.object({ id: z.string() }),
-    resolve({ ctx, input }) {
-      return ctx.db.project.findUnique({
+    async resolve({ ctx, input }) {
+      const project = await ctx.db.project.findUnique({
         where: {
           id: input.id
-        },
-        rejectOnNotFound: true
+        }
       });
+
+      if (!project) {
+        throw new TRPCError({
+          code: "NOT_FOUND"
+        });
+      }
+
+      return project;
     }
   })
   .mutation("updateProject", {

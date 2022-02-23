@@ -43,19 +43,106 @@ import { trpc } from "../../utils/trpc";
 const RENDER_THROTTLE_FPS = 10;
 const SAVE_THROTTLE_FPS = 1;
 
+type PreviewAndEditorProps = {
+  projectId: string;
+  previewRef: React.RefObject<HTMLIFrameElement>;
+  content?: string;
+  bibliography?: string;
+  output?: JSX.Element;
+  onContentChange: (newContent: string) => void;
+  onBibliographyChange: (newBibliography: string) => void;
+};
+
+function PreviewAndEditor({
+  projectId,
+  previewRef,
+  content,
+  bibliography,
+  output,
+  onContentChange,
+  onBibliographyChange
+}: PreviewAndEditorProps) {
+  const projectQuery = trpc.useQuery(["project", { id: projectId }]);
+  const theme = useTheme();
+
+  // TODO: we probably don't want to show the full error page when error happens
+  // on a refetch (maybe show an error status indicator and toast message)
+  if (projectQuery.isError) {
+    return (
+      <Center flexGrow={1}>
+        Something went wrong when loading the project:
+        <br />
+        {projectQuery.error.message}
+      </Center>
+    );
+  }
+
+  if (projectQuery.isLoading) {
+    return (
+      <Center flexGrow={1}>
+        <Spinner size="xl" />
+      </Center>
+    );
+  }
+
+  return (
+    <Flex flexGrow={1}>
+      <Box flex="1 0 0">
+        <TabPanels
+          height="100%"
+          _focusWithin={{
+            boxShadow: `inset ${theme.shadows.outline}`
+          }}
+          transitionDuration="normal"
+        >
+          <TabPanel p={0} height="100%" tabIndex={-1}>
+            <Editor
+              value={content}
+              onChange={(event) => onContentChange(event.target.value)}
+              placeholder="Enter Markdown here"
+              height="100%"
+            />
+          </TabPanel>
+          <TabPanel p={0} height="100%" tabIndex={-1}>
+            <Editor
+              value={bibliography}
+              onChange={(event) => onBibliographyChange(event.target.value)}
+              placeholder="Enter BibTeX here"
+              height="100%"
+            />
+          </TabPanel>
+        </TabPanels>
+      </Box>
+      <Box flex="1 0 0" borderLeft="2px" borderColor="gray.200">
+        {output ? (
+          <Preview ref={previewRef} width="100%" height="100%" overflowY="auto">
+            {output}
+          </Preview>
+        ) : (
+          <Center p={8} width="100%" height="100%">
+            <PreviewPlaceholder />
+          </Center>
+        )}
+      </Box>
+    </Flex>
+  );
+}
+
 function ProjectPage() {
   const { query } = useRouter();
   const projectId = query.projectId as string;
 
   // TODO: draft project
-  // TODO: error handling such as 404
 
   const queryClient = useQueryClient();
   // TODO: disable the query after initial load of project?
   const projectQuery = trpc.useQuery(["project", { id: projectId }], {
     onError: (error) => {
-      const message = `Oops, something went wrong when loading the project:\n${error.message}`;
-      console.error(message);
+      if (error.data?.code !== "NOT_FOUND") {
+        console.error(
+          `Something went wrong when loading the project:\n${error.message}`
+        );
+      }
     },
     onSuccess: (newProject) => {
       // Never overwrite the local state with server state
@@ -65,6 +152,13 @@ function ProjectPage() {
       if (bibliography === undefined) {
         setBibliography(newProject.bibliography);
       }
+    },
+    retry: (failureCount, error) => {
+      if (error.data?.code === "NOT_FOUND") {
+        // TODO: show a 404 page
+        return false;
+      }
+      return failureCount < 3;
     }
   });
   const updateProjectMutation = trpc.useMutation(["updateProject"], {
@@ -78,14 +172,15 @@ function ProjectPage() {
   const [bibliography, setBibliography] = useState(
     projectQuery.data?.bibliography
   );
-  const [output, setOutput] = useState<JSX.Element | null>(null);
+  const [output, setOutput] = useState<JSX.Element | undefined>(undefined);
 
   const hasUnsavedChanges =
-    content !== projectQuery.data?.content ||
-    bibliography !== projectQuery.data?.bibliography;
+    content !== undefined &&
+    bibliography !== undefined &&
+    (content !== projectQuery.data?.content ||
+      bibliography !== projectQuery.data?.bibliography);
 
   const previewRef = useRef<HTMLIFrameElement>(null);
-  const theme = useTheme();
 
   function renderProject(content: string, bibliography: string) {
     const startTime = performance.now();
@@ -101,7 +196,7 @@ function ProjectPage() {
         console.debug(`Processing time: ${Math.round(endTime - startTime)}ms`);
         if (vfile.value === "") {
           // Input was empty
-          setOutput(null);
+          setOutput(undefined);
         } else {
           setOutput(vfile.result as JSX.Element);
         }
@@ -172,11 +267,11 @@ function ProjectPage() {
             />
           </NextLink>
           <TabList borderBottom="none">
-            <Tab isDisabled={projectQuery.isLoading}>
+            <Tab isDisabled={!projectQuery.isSuccess}>
               <Icon as={Edit} mr={2} />
               Content
             </Tab>
-            <Tab isDisabled={projectQuery.isLoading}>
+            <Tab isDisabled={!projectQuery.isSuccess}>
               <Icon as={Book} mr={2} />
               Bibliography
             </Tab>
@@ -207,56 +302,15 @@ function ProjectPage() {
             <GitHubButton as="a" target="_blank" />
           </NextLink>
         </Header>
-        {projectQuery.isLoading ? (
-          <Center flexGrow={1}>
-            <Spinner size="xl" />
-          </Center>
-        ) : (
-          <Flex flexGrow={1}>
-            <Box flex="1 0 0">
-              <TabPanels
-                height="100%"
-                _focusWithin={{
-                  boxShadow: `inset ${theme.shadows.outline}`
-                }}
-                transitionDuration="normal"
-              >
-                <TabPanel p={0} height="100%" tabIndex={-1}>
-                  <Editor
-                    value={content}
-                    onChange={(event) => setContent(event.target.value)}
-                    placeholder="Enter Markdown here"
-                    height="100%"
-                  />
-                </TabPanel>
-                <TabPanel p={0} height="100%" tabIndex={-1}>
-                  <Editor
-                    value={bibliography}
-                    onChange={(event) => setBibliography(event.target.value)}
-                    placeholder="Enter BibTeX here"
-                    height="100%"
-                  />
-                </TabPanel>
-              </TabPanels>
-            </Box>
-            <Box flex="1 0 0" borderLeft="2px" borderColor="gray.200">
-              {output ? (
-                <Preview
-                  ref={previewRef}
-                  width="100%"
-                  height="100%"
-                  overflowY="auto"
-                >
-                  {output}
-                </Preview>
-              ) : (
-                <Center p={8} width="100%" height="100%">
-                  <PreviewPlaceholder />
-                </Center>
-              )}
-            </Box>
-          </Flex>
-        )}
+        <PreviewAndEditor
+          projectId={projectId}
+          previewRef={previewRef}
+          content={content}
+          bibliography={bibliography}
+          output={output}
+          onContentChange={setContent}
+          onBibliographyChange={setBibliography}
+        />
         <HStack
           as="footer"
           flexShrink={0}
